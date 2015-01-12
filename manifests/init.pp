@@ -53,7 +53,7 @@ class ibm_installation_manager (
   $user          = $installation_manager::params::user,
 ) inherits ibm_installation_manager::params {
 
-  validate_boolean($deploy_source)
+  validate_bool($deploy_source)
   validate_absolute_path($source_dir)
   validate_string($options)
   validate_string($user)
