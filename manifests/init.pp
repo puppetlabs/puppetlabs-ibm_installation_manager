@@ -4,6 +4,11 @@
 #
 # === Parameters
 #
+# [*deploy_source*]
+#   Specifies whether this module should deploy the source or not. If set to
+#   false, the InstallationManager installer is assumed to be already available
+#   at $tmp_dir
+#
 # [*source*]
 #   Source to the compressed archive from IBM. Required.
 #
@@ -39,11 +44,12 @@
 # Copyright 2015 Puppet Labs, Inc, unless otherwise noted.
 #
 class installation_manager (
-  $source,
-  $tmp_dir = $installation_manager::params::tmp_dir,
-  $options = $installation_manager::params::options,
-  $user    = $installation_manager::params::user,
-  $group   = $installation_manager::params::group,
+  $deploy_source = true,
+  $group         = $installation_manager::params::group,
+  $options       = $installation_manager::params::options,
+  $source        = undef,
+  $tmp_dir       = $installation_manager::params::tmp_dir,
+  $user          = $installation_manager::params::user,
 ) {
 
   validate_absolute_path($tmp_dir)
@@ -55,11 +61,19 @@ class installation_manager (
     ensure => 'directory',
   }
 
-  staging::deploy { 'ibm_im.zip':
-    source  => $source,
-    target  => "${tmp_dir}/IBM_IM",
-    creates => "${tmp_dir}/IBM_IM/tools/imcl",
-    require => File["${tmp_dir}/IBM_IM"],
+  if $deploy_source {
+    if $source {
+      staging::deploy { 'ibm_im.zip':
+        source  => $source,
+        target  => "${tmp_dir}/IBM_IM",
+        creates => "${tmp_dir}/IBM_IM/tools/imcl",
+        require => File["${tmp_dir}/IBM_IM"],
+        before  => Exec['Install IBM Installation Manager'],
+      }
+    }
+    else {
+      fail("${module_name} requires a source parameter to be set.")
+    }
   }
 
   exec { 'Install IBM Installation Manager':
@@ -67,7 +81,6 @@ class installation_manager (
     creates => "${base_dir}/InstallationManager/eclipse/tools/imcl",
     user    => $user,
     group   => $group,
-    require => Staging::Deploy['ibm_im.zip'],
   }
 
 }
