@@ -43,7 +43,7 @@
 #
 # Copyright 2015 Puppet Labs, Inc, unless otherwise noted.
 #
-class installation_manager (
+class ibm_installation_manager (
   $deploy_source = true,
   $base_dir      = $installation_manager::params::base_dir,
   $source_dir    = $installation_manager::params::source_dir,
@@ -51,7 +51,7 @@ class installation_manager (
   $options       = $installation_manager::params::options,
   $source        = undef,
   $user          = $installation_manager::params::user,
-) {
+) inherits ibm_installation_manager::params {
 
   validate_boolean($deploy_source)
   validate_absolute_path($source_dir)

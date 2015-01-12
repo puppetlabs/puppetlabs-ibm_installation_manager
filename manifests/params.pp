@@ -1,4 +1,4 @@
-class installation_manager::params {
+class ibm_installation_manager::params {
   $timestamp  = generate('/bin/date', '+%Y%d%m_%H:%M:%S')
   $source_dir = '/opt/IBM/tmp'
   $base_dir   = '/opt/IBM'
