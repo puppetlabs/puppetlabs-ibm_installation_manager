@@ -7,12 +7,12 @@
 # [*deploy_source*]
 #   Specifies whether this module should deploy the source or not. If set to
 #   false, the InstallationManager installer is assumed to be already available
-#   at $tmp_dir
+#   at $source_dir
 #
 # [*source*]
 #   Source to the compressed archive from IBM. Required.
 #
-# [*tmp_dir*]
+# [*source_dir*]
 #   Location to extract the InstallationManager archive
 #
 # [*options*]
@@ -32,7 +32,7 @@
 #
 # class { 'installation_manager':
 #   source  => '/mnt/IBM/IM.zip',
-#   tmp_dir => '/opt/IBM',
+#   source_dir => '/opt/IBM',
 # }
 #
 # === Authors
@@ -45,19 +45,21 @@
 #
 class installation_manager (
   $deploy_source = true,
+  $base_dir      = $installation_manager::params::base_dir,
+  $source_dir    = $installation_manager::params::source_dir,
   $group         = $installation_manager::params::group,
   $options       = $installation_manager::params::options,
   $source        = undef,
-  $tmp_dir       = $installation_manager::params::tmp_dir,
   $user          = $installation_manager::params::user,
 ) {
 
-  validate_absolute_path($tmp_dir)
+  validate_boolean($deploy_source)
+  validate_absolute_path($source_dir)
   validate_string($options)
   validate_string($user)
   validate_string($group)
 
-  file { "${tmp_dir}/InstallationManager":
+  file { $source_dir:
     ensure => 'directory',
   }
 
@@ -65,9 +67,9 @@ class installation_manager (
     if $source {
       staging::deploy { 'ibm_im.zip':
         source  => $source,
-        target  => "${tmp_dir}/IBM_IM",
-        creates => "${tmp_dir}/IBM_IM/tools/imcl",
-        require => File["${tmp_dir}/IBM_IM"],
+        target  => "${source_dir}",
+        creates => "${source_dir}/tools/imcl",
+        require => File[$source_dir],
         before  => Exec['Install IBM Installation Manager'],
       }
     }
@@ -77,7 +79,7 @@ class installation_manager (
   }
 
   exec { 'Install IBM Installation Manager':
-    command => "${tmp_dir}/IBM_IM/installc ${options}",
+    command => "${source_dir}/installc ${options}",
     creates => "${base_dir}/InstallationManager/eclipse/tools/imcl",
     user    => $user,
     group   => $group,
