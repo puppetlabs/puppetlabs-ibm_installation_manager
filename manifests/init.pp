@@ -45,12 +45,12 @@
 #
 class ibm_installation_manager (
   $deploy_source = true,
-  $base_dir      = $installation_manager::params::base_dir,
-  $source_dir    = $installation_manager::params::source_dir,
-  $group         = $installation_manager::params::group,
-  $options       = $installation_manager::params::options,
+  $base_dir      = $ibm_installation_manager::params::base_dir,
+  $source_dir    = $ibm_installation_manager::params::source_dir,
+  $group         = $ibm_installation_manager::params::group,
+  $options       = $ibm_installation_manager::params::options,
   $source        = undef,
-  $user          = $installation_manager::params::user,
+  $user          = $ibm_installation_manager::params::user,
 ) inherits ibm_installation_manager::params {
 
   validate_bool($deploy_source)
