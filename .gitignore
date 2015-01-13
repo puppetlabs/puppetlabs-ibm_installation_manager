@@ -13,3 +13,8 @@ tmtags
 ## VIM
 *.swp
 tags
+
+.vendor
+.bundler
+Gemfile.lock
+spec/fixtures/modules/*

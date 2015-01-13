@@ -45,12 +45,12 @@
 #
 class ibm_installation_manager (
   $deploy_source = true,
+  $source        = undef,
   $base_dir      = $ibm_installation_manager::params::base_dir,
   $source_dir    = $ibm_installation_manager::params::source_dir,
+  $user          = $ibm_installation_manager::params::user,
   $group         = $ibm_installation_manager::params::group,
   $options       = $ibm_installation_manager::params::options,
-  $source        = undef,
-  $user          = $ibm_installation_manager::params::user,
 ) inherits ibm_installation_manager::params {
 
   validate_bool($deploy_source)
@@ -59,15 +59,14 @@ class ibm_installation_manager (
   validate_string($user)
   validate_string($group)
 
-  file { $source_dir:
-    ensure => 'directory',
-  }
-
   if $deploy_source {
+    file { $source_dir:
+      ensure => 'directory',
+    }
     if $source {
       staging::deploy { 'ibm_im.zip':
         source  => $source,
-        target  => "${source_dir}",
+        target  => $source_dir,
         creates => "${source_dir}/tools/imcl",
         require => File[$source_dir],
         before  => Exec['Install IBM Installation Manager'],

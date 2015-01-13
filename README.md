@@ -1,49 +1,38 @@
-# installation_manager
+# ibm_installation_manager
 
 #### Table of Contents
 
 1. [Overview](#overview)
-2. [Module Description - What the module does and why it is useful](#module-description)
-3. [Setup - The basics of getting started with installation_manager](#setup)
-    * [What installation_manager affects](#what-installation_manager-affects)
-    * [Setup requirements](#setup-requirements)
-    * [Beginning with installation_manager](#beginning-with-installation_manager)
+2. [Module Description](#module-description)
+3. [Setup - The basics of getting started with ibm_installation_manager](#setup)
+    * [What ibm_installation_manager affects](#what-ibm_installation_manager-affects)
+    * [Beginning with ibm_installation_manager](#beginning-with-ibm_installation_manager)
 4. [Usage - Configuration options and additional functionality](#usage)
-5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
-5. [Limitations - OS compatibility, etc.](#limitations)
-6. [Development - Guide for contributing to the module](#development)
+5. [Reference - Classes and Parameters](#reference)
+6. [Limitations - OS compatibility, etc.](#limitations)
+7. [Dependencies](#dependencies)
+8. [Authors](#authors)
 
 ## Overview
 
-A one-maybe-two sentence summary of what the module does/what problem it solves.
-This is your 30 second elevator pitch for your module. Consider including
-OS/Puppet version it works with.
+Manages the installation of
+[IBM Installation Manager](http://www-947.ibm.com/support/entry/portal/product/rational/ibm_installation_manager?productContext=-57272472)
 
 ## Module Description
 
-If applicable, this section should have a brief description of the technology
-the module integrates with and what that integration enables. This section
-should answer the questions: "What does this module *do*?" and "Why would I use
-it?"
-
-If your module has a range of functionality (installation, configuration,
-management, etc.) this is the time to mention it.
+This module will install the IBM Installation Manager.  Optionally, it can
+deploy the installation from a source such as HTTP or a local file path.
 
 ## Setup
 
-### What installation_manager affects
+### What ibm_installation_manager affects
 
 * A list of files, packages, services, or operations that the module will alter,
   impact, or execute on the system it's installed on.
 * This is a great place to stick any warnings.
 * Can be in list or paragraph form.
 
-### Setup Requirements **OPTIONAL**
-
-If your module requires anything extra before setting up (pluginsync enabled,
-etc.), mention it here.
-
-### Beginning with installation_manager
+### Beginning with ibm_installation_manager
 
 The very basic steps needed for a user to get the module up and running.
 
@@ -53,27 +42,85 @@ for upgrading, you may wish to include an additional section here: Upgrading
 
 ## Usage
 
-Put the classes, types, and resources for customizing, configuring, and doing
-the fancy stuff with your module here.
+Example usage for installing Installation Manager from a source archive from
+an HTTP repository:
+
+```puppet
+class { 'ibm_installation_manager':
+  source => 'http://internal.lan/packages/IM.zip',
+}
+```
+
+Example usage for installing Installation Manager from an existing path on
+the filesystem.  As in, an already extracted archive from IBM:
+
+```puppet
+class { 'ibm_installation_manager':
+  deploy_source => false,
+  source_dir    => '/path/to/installation/IM'
+}
+```
+
+Example usage for installing to a custom location:
+
+```puppet
+class { 'ibm_installation_manager':
+  source   => 'http://internal.lan/packages/IM.zip',
+  base_dir => '/opt/myorg/IBM',
+  options  => '-acceptLicense -s -installationDirectory /opt/myorg/IBM',
+}
+```
 
 ## Reference
 
-Here, list the classes, types, providers, facts, etc contained in your module.
-This section should include all of the under-the-hood workings of your module so
-people know what the module is touching on their system but don't need to mess
-with things. (We are working on automating this section!)
+### Class: ibm_installation_manager
+
+#### Parameters
+
+##### deploy_source
+
+Specifies whether this module should be responsible for deploying the source
+package for Installation Manager.  Valid values are `true` and `false`.
+Defaults to `true`
+
+##### source
+
+Required if `deploy_source` is true.  If `deploy_source` is true, a source
+should be specified here.  This can be an absolute path to the source or an
+HTTP address.  This expects a compressed archive from IBM.
+
+##### source_dir
+
+Absolute path to the directory to deploy the installer to and run out of.
+Defaults to `/opt/IBM/tmp`
+
+##### base_dir
+
+Absolute path to the _base_ location that IBM Installation Manager will be
+installed to.  Defaults to `/opt/IBM`
+
+##### user
+
+The user to run the installation as.  Defaults to `root`
+
+##### group
+
+The group to run the installation as.  Defaults to `root`
+
+##### options
+
+Options to pass to the installer.  Defaults to `-acceptLicense -s -log
+/tmp/IM_install.${timestamp}.log.xml`
 
 ## Limitations
 
-This is where you list OS compatibility, version compatibility, etc.
+Tested with RHEL 6 x86_64 and IBM Installation Manager 1.8.1 and 1.6.x
 
-## Development
+## Dependencies
 
-Since your module is awesome, other users will want to play with it. Let them
-know what the ground rules for contributing are.
+* [puppetlabs/stdlib](https://forge.puppetlabs.com/puppetlabs/stdlib)
+* [nanliu/staging](https://forge.puppetlabs.com/nanliu/staging)
 
-## Release Notes/Contributors/Etc **Optional**
+## Authors
 
-If you aren't using changelog, put your release notes here (though you should
-consider using changelog). You may also add any additional sections you feel are
-necessary or important to include here. Please use the `## ` header.
+Josh Beard <beard@puppetlabs.com>
