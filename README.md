@@ -116,6 +116,13 @@ Options to pass to the installer.  Defaults to `-acceptLicense -s -log
 
 Tested with RHEL 6 x86_64 and IBM Installation Manager 1.8.1 and 1.6.x
 
+## Development and Contributing
+
+If you're masochistic enough to use this software and feel up for it, I'd
+greatly appreciate contributions.
+
+You can download trials of IBM's software from their website.
+
 ## Dependencies
 
 * [puppetlabs/stdlib](https://forge.puppetlabs.com/puppetlabs/stdlib)
