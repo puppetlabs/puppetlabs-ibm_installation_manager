@@ -94,7 +94,8 @@ HTTP address.  This expects a compressed archive from IBM.
 
 ##### source_dir
 
-Absolute path to the directory to deploy the installer to and run out of.
+Absolute path to the directory to deploy the installer to and/or run out of.
+Basically, where is the `installc` binary?
 Defaults to `/opt/IBM/tmp`
 
 ##### base_dir
