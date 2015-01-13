@@ -13,7 +13,8 @@
 5. [Reference - Classes and Parameters](#reference)
 6. [Limitations - OS compatibility, etc.](#limitations)
 7. [Dependencies](#dependencies)
-8. [Authors](#authors)
+8. [Development and Contributing](#development-and-contributing)
+9. [Authors](#authors)
 
 ## Overview
 
@@ -118,17 +119,17 @@ Options to pass to the installer.  Defaults to `-acceptLicense -s -log
 
 Tested with RHEL 6 x86_64 and IBM Installation Manager 1.8.1 and 1.6.x
 
+## Dependencies
+
+* [puppetlabs/stdlib](https://forge.puppetlabs.com/puppetlabs/stdlib)
+* [nanliu/staging](https://forge.puppetlabs.com/nanliu/staging)
+
 ## Development and Contributing
 
 If you're masochistic enough to use this software and feel up for it, I'd
 greatly appreciate contributions.
 
 You can download trials of IBM's software from their website.
-
-## Dependencies
-
-* [puppetlabs/stdlib](https://forge.puppetlabs.com/puppetlabs/stdlib)
-* [nanliu/staging](https://forge.puppetlabs.com/nanliu/staging)
 
 ## Authors
 
