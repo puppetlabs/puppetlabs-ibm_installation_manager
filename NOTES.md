@@ -14,3 +14,5 @@ JVMPORT030W /proc/sys/kernel/core_pattern setting "|/usr/libexec/abrt-hook-ccpp 
 libgcc_s.so.1 must be installed for pthread_cancel to work
 0
 ```
+
+This isn't an issue with Puppet - it's IBM's shitty software.
