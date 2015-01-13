@@ -1,5 +1,7 @@
 # ibm_installation_manager
 
+[![Build Status](https://img.shields.io/travis/joshbeard/ibm_installation_manager.svg?style=flat-square)](https://travis-ci.org/joshbeard/ibm_installation_manager)
+
 #### Table of Contents
 
 1. [Overview](#overview)

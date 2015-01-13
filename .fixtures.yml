@@ -4,7 +4,7 @@ fixtures:
       repo: 'git://github.com/puppetlabs/puppetlabs-stdlib.git'
       ref: '4.1.0'
     staging:
-      repo: 'git@github.com:nanliu/puppet-staging.git'
+      repo: 'git://github.com/nanliu/puppet-staging.git'
       ref: '1.0.2'
   symlinks:
     'ibm_installation_manager': "#{source_dir}"
