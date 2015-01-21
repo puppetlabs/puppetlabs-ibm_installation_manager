@@ -20,6 +20,7 @@
 
 Manages the installation of
 [IBM Installation Manager](http://www-947.ibm.com/support/entry/portal/product/rational/ibm_installation_manager?productContext=-57272472)
+(yo dawg?)
 
 ## Module Description
 
@@ -131,6 +132,17 @@ If you're masochistic enough to use this software and feel up for it, I'd
 greatly appreciate contributions.
 
 You can download trials of IBM's software from their website.
+
+Visit [https://www14.software.ibm.com/webapp/iwm/web/reg/download.do?source=swerpws-wasnd85&S_PKG=500026211&S_TACT=109J87BW&lang=en_US&cp=UTF-8](https://www14.software.ibm.com/webapp/iwm/web/reg/download.do?source=swerpws-wasnd85&S_PKG=500026211&S_TACT=109J87BW&lang=en_US&cp=UTF-8)
+
+You'll need an account there - IBM doesn't make it easy to try their stuff.
+
+Once there, look for the __"IBM Installation Manager"__ section and find the
+appropriate package for your platform.  Probably something like
+`agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip` for a standard
+Linux box.  It says PPC, but it appears to be x86_64.) It also says "gtk",
+but you don't actually need X11 or GTK to use the thing (and this module
+doesn't).
 
 ## Authors
 
