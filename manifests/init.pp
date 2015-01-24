@@ -55,6 +55,7 @@ class ibm_installation_manager (
 
   validate_bool($deploy_source)
   validate_absolute_path($source_dir)
+  validate_absolute_path($base_dir)
   validate_string($options)
   validate_string($user)
   validate_string($group)

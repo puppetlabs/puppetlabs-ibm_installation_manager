@@ -2,6 +2,28 @@
 
 ## Known Issues
 
+### It's a fragile piece of something
+
+If a "install.xml" file is not present in the source directory, the thing will
+fail, so don't overwrite it.  You can specify the options on the command-line,
+I think.
+
+```
+Debug: Exec[Install IBM Installation Manager](provider=posix): Executing '/vagrant/ibm/IM/installc -acceptLicense -s -log /tmp/IM_install.20151301_040540.log.xml'
+Debug: Executing '/vagrant/ibm/IM/installc -acceptLicense -s -log /tmp/IM_install.20151301_040540.log.xml'
+Notice: /Stage[main]/Ibm_installation_manager/Exec[Install IBM Installation Manager]/returns: ERROR: Failed to read response file "/vagrant/ibm/IM/install.xml".
+Notice: /Stage[main]/Ibm_installation_manager/Exec[Install IBM Installation Manager]/returns:
+Notice: /Stage[main]/Ibm_installation_manager/Exec[Install IBM Installation Manager]/returns: 00:01.24 ERROR [main] com.ibm.cic.agent.core.application.HeadlessApplication run
+Notice: /Stage[main]/Ibm_installation_manager/Exec[Install IBM Installation Manager]/returns:
+Notice: /Stage[main]/Ibm_installation_manager/Exec[Install IBM Installation Manager]/returns:   java.io.FileNotFoundException: /vagrant/ibm/IM/install.xml (No such file or directory)
+Notice: /Stage[main]/Ibm_installation_manager/Exec[Install IBM Installation Manager]/returns:   java.io.FileNotFoundException: /vagrant/ibm/IM/install.xml (No such file or directory)
+Notice: /Stage[main]/Ibm_installation_manager/Exec[Install IBM Installation Manager]/returns:     at java.io.FileInputStream.<init>(FileInputStream.java:123)
+Notice: /Stage[main]/Ibm_installation_manager/Exec[Install IBM Installation Manager]/returns:     at com.ibm.cic.agent.core.internal.commands.Input.load(Input.java:215)
+Notice: /Stage[main]/Ibm_installation_manager/Exec[Install IBM Installation Manager]/returns:     at com.ibm.cic.agent.core.internal.commands.Input.load(Input.java:693)
+Notice: /Stage[main]/Ibm_installation_manager/Exec[Install IBM Installation Manager]/returns:     at com.ibm.cic.agent.core.application.HeadlessApplication.run(HeadlessApplication.java:452)
+Notice: /Stage[main]/Ibm_installation_manager/Exec[Install IBM Installation Manager]/returns:     ...
+```
+
 ### Installation Manager returns 0 even if failed
 
 ```
