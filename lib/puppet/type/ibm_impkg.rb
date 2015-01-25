@@ -15,6 +15,16 @@ require 'pathname'
 
 Puppet::Type.newtype(:ibm_impkg) do
 
+
+  validate do
+    unless self[:response]
+      fail("target is required when a response file is not provided") if self[:target].nil?
+      fail("package is required when a response file is not provided") if self[:package].nil?
+      fail("version is required when a response file is not provided") if self[:version].nil?
+      fail("repository is required when a response file is not provided") if self[:repository].nil?
+    end
+  end
+
   ensurable do
     desc "Manage the existence of an IBM package"
 
@@ -56,10 +66,8 @@ Puppet::Type.newtype(:ibm_impkg) do
     desc "The full path to install the specified package to.
     Corresponds to the 'imcl' option '-installationDirectory'"
     validate do |value|
-      unless self[:response]
-        unless Pathname.new(value).absolute?
-          raise ArgumentError, "target must be an absolute path: #{value}"
-        end
+      unless Pathname.new(value).absolute?
+        raise ArgumentError, "target must be an absolute path: #{value}"
       end
     end
   end
@@ -84,10 +92,8 @@ Puppet::Type.newtype(:ibm_impkg) do
     desc "The full path to the 'repository.config' file for installing this
     package"
     validate do |value|
-      unless self[:response]
-        unless Pathname.new(value).absolute?
-          raise ArgumentError, "repository must be an absolute path: #{value}"
-        end
+      unless Pathname.new(value).absolute?
+        raise ArgumentError, "repository must be an absolute path: #{value}"
       end
     end
   end
