@@ -75,6 +75,20 @@ class { 'ibm_installation_manager':
 }
 ```
 
+Example of using the included `ibm_impkg` type.  This will install a
+WebSphere 8.5 package from an extracted source at `/vagrant/ibm/websphere/` to
+`/opt/IBM/WebSphere85`
+
+```puppet
+ibm_impkg { 'com.ibm.websphere.NDTRIAL.v85':
+  ensure     => 'present',
+  package    => 'com.ibm.websphere.NDTRIAL.v85',
+  version    => '8.5.5000.20130514_1044',
+  target     => '/opt/IBM/WebSphere85',
+  repository => '/vagrant/ibm/websphere/repository.config',
+}
+```
+
 ## Reference
 
 ### Class: ibm_installation_manager
@@ -116,6 +130,81 @@ The group to run the installation as.  Defaults to `root`
 
 Options to pass to the installer.  Defaults to `-acceptLicense -s -log
 /tmp/IM_install.${timestamp}.log.xml`
+
+### Type: ibm_impkg
+
+A custom type called `ibm_impkg` is provided that can be used to install
+software with IBM Installation Manager.  By default, this includes an `imcl`
+provider, which uses the Installation Manager's `imcl` command-line tool to
+handle installation.
+
+#### Parameters
+
+##### ensure
+
+Valid values are `present` and `absent`.  Defaults to `present`
+
+Specifies the presence of the specified package.
+
+##### name
+
+Defaults to the resource title.  This is only used for identifying the resource
+within Puppet, not the actual name of the IBM package.
+
+##### imcl_path
+
+This is optional.  This should be the absolute path to the `imcl` command-line
+tool for IBM Installation Manager.  By default, this will attempt to be
+discovered by parsin `/var/ibm/InstallationManager/installed.xml` on the
+system.  IBM's default location is
+`/opt/IBM/InstallationManager/eclipse/tools/imcl`
+
+##### target
+
+The absolute path to the directory that you want to install the specified
+package to.  This maps to the `imcl` argument `-installationDirectory`.
+If you're using a response file, this is optional.  Otherwise, it is required.
+
+##### package
+
+The IBM package name.  For example: `com.ibm.websphere.IBMJAVA.v71`.
+This is the _first_ part of the traditional IBM full package name - _before_
+the first underscore. If you're installing with a response file, this
+parameter is optional.  Otherwise, it is required.
+
+##### version
+
+The IBM version of the package.  For example: `7.1.2000.20141116_0823`. This
+is the _second_ part of the traditional IBM full package name - _after_ the
+first underscore. If you're installing with a response file, this parameter
+is optional.  Otherwise, it is required.
+
+##### repository
+
+The full path to the `repository.config` file for installing this package.
+When downloading and extracting a package from IBM, a `repository.config` file
+is provided.  The value of this parameter should point to that.  If you're
+installing with a response file, this parameter is optional.  Otherwise, it
+is required.
+
+##### options
+
+Any custom options to pass to the `imcl` tool for installing the package. This
+is optional.
+
+##### response
+
+The absolute path to a response file to use for installing the package. If
+you're using a response file, the `package`, `version`, `target`, and
+`repository` parameters are optional.  However, ensure that your response file
+includes the needed values for these options.  You can also mix and match.
+This simply passes a response file to the `imcl` tool.
+
+##### user
+
+The user to run the `imcl` command as.  Defaults to `root`.  Basically, what
+user are we installing this as?  Ensure that this user has the necessary
+permissions for reading/writing to all the needed resources.
 
 ## Limitations
 
