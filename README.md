@@ -89,6 +89,15 @@ ibm_impkg { 'com.ibm.websphere.NDTRIAL.v85':
 }
 ```
 
+Example of using the included `ibm_impkg` type with a custom response file.
+
+```puppet
+ibm_impkg { 'com.ibm.websphere.NDTRIAL.v85':
+  ensure   => 'present',
+  response => '/mnt/resources/was_response_file.xml',
+}
+```
+
 ## Reference
 
 ### Class: ibm_installation_manager
@@ -137,6 +146,11 @@ A custom type called `ibm_impkg` is provided that can be used to install
 software with IBM Installation Manager.  By default, this includes an `imcl`
 provider, which uses the Installation Manager's `imcl` command-line tool to
 handle installation.
+
+The resource does not currently handle upgrading packages in the traditional
+sense.  Basically, the provider will make sure that the specified version _or
+greater_ is installed.  This is partly due to the nature of how IBM software
+is deployed (by a downloaded/extracted archive).
 
 #### Parameters
 
