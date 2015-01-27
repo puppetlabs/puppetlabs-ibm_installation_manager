@@ -76,9 +76,9 @@ Puppet::Type.type(:ibm_impkg).provide(:imcl) do
 
     command += " #{resource[:options]}" if resource[:options]
 
-    Puppet.debug("Executing #{command}")
+    self.debug "Executing #{command}"
     result = Puppet::Util::Execution.execute(command, :uid => resource[:user], :combine => true)
-    Puppet.debug(result)
+    self.debug result
 
     if result =~ /ERROR/
       raise Puppet::Error, "Failed: #{result}"
@@ -163,11 +163,11 @@ Puppet::Type.type(:ibm_impkg).provide(:imcl) do
     ## it unique.  You can have the same package/version installed to a
     ## different path.
     if version
-      Puppet.debug("#{resource[:package]}: Current: #{version} Specified: #{resource[:version]}")
+      self.debug "#{resource[:package]}: Current: #{version} Specified: #{resource[:version]}"
       compare = Puppet::Util::Package.versioncmp(resource[:version], version.to_s)
-      Puppet.debug("versioncmp: #{compare}")
+      self.debug "versioncmp: #{compare}"
       if compare <= 0
-        Puppet.debug("Version: #{version.to_s} <= #{resource[:version]}")
+        self.debug "Version: #{version.to_s} <= #{resource[:version]}"
         true
       else
         false
@@ -175,7 +175,7 @@ Puppet::Type.type(:ibm_impkg).provide(:imcl) do
     end
 
 #    if path and package and id and version
-#      Puppet.debug("Ibm_impkg[#{resource[:package]}]: "\
+#      self.debug "Ibm_impkg[#{resource[:package]}]: "\
 #         + "#{id} version #{resource[:version]} appears to exist at #{path}"
 #      )
 #      true
