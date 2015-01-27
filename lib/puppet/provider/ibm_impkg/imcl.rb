@@ -100,31 +100,33 @@ Puppet::Type.type(:ibm_impkg).provide(:imcl) do
     ps = Facter.value :ps
     regex = Regexp.new(resource[:target])
     self.debug "Executing '#{ps}' to find processes that match #{resource[:target]}"
-    pid = nil
+    pid = []
     IO.popen(ps) { |table|
       table.each_line { |line|
         if regex.match(line)
           self.debug "Process matched: #{line}"
           ary = line.sub(/^\s+/, '').split(/\s+/)
-          pid = ary[1]
+          pid << ary[1]
         end
       }
     }
 
     ## If a PID matches, attempt to kill it.
-    if pid
-      begin
-        self.debug "Attempting to kill PID #{pid}"
-        output = kill pid
-      rescue Puppet::ExecutionFailure
-        err = <<-EOF
-        Could not kill #{self.name}, PID #{pid}.
-        In order to install/upgrade to specified target: #{resource[:target]},
-        all related processes need to be stopped.
-        Output of 'kill #{pid}': #{output}
-        EOF
+    unless pid.empty?
+      pid.each do |thepid|
+        begin
+          self.debug "Attempting to kill PID #{thepid}"
+          output = kill thepid
+        rescue Puppet::ExecutionFailure
+          err = <<-EOF
+          Could not kill #{self.name}, PID #{thepid}.
+          In order to install/upgrade to specified target: #{resource[:target]},
+          all related processes need to be stopped.
+          Output of 'kill #{thepid}': #{output}
+          EOF
 
-        @resource.fail Puppet::Error, err, $!
+          @resource.fail Puppet::Error, err, $!
+        end
       end
     end
 
