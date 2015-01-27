@@ -38,6 +38,8 @@ include REXML
 
 Puppet::Type.type(:ibm_impkg).provide(:imcl) do
 
+  commands :kill => 'kill'
+
   def imcl(command)
 
     registry = '/var/ibm/InstallationManager/installed.xml'
@@ -82,15 +84,58 @@ Puppet::Type.type(:ibm_impkg).provide(:imcl) do
       raise Puppet::Error, "Failed: #{result}"
     end
 
-    unless result =~ /Installed/
+    unless result =~ /(Installed|Updated)/
       raise Puppet::Error, "Failed? #{result}"
     end
+  end
+
+  ## The bulk of this is from puppet/lib/puppet/provider/service/base
+  ## IBM requires that all services be stopped prior to installing software
+  ## to the target. They won't do it for you, and there's not really a clear
+  ## way to say "stop everything that matters".  So for now, we're just
+  ## going to search the process table for anything that matches our target
+  ## directory and kill it.  We've got to come up with something better for
+  ## this.  Fucking IBM.
+  def stopprocs
+    ps = Facter.value :ps
+    regex = Regexp.new(resource[:target])
+    self.debug "Executing '#{ps}' to find processes that match #{resource[:target]}"
+    pid = nil
+    IO.popen(ps) { |table|
+      table.each_line { |line|
+        if regex.match(line)
+          self.debug "Process matched: #{line}"
+          ary = line.sub(/^\s+/, '').split(/\s+/)
+          pid = ary[1]
+        end
+      }
+    }
+
+    ## If a PID matches, attempt to kill it.
+    if pid
+      begin
+        self.debug "Attempting to kill PID #{pid}"
+        output = kill pid
+      rescue Puppet::ExecutionFailure
+        err = <<-EOF
+        Could not kill #{self.name}, PID #{pid}.
+        In order to install/upgrade to specified target: #{resource[:target]},
+        all related processes need to be stopped.
+        Output of 'kill #{pid}': #{output}
+        EOF
+
+        @resource.fail Puppet::Error, err, $!
+      end
+    end
+
   end
 
   def create
     install = 'install ' + resource[:package] + '_' + resource[:version]
     install += ' -repositories ' + resource[:repository] + ' -installationDirectory '
     install += resource[:target] + ' -acceptLicense'
+
+    stopprocs
 
     imcl(install)
   end
@@ -124,16 +169,19 @@ Puppet::Type.type(:ibm_impkg).provide(:imcl) do
       if compare <= 0
         Puppet.debug("Version: #{version.to_s} <= #{resource[:version]}")
         true
+      else
+        false
       end
     end
-    if path and package and id and version
-      Puppet.debug("Ibm_impkg[#{resource[:package]}]: "\
-         + "#{id} version #{resource[:version]} appears to exist at #{path}"
-      )
-      true
-    else
-      false
-    end
+
+#    if path and package and id and version
+#      Puppet.debug("Ibm_impkg[#{resource[:package]}]: "\
+#         + "#{id} version #{resource[:version]} appears to exist at #{path}"
+#      )
+#      true
+#    else
+#      false
+#    end
   end
 
   def destroy
