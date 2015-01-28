@@ -13,7 +13,7 @@
 #
 require 'pathname'
 
-Puppet::Type.newtype(:ibm_impkg) do
+Puppet::Type.newtype(:ibm_pkg) do
 
 
   validate do

@@ -75,12 +75,12 @@ class { 'ibm_installation_manager':
 }
 ```
 
-Example of using the included `ibm_impkg` type.  This will install a
+Example of using the included `ibm_pkg` type.  This will install a
 WebSphere 8.5 package from an extracted source at `/vagrant/ibm/websphere/` to
 `/opt/IBM/WebSphere85`
 
 ```puppet
-ibm_impkg { 'com.ibm.websphere.NDTRIAL.v85':
+ibm_pkg { 'com.ibm.websphere.NDTRIAL.v85':
   ensure     => 'present',
   package    => 'com.ibm.websphere.NDTRIAL.v85',
   version    => '8.5.5000.20130514_1044',
@@ -89,10 +89,10 @@ ibm_impkg { 'com.ibm.websphere.NDTRIAL.v85':
 }
 ```
 
-Example of using the included `ibm_impkg` type with a custom response file.
+Example of using the included `ibm_pkg` type with a custom response file.
 
 ```puppet
-ibm_impkg { 'com.ibm.websphere.NDTRIAL.v85':
+ibm_pkg { 'com.ibm.websphere.NDTRIAL.v85':
   ensure   => 'present',
   response => '/mnt/resources/was_response_file.xml',
 }
@@ -146,9 +146,9 @@ be undesirable.
 Options to pass to the installer.  Defaults to `-acceptLicense -s -log
 /tmp/IM_install.${timestamp}.log.xml`
 
-### Type: ibm_impkg
+### Type: ibm_pkg
 
-A custom type called `ibm_impkg` is provided that can be used to install
+A custom type called `ibm_pkg` is provided that can be used to install
 software with IBM Installation Manager.  By default, this includes an `imcl`
 provider, which uses the Installation Manager's `imcl` command-line tool to
 handle installation.

@@ -36,7 +36,7 @@
 require 'rexml/document'
 include REXML
 
-Puppet::Type.type(:ibm_impkg).provide(:imcl) do
+Puppet::Type.type(:ibm_pkg).provide(:imcl) do
 
   commands :kill => 'kill'
 
@@ -61,11 +61,11 @@ Puppet::Type.type(:ibm_impkg).provide(:imcl) do
     end
 
     unless File.exists?(imcl)
-      raise Puppet::Error, "Ibm_impkg[#{resource[:package]}]: #{imcl} not found."
+      raise Puppet::Error, "Ibm_pkg[#{resource[:package]}]: #{imcl} not found."
     end
 
     unless File.exists?(resource[:repository])
-      raise Puppet::Error, "Ibm_impkg[#{resource[:package]}]: #{resource[:repository]} not found."
+      raise Puppet::Error, "Ibm_pkg[#{resource[:package]}]: #{resource[:repository]} not found."
     end
 
     if resource[:response]
@@ -177,7 +177,7 @@ Puppet::Type.type(:ibm_impkg).provide(:imcl) do
     end
 
 #    if path and package and id and version
-#      self.debug "Ibm_impkg[#{resource[:package]}]: "\
+#      self.debug "Ibm_pkg[#{resource[:package]}]: "\
 #         + "#{id} version #{resource[:version]} appears to exist at #{path}"
 #      )
 #      true
