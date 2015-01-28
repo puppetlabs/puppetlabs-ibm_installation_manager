@@ -238,7 +238,11 @@ Tested with RHEL 6 x86_64 and IBM Installation Manager 1.8.1 and 1.6.x
 ## Dependencies
 
 * [puppetlabs/stdlib](https://forge.puppetlabs.com/puppetlabs/stdlib)
+
 * [nanliu/staging](https://forge.puppetlabs.com/nanliu/staging)
+
+You only need _nanliu/staging_ if you want the module to extract the source
+for you.
 
 ## Development and Contributing
 
@@ -257,6 +261,10 @@ appropriate package for your platform.  Probably something like
 Linux box.  It says PPC, but it appears to be x86_64.) It also says "gtk",
 but you don't actually need X11 or GTK to use the thing (and this module
 doesn't).
+
+I'm particuarily interested in help with the custom types/providers. Someone
+with more Ruby experience and familiarity with Puppet's type/provider API
+would be a huge help.
 
 ## Authors
 
