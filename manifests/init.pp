@@ -9,15 +9,24 @@
 #   false, the InstallationManager installer is assumed to be already available
 #   at $source_dir
 #
+#   Defaults to false.
+#
 # [*source*]
-#   Source to the compressed archive from IBM. Required.
+#   Source to the compressed archive from IBM. Required if 'deploy_source' is
+#   true.
+#
+# [*target*]
+#   Full path to install to.  Defaults to /opt/IBM/InstallationManager
 #
 # [*source_dir*]
-#   Location to extract the InstallationManager archive
+#   Location to the InstallationManager installation directory - either from
+#   the extracted archive or a manually extracted archive.  The 'installc'
+#   tool should be inside this directory.
 #
 # [*options*]
 #   Installation options to pass to the installer.
-#   Defaults to: -acceptLicense -sP -log /tmp/IM_install.${date}.log.xml
+#   Defaults to: -acceptLicense -sP -log /tmp/IM_install.${date}.log.xml \
+#     -installationDirectory ${target}
 #
 # [*user*]
 #   User to run the installer as.  Defaults to 'root'
@@ -31,7 +40,7 @@
 # === Examples
 #
 # class { 'installation_manager':
-#   source  => '/mnt/IBM/IM.zip',
+#   source     => '/mnt/IBM/IM.zip',
 #   source_dir => '/opt/IBM',
 # }
 #
@@ -44,25 +53,41 @@
 # Copyright 2015 Puppet Labs, Inc, unless otherwise noted.
 #
 class ibm_installation_manager (
-  $deploy_source = true,
+  $deploy_source = false,
   $source        = undef,
-  $base_dir      = $ibm_installation_manager::params::base_dir,
-  $source_dir    = $ibm_installation_manager::params::source_dir,
-  $user          = $ibm_installation_manager::params::user,
-  $group         = $ibm_installation_manager::params::group,
-  $options       = $ibm_installation_manager::params::options,
-) inherits ibm_installation_manager::params {
+  $target        = '/opt/IBM/InstallationManager',
+  $source_dir    = '/opt/IBM/tmp/InstallationManager',
+  $user          = 'root',
+  $group         = 'root',
+  $options       = undef,
+) {
 
   validate_bool($deploy_source)
   validate_absolute_path($source_dir)
-  validate_absolute_path($base_dir)
+  validate_absolute_path($target)
   validate_string($options)
   validate_string($user)
   validate_string($group)
 
+  $timestamp  = chomp(generate('/bin/date', '+%Y%d%m_%H%M%S'))
+
+  if !$options {
+    $_options = "-acceptLicense -s -log /tmp/IM_install.${timestamp}.log.xml -installationDirectory ${target}"
+  } else {
+    $_options = $options
+  }
+
   if $deploy_source {
+
+    exec { "mkdir -p ${source_dir}":
+      creates => $source_dir,
+      path    => '/bin:/usr/bin:/sbin:/usr/sbin',
+    }
+
     file { $source_dir:
       ensure => 'directory',
+      owner  => $user,
+      group  => $group,
     }
     if $source {
       staging::deploy { 'ibm_im.zip':
@@ -79,8 +104,8 @@ class ibm_installation_manager (
   }
 
   exec { 'Install IBM Installation Manager':
-    command => "${source_dir}/installc ${options}",
-    creates => "${base_dir}/InstallationManager/eclipse/tools/imcl",
+    command => "${source_dir}/installc ${_options}",
+    creates => "${target}/eclipse/tools/imcl",
     user    => $user,
     group   => $group,
   }

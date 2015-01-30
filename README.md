@@ -51,7 +51,8 @@ an HTTP repository:
 
 ```puppet
 class { 'ibm_installation_manager':
-  source => 'http://internal.lan/packages/IM.zip',
+  deploy_source => true,
+  source        => 'http://internal.lan/packages/IM.zip',
 }
 ```
 
@@ -60,8 +61,7 @@ the filesystem.  As in, an already extracted archive from IBM:
 
 ```puppet
 class { 'ibm_installation_manager':
-  deploy_source => false,
-  source_dir    => '/path/to/installation/IM'
+  source_dir => '/path/to/installation/IM'
 }
 ```
 
@@ -69,9 +69,8 @@ Example usage for installing to a custom location:
 
 ```puppet
 class { 'ibm_installation_manager':
-  source   => 'http://internal.lan/packages/IM.zip',
-  base_dir => '/opt/myorg/IBM',
-  options  => '-acceptLicense -s -installationDirectory /opt/myorg/IBM',
+  source  => 'http://internal.lan/packages/IM.zip',
+  target  => '/opt/myorg/IBM',
 }
 ```
 
@@ -108,24 +107,25 @@ ibm_pkg { 'com.ibm.websphere.NDTRIAL.v85':
 
 Specifies whether this module should be responsible for deploying the source
 package for Installation Manager.  Valid values are `true` and `false`.
-Defaults to `true`
+Defaults to `false`
 
 ##### source
 
 Required if `deploy_source` is true.  If `deploy_source` is true, a source
 should be specified here.  This can be an absolute path to the source or an
-HTTP address.  This expects a compressed archive from IBM.
+HTTP address.  This expects a compressed archive from IBM (zip).
 
 ##### source_dir
 
 Absolute path to the directory to deploy the installer to and/or run out of.
 Basically, where is the `installc` binary?
-Defaults to `/opt/IBM/tmp`
+Defaults to `/opt/IBM/tmp`.  If you extracted the archive yourself, you should
+point this parameter to that location.
 
-##### base_dir
+##### target
 
 Absolute path to the _base_ location that IBM Installation Manager will be
-installed to.  Defaults to `/opt/IBM`
+installed to.  Defaults to `/opt/IBM/InstallationManager`
 
 ##### user
 
@@ -144,7 +144,7 @@ be undesirable.
 ##### options
 
 Options to pass to the installer.  Defaults to `-acceptLicense -s -log
-/tmp/IM_install.${timestamp}.log.xml`
+/tmp/IM_install.${timestamp}.log.xml -installationDirectory ${target}`
 
 ### Type: ibm_pkg
 
