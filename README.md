@@ -235,6 +235,11 @@ data with the rest of the system.  You probably want to install as root.
 
 Tested with RHEL 6 x86_64 and IBM Installation Manager 1.8.1 and 1.6.x
 
+## Caveats
+
+The installer will exit 0 even if it failed.  Not a lot we can _reasonably_ do
+about that.
+
 ## Dependencies
 
 * [puppetlabs/stdlib](https://forge.puppetlabs.com/puppetlabs/stdlib)
