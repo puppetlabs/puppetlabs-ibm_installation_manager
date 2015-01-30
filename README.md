@@ -69,8 +69,8 @@ Example usage for installing to a custom location:
 
 ```puppet
 class { 'ibm_installation_manager':
-  source  => 'http://internal.lan/packages/IM.zip',
-  target  => '/opt/myorg/IBM',
+  source => 'http://internal.lan/packages/IM.zip',
+  target => '/opt/myorg/IBM',
 }
 ```
 

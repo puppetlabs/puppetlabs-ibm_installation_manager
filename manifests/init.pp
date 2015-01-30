@@ -34,14 +34,10 @@
 # [*group*]
 #   Group to run the installer as.  Defaults to 'root'
 #
-# === Variables
-#
-#
 # === Examples
 #
 # class { 'installation_manager':
 #   source     => '/mnt/IBM/IM.zip',
-#   source_dir => '/opt/IBM',
 # }
 #
 # === Authors
