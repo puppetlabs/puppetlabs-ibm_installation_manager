@@ -27,22 +27,8 @@ Manages the installation of
 This module will install the IBM Installation Manager.  Optionally, it can
 deploy the installation from a source such as HTTP or a local file path.
 
-## Setup
-
-### What ibm_installation_manager affects
-
-* A list of files, packages, services, or operations that the module will alter,
-  impact, or execute on the system it's installed on.
-* This is a great place to stick any warnings.
-* Can be in list or paragraph form.
-
-### Beginning with ibm_installation_manager
-
-The very basic steps needed for a user to get the module up and running.
-
-If your most recent release breaks compatibility or requires particular steps
-for upgrading, you may wish to include an additional section here: Upgrading
-(For an example, see http://forge.puppetlabs.com/puppetlabs/firewall).
+A type and provider is also included that can be used to manage the
+installation of IBM software from IBM packages (e.g. WebSphere, IHS).
 
 ## Usage
 
@@ -239,6 +225,11 @@ Tested with RHEL 6 x86_64 and IBM Installation Manager 1.8.1 and 1.6.x
 
 The installer will exit 0 even if it failed.  Not a lot we can _reasonably_ do
 about that.
+
+    ERROR: java.lang.IllegalStateException: No metadata found for installed
+    package com.ibm.cic.agent 1.6.2000.20130301_2248.
+
+This likely means there's a stale `/var/ibm` stuck around.
 
 ## Dependencies
 
