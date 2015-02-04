@@ -64,8 +64,10 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
       raise Puppet::Error, "Ibm_pkg[#{resource[:package]}]: #{imcl} not found."
     end
 
-    unless File.exists?(resource[:repository])
-      raise Puppet::Error, "Ibm_pkg[#{resource[:package]}]: #{resource[:repository]} not found."
+    unless resource[:response]
+      unless File.exists?(resource[:repository])
+        raise Puppet::Error, "Ibm_pkg[#{resource[:package]}]: #{resource[:repository]} not found."
+      end
     end
 
     if resource[:response]
