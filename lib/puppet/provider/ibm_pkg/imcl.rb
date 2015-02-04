@@ -133,9 +133,13 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
   end
 
   def create
-    install = 'install ' + resource[:package] + '_' + resource[:version]
-    install += ' -repositories ' + resource[:repository] + ' -installationDirectory '
-    install += resource[:target] + ' -acceptLicense'
+    unless resource[:response]
+      install = 'install ' + resource[:package] + '_' + resource[:version]
+      install += ' -repositories ' + resource[:repository] + ' -installationDirectory '
+      install += resource[:target] + ' -acceptLicense'
+    else
+      install = nil
+    end
 
     stopprocs
 
