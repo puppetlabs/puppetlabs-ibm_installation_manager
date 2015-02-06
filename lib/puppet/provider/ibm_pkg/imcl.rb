@@ -121,7 +121,8 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
       end
       begin
         self.debug "Attempting to kill PID #{pids}"
-        output = kill pids
+        command = "/bin/kill #{pids}"
+        output = Puppet::Util::Execution.execute(command, :combine => true, :failonfail => false)
       rescue Puppet::ExecutionFailure
         err = <<-EOF
         Could not kill #{self.name}, PID #{thepid}.
