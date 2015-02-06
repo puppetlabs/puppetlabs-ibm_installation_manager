@@ -175,7 +175,7 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
     ## different path.
     if version
       self.debug "#{resource[:package]}: Current: #{version} Specified: #{resource[:version]}"
-      compare = Puppet::Util::Package.versioncmp(resource[:version], version.to_s)
+      compare = Puppet::Util::Package.versioncmp(version.to_s, resource[:version])
       self.debug "versioncmp: #{compare}"
       if compare >= 0
         self.debug "Version: #{version.to_s} >= #{resource[:version]}; Satisfied"
