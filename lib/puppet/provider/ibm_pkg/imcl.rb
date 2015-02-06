@@ -177,11 +177,11 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
       self.debug "#{resource[:package]}: Current: #{version} Specified: #{resource[:version]}"
       compare = Puppet::Util::Package.versioncmp(resource[:version], version.to_s)
       self.debug "versioncmp: #{compare}"
-      if compare <= 0
-        self.debug "Version: #{version.to_s} <= #{resource[:version]}"
-        true
+      if compare >= 0
+        self.debug "Version: #{version.to_s} >= #{resource[:version]}; Satisfied"
+        return true
       else
-        false
+        return false
       end
     end
 
