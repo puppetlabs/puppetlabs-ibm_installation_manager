@@ -102,6 +102,7 @@ class ibm_installation_manager (
   exec { 'Install IBM Installation Manager':
     command => "${source_dir}/installc ${_options}",
     creates => "${target}/eclipse/tools/imcl",
+    cwd     => $source_dir,
     user    => $user,
     group   => $group,
   }
