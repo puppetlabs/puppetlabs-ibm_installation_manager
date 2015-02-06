@@ -120,7 +120,7 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
         pids += "#{thepid} "
       end
       begin
-        self.debug "Attempting to kill PID #{thepid}"
+        self.debug "Attempting to kill PID #{pids}"
         output = kill pids
       rescue Puppet::ExecutionFailure
         err = <<-EOF
