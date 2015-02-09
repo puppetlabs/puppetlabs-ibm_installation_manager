@@ -104,7 +104,6 @@ class ibm_installation_manager (
     creates => "${target}/eclipse/tools/imcl",
     cwd     => $source_dir,
     user    => $user,
-    group   => $group,
   }
 
 }
