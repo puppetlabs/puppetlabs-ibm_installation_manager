@@ -34,6 +34,12 @@
 # [*group*]
 #   Group to run the installer as.  Defaults to 'root'
 #
+# [*timeout*]
+#   A timeout for the exec resource that installs IBM Installation Manager.
+#   Installing it can take a while.  The default is '900'.
+#   If you encounter issues where the exec has exceeded timeout, you may need
+#   to increase this.
+#
 # === Examples
 #
 # class { 'installation_manager':
@@ -56,6 +62,7 @@ class ibm_installation_manager (
   $user          = 'root',
   $group         = 'root',
   $options       = undef,
+  $timeout       = '900',
 ) {
 
   validate_bool($deploy_source)
@@ -104,6 +111,7 @@ class ibm_installation_manager (
     creates => "${target}/eclipse/tools/imcl",
     cwd     => $source_dir,
     user    => $user,
+    timeout => $timeout,
   }
 
 }

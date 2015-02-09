@@ -217,6 +217,14 @@ IBM's documentation for details.  Basically, it'll be a self-contained
 installation, and that might be undesirable.  It won't share installation
 data with the rest of the system.  You probably want to install as root.
 
+##### timeout
+
+A timeout for the installation.  Basically, how long should we wait for
+Installation Manager to install, in seconds?  It can take a while.  Puppet's
+default is 300, which can easily be exceeded by Installation Manager.  The
+module's default is 900.  You may need to increase this if you run into issues
+where Puppet gives up (exeeded timeout) before the installation has completed.
+
 ## Limitations
 
 Tested with RHEL 6 x86_64 and IBM Installation Manager 1.8.1 and 1.6.x
