@@ -229,6 +229,8 @@ where Puppet gives up (exeeded timeout) before the installation has completed.
 
 Tested with RHEL 6 x86_64 and IBM Installation Manager 1.8.1 and 1.6.x
 
+Tested on AIX 7.1
+
 ## Caveats
 
 The installer will exit 0 even if it failed.  Not a lot we can _reasonably_ do
