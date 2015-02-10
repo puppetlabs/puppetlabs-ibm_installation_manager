@@ -16,5 +16,6 @@ tags
 
 .vendor
 .bundler
+.bundle
 Gemfile.lock
 spec/fixtures/modules/*
