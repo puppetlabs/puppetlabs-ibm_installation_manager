@@ -132,6 +132,14 @@ be undesirable.
 Options to pass to the installer.  Defaults to `-acceptLicense -s -log
 /tmp/IM_install.${timestamp}.log.xml -installationDirectory ${target}`
 
+##### timeout
+
+A timeout for the installation.  Basically, how long should we wait for
+Installation Manager to install, in seconds?  It can take a while.  Puppet's
+default is 300, which can easily be exceeded by Installation Manager.  The
+module's default is 900.  You may need to increase this if you run into issues
+where Puppet gives up (exeeded timeout) before the installation has completed.
+
 ### Type: ibm_pkg
 
 A custom type called `ibm_pkg` is provided that can be used to install
@@ -216,14 +224,6 @@ Note that installing as a different user will have weird affects.  Consult
 IBM's documentation for details.  Basically, it'll be a self-contained
 installation, and that might be undesirable.  It won't share installation
 data with the rest of the system.  You probably want to install as root.
-
-##### timeout
-
-A timeout for the installation.  Basically, how long should we wait for
-Installation Manager to install, in seconds?  It can take a while.  Puppet's
-default is 300, which can easily be exceeded by Installation Manager.  The
-module's default is 900.  You may need to increase this if you run into issues
-where Puppet gives up (exeeded timeout) before the installation has completed.
 
 ## Limitations
 
