@@ -229,7 +229,7 @@ where Puppet gives up (exeeded timeout) before the installation has completed.
 
 Tested with RHEL 6 x86_64 and IBM Installation Manager 1.8.1 and 1.6.x
 
-Tested on AIX 7.1
+Tested on AIX 6.1 and 7.1
 
 ## Caveats
 
@@ -244,6 +244,8 @@ This likely means there's a stale `/var/ibm` stuck around.
 ## Dependencies
 
 * [puppetlabs/stdlib](https://forge.puppetlabs.com/puppetlabs/stdlib)
+
+If you want the module to extract the Zip file for you:
 
 * [nanliu/staging](https://forge.puppetlabs.com/nanliu/staging)
 
