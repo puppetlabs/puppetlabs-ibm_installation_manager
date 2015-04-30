@@ -38,7 +38,9 @@ include REXML
 
 Puppet::Type.type(:ibm_pkg).provide(:imcl) do
 
-  commands :kill => 'kill'
+  commands :kill   => 'kill'
+  commands :chown  => 'chown'
+  confine  :exists => '/var/ibm/InstallationManager/installed.xml'
 
   def imcl(command)
 
@@ -97,7 +99,7 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
   ## way to say "stop everything that matters".  So for now, we're just
   ## going to search the process table for anything that matches our target
   ## directory and kill it.  We've got to come up with something better for
-  ## this.  Fucking IBM.
+  ## this.
   def stopprocs
     ps = Facter.value :ps
     regex = Regexp.new(resource[:target])
@@ -122,7 +124,7 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
       begin
         self.debug "Attempting to kill PID #{pids}"
         command = "/bin/kill #{pids}"
-        output = Puppet::Util::Execution.execute(command, :combine => true, :failonfail => false)
+        output = kill(pids, :combine => true, :failonfail => false)
       rescue Puppet::ExecutionFailure
         err = <<-EOF
         Could not kill #{self.name}, PID #{thepid}.
@@ -149,6 +151,10 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
     stopprocs
 
     imcl(install)
+
+    if resource.manage_ownership?
+      chown(['-R', "#{resource[:package_owner]}:#{resource[:package_group]}", "#{resource[:target]}"])
+    end
   end
 
   def exists?
@@ -166,7 +172,6 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
     path    = XPath.first(product, "@path") if product
     package = XPath.first(product, "package[@id='#{resource[:package]}']") if product
     id      = XPath.first(package, "@id") if package
-    #version = XPath.first(package, "@version='#{resource[:version]}'") if package
     version = XPath.first(package, "@version") if package
 
     ## If everything matches, we consider the package to exist.
@@ -185,14 +190,6 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
       end
     end
 
-#    if path and package and id and version
-#      self.debug "Ibm_pkg[#{resource[:package]}]: "\
-#         + "#{id} version #{resource[:version]} appears to exist at #{path}"
-#      )
-#      true
-#    else
-#      false
-#    end
   end
 
   def destroy
