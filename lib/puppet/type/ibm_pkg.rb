@@ -16,6 +16,21 @@ require 'puppet/parameter/boolean'
 
 Puppet::Type.newtype(:ibm_pkg) do
 
+  autorequire(:file) do
+    self[:target]
+  end
+
+  autorequire(:user) do
+    self[:package_owner]
+  end
+
+  autorequire(:group) do
+    self[:package_group]
+  end
+
+  autorequire(:exec) do
+    'Install IBM Installation Manager'
+  end
 
   validate do
     unless self[:response]
