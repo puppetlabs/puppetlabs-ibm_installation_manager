@@ -23,8 +23,8 @@ ibm_pkg { 'com.ibm.websphere.NDTRIAL.v85':
 # In this case, our response file includes all the information we need - the
 # package name, the version, the repository location, and the target.
 ibm_pkg { 'com.ibm.websphere.NDTRIAL.v85':
-  ensure     => 'present',
-  response   => '/opt/myorg/was/response/response_85.xml',
+  ensure   => 'present',
+  response => '/opt/myorg/was/response/response_85.xml',
 }
 
 
