@@ -12,9 +12,25 @@
 # to be installed.
 #
 require 'pathname'
+require 'puppet/parameter/boolean'
 
 Puppet::Type.newtype(:ibm_pkg) do
 
+  autorequire(:file) do
+    self[:target]
+  end
+
+  autorequire(:user) do
+    self[:package_owner]
+  end
+
+  autorequire(:group) do
+    self[:package_group]
+  end
+
+  autorequire(:exec) do
+    'Install IBM Installation Manager'
+  end
 
   validate do
     unless self[:response]
@@ -25,20 +41,7 @@ Puppet::Type.newtype(:ibm_pkg) do
     end
   end
 
-  ensurable do
-    desc "Manage the existence of an IBM package"
-
-    defaultto(:present)
-
-    newvalue(:present) do
-      provider.create
-    end
-
-    newvalue(:absent) do
-      provider.destroy
-    end
-
-  end
+  ensurable
 
   newparam(:name) do
     ## We don't really care about this - we can install the same package
@@ -127,4 +130,18 @@ Puppet::Type.newtype(:ibm_pkg) do
 
   end
 
+  newparam(:manage_ownership, :boolean => true, :parent => Puppet::Parameter::Boolean) do
+    desc 'Whether or not to manage the ownership of installed packages. Allows for packages to not be installed as root.'
+    defaultto true
+  end
+
+  newparam(:package_owner) do
+    desc 'The user that should own this package installation. Only used if manage_ownership is true.'
+    defaultto 'root'
+  end
+
+  newparam(:package_group) do
+    desc 'The group that should own this package installation. Only used if manage_ownership is true.'
+    defaultto 'root'
+  end
 end
