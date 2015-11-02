@@ -33,7 +33,7 @@ group :system_tests do
     gem 'beaker-rspec',  :require => false
   end
   gem 'serverspec',    :require => false
-  gem 'master_manipulator', '~> 1.1',  :require => false
+  gem 'master_manipulator', '1.1.2',  :require => false
 end
 
 if facterversion = ENV['FACTER_GEM_VERSION']

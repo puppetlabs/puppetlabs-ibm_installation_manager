@@ -1,16 +1,12 @@
 test_name 'FM-3804 - C94728 - Plug-in Sync Module from Master with Prerequisites Satisfied on Agent'
 
-# step 'Install Module via PMT'
-# stub_forge_on(master)
-
 #Currently the puppetlabs-ibm_installation_manager is not ready for testing, so using joshbeard-ibm_installation_manager
 # instead.
 on(master, puppet('module install joshbeard-ibm_installation_manager'))
 
-on(master, puppet('module install nanliu-staging'))
+on(master, puppet('module install nanliu-staging -v 1.0.3'))
 on(master, puppet('module install puppetlabs-stdlib'))
 on(master, puppet('module install puppetlabs-concat'))
-
 
 step 'Install dsestero/download_uncompress module on the agent'
 confine_block(:except, :roles => %w{master dashboard database}) do
