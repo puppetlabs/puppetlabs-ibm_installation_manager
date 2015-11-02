@@ -1,0 +1,7 @@
+download_uncompress {'download_unzip_<%= cfilename %>':
+  download_base_url => "<%= installer_url %>",
+  distribution_name  => '<%= cfilename %>',
+  dest_folder   => '<%= dest_directory %>',
+  creates       => "<%= directory_path %>",
+  uncompress    => '<%= compress_type %>',
+}
