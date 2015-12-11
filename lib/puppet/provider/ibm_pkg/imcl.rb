@@ -74,8 +74,8 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
     '/var/ibm/InstallationManager/installed.xml'
   end
 
-  def imcl(cmd_options)
-    command = "#{imcl_command_path} #{cmd_options}"
+  def imcl(cmd_options=[])
+    command = cmd_options.unshift(imcl_command_path).flatten.uniq
     Puppet::Util::Execution.execute(command, :uid => resource[:user], :combine => true, :failonfail => true)
   end
 
@@ -120,19 +120,16 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
 
     ## If a PID matches, attempt to kill it.
     unless pid.empty?
-      pids = ''
-      pid.each do |thepid|
-        pids += "#{thepid} "
-      end
+      pids = pid.join(' ')
       begin
         self.debug "Attempting to kill PID #{pids}"
         output = kill(pids, :combine => true, :failonfail => false)
       rescue Puppet::ExecutionFailure
         err = <<-EOF
-        Could not kill #{self.name}, PID #{thepid}.
+        Could not kill #{self.name}, PID #{pids}.
         In order to install/upgrade to specified target: #{resource[:target]},
         all related processes need to be stopped.
-        Output of 'kill #{thepid}': #{output}
+        Output of 'kill #{pids}': #{output}
         EOF
         @resource.fail Puppet::Error, err, $!
       end
@@ -160,13 +157,13 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
 
   def create
     if resource[:response]
-      cmd_options = "input #{resource[:response]} -acceptLicense"
+      cmd_options = ["input", "#{resource[:response]}", "-acceptLicense"]
     else
-      cmd_options =  "install #{resource[:package]}_#{resource[:version]}"
-      cmd_options << " -repositories #{resource[:repository]} -installationDirectory #{resource[:target]}"
-      cmd_options << " -acceptLicense"
+      cmd_options = ["install #{resource[:package]}_#{resource[:version]}",
+                     "-repositories #{resource[:repository]}", "-installationDirectory #{resource[:target]}",
+                     "-acceptLicense"]
     end
-    #cmd_options.push(resource[:options]) if resource[:options]
+    cmd_options.push(resource[:options]) if resource[:options]
     stopprocs  # stop related processes before we install
     imcl(cmd_options)
     # change owner
@@ -181,7 +178,9 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
   end
 
   def destroy
-    cmd_options = "uninstall #{resource[:package]}_#{resource[:version]} -s -installationDirectory #{resource[:target]}"
+    cmd_options = [
+      'uninstall', "#{resource[:package]}_#{resource[:version]}", '-s', '-installationDirectory', resource[:target]
+    ]
     imcl(cmd_options)
   end
 

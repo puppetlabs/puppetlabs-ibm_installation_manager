@@ -21,7 +21,7 @@ class ibm_installation_manager (
 
   $timestamp  = chomp(generate('/bin/date', '+%Y%d%m_%H%M%S'))
 
-  if $options == '' {
+  if $options != '' {
     $_options = $options
   } else {
     $_options = "-acceptLicense -s -log /tmp/IM_install.${timestamp}.log.xml -installationDirectory ${target}"

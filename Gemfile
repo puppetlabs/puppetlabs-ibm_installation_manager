@@ -19,6 +19,9 @@ group :development, :test do
   gem 'simplecov',               :require => false
   gem 'puppet_facts',            :require => false
   gem 'json',                    :require => false
+  gem 'rspec-puppet-utils'
+  gem 'hiera-puppet-helper'
+  gem 'pry'
 end
 
 beaker_version = ENV['BEAKER_VERSION']
