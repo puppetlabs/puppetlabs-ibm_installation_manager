@@ -49,13 +49,13 @@ class ibm_installation_manager (
       extract_path => $source_dir,
       creates      => "${source_dir}/tools/imcl",
       require      => File[$source_dir],
-      before       => Exec['Install IBM Installation Manager'],
+      before       => Exec['Install IBM Installation Manager',"/bin/chmod -R 2750 ${source_dir}"],
     }
   }
   # lets ensure we can execute the installc file
   exec{"/bin/chmod -R 2750 ${source_dir}":
-    before  => Exec['Install IBM Installation Manager'],
-    creates => "${target}/eclipse/tools/imcl"
+    before => Exec['Install IBM Installation Manager'],
+    unless => "/usr/bin/test -x ${source_dir}/installc",
   }
   exec { 'Install IBM Installation Manager':
     command => "${source_dir}/installc ${_options}",
