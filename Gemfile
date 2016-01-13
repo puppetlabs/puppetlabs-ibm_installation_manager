@@ -10,10 +10,10 @@ def location_for(place, fake_version = nil)
   end
 end
 
-group :development, :unit_tests do
+group :development, :test do
   gem 'rake',                    :require => false
-  gem 'rspec-core', '3.1.7',     :require => false
-  gem 'rspec-puppet', '~> 2.1',  :require => false
+  gem 'rspec-core',              :require => false
+  gem 'rspec-puppet',            :require => false
   gem 'puppetlabs_spec_helper',  :require => false
   gem 'puppet-lint',             :require => false
   gem 'simplecov',               :require => false
@@ -23,18 +23,6 @@ end
 
 beaker_version = ENV['BEAKER_VERSION']
 beaker_rspec_version = ENV['BEAKER_RSPEC_VERSION']
-group :system_tests do
-  if beaker_version
-    gem 'beaker', *location_for(beaker_version || '~> 2.26')
-  end
-  if beaker_rspec_version
-    gem 'beaker-rspec', *location_for(beaker_rspec_version)
-  else
-    gem 'beaker-rspec',  :require => false
-  end
-  gem 'serverspec',    :require => false
-  gem 'master_manipulator', '1.1.2',  :require => false
-end
 
 if facterversion = ENV['FACTER_GEM_VERSION']
   gem 'facter', facterversion, :require => false
@@ -46,6 +34,20 @@ if puppetversion = ENV['PUPPET_GEM_VERSION']
   gem 'puppet', puppetversion, :require => false
 else
   gem 'puppet', :require => false
+end
+
+group :system_tests do
+  if beaker_version
+    gem 'beaker', *location_for(beaker_version || '~> 2.26')
+  end
+  if beaker_rspec_version
+    gem 'beaker-rspec', *location_for(beaker_rspec_version)
+  else
+    gem 'beaker-rspec',  :require => false
+  end
+  gem 'beaker-puppet_install_helper', :require => false
+  gem 'serverspec',                   :require => false
+  gem 'master_manipulator', '1.1.2',  :require => false
 end
 
 # vim:ft=ruby

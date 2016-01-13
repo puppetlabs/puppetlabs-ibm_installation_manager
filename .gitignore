@@ -19,4 +19,3 @@ pkg/
 .bundler
 .bundle
 Gemfile.lock
-spec/fixtures/modules/*
