@@ -28,11 +28,14 @@ RSpec.configure do |c|
 
       # scp the ibm installation manager installer
       scp_to host, "#{install_pkg_path}/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip", "/tmp/"
+      # scp
+      scp_to host, "#{install_pkg_path}/was.repo.8550.liberty.ndtrial.zip", "/tmp/"
+      on host, "/usr/bin/unzip /tmp/was.repo.8550.liberty.ndtrial.zip -d /tmp/ndtrial/"
       # scp and unzip ibm java7 installer
-      %w(part1 part2 part3).each do |part|
-        scp_to host, "#{install_pkg_path}/was.repo.8550.ndtrial_#{part}.zip", "/tmp/"
-        on host, "/usr/bin/unzip /tmp/was.repo.8550.ndtrial_#{part}.zip -d /tmp/ndtrial/"
-      end
+      #%w(part1 part2 part3).each do |part|
+      #  scp_to host, "#{install_pkg_path}/was.repo.8550.ndtrial_#{part}.zip", "/tmp/"
+      #  on host, "/usr/bin/unzip /tmp/was.repo.8550.ndtrial_#{part}.zip -d /tmp/ndtrial/"
+      #end
     end
   end
 end

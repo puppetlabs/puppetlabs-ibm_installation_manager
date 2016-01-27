@@ -11,8 +11,8 @@ describe 'ibm installation manager ibm_pkg:' do
         }
         ibm_pkg { 'Websphere0':
           ensure        => 'present',
-          package       => 'com.ibm.websphere.NDTRIAL.v85',
-          version       => '8.5.5000.20130514_1044',
+          package       => 'com.ibm.websphere.liberty.NDTRIAL.v85',
+          version       => '8.5.5000.20130514_1313',
           repository    => "/tmp/ndtrial/repository.config",
           target        => '/opt/IBM/WebSphere0/AppServer',
           package_owner => 'root',
@@ -46,8 +46,8 @@ describe 'ibm installation manager ibm_pkg:' do
         }
         ibm_pkg { 'Websphere1':
           ensure        => 'present',
-          package       => 'com.ibm.websphere.NDTRIAL.v85',
-          version       => '8.5.5000.20130514_1044',
+          package       => 'com.ibm.websphere.liberty.NDTRIAL.v85',
+          version       => '8.5.5000.20130514_1313',
           repository    => "/tmp/ndtrial/repository.config",
           target        => '/opt/IBM/WebSphere1/AppServer',
           package_owner => 'webadmin',
@@ -88,8 +88,8 @@ describe 'ibm installation manager ibm_pkg:' do
         }
         ibm_pkg { 'Websphere2':
           ensure           => 'present',
-          package          => 'com.ibm.websphere.NDTRIAL.v85',
-          version          => '8.5.5000.20130514_1044',
+          package          => 'com.ibm.websphere.liberty.NDTRIAL.v85',
+          version          => '8.5.5000.20130514_1313',
           repository       => "/tmp/ndtrial/repository.config",
           target           => '/opt/IBM/WebSphere2/AppServer',
           manage_ownership => 'false',
