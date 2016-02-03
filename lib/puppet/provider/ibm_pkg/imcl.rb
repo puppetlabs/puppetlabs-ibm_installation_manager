@@ -37,59 +37,62 @@ require 'rexml/document'
 include REXML
 
 Puppet::Type.type(:ibm_pkg).provide(:imcl) do
+  desc 'Provides ibm package manager support'
 
-  commands :kill   => 'kill'
-  commands :chown  => 'chown'
+  commands :kill => 'kill'
+  commands :chown => 'chown'
   confine  :exists => '/var/ibm/InstallationManager/installed.xml'
+  # presumbly this could work on windows but we have some hard coded paths which
+  # breaks these things on windows where the paths are different.
+  confine  :true => Facter.value(:kernel) != 'windows'
 
-  def imcl(command)
+  mk_resource_methods
 
-    registry = '/var/ibm/InstallationManager/installed.xml'
-
-    xml_data = File.open(registry)
-
-    doc = REXML::Document.new(xml_data)
-
-    unless resource[:imcl_path]
-      path = XPath.first(doc, '//installInfo/location[@id="IBM Installation Manager"]/@path')
-
-      imcl = path.to_s + '/tools/imcl'
-
-      unless imcl
-        raise Puppet::Error, "Could not discover path to imcl"
-      end
-    else
-      imcl = resource[:imcl_path]
-    end
-
-    unless File.exists?(imcl)
-      raise Puppet::Error, "Ibm_pkg[#{resource[:package]}]: #{imcl} not found."
-    end
-
-    unless resource[:response]
-      unless File.exists?(resource[:repository])
-        raise Puppet::Error, "Ibm_pkg[#{resource[:package]}]: #{resource[:repository]} not found."
+  # returns the path to the command
+  # this is required because it is unlikely that the system would have this in the path
+  def imcl_command_path
+    unless @imcl_command_path
+      if resource[:imcl_path]
+        @imcl_command_path = resource[:imcl_path]
+      else
+        registry = File.open(self.registry_file)
+        doc = REXML::Document.new(registry)
+        path = XPath.first(doc, '//installInfo/location[@id="IBM Installation Manager"]/@path').value
+        registry.close
+        @imcl_command_path = File.join(path, 'tools','imcl')
       end
     end
+    # ensure the execution bit is set
+    fail("#{@imcl_command_path} file does not exist") unless File.exists?(@imcl_command_path)
+    fail("#{@imcl_command_path} is not executible, use chmod") unless File.open(@imcl_command_path) {|f| f.stat.executable?}
+    @imcl_command_path
+  end
 
-    if resource[:response]
-      command = "#{imcl} input #{resource[:response]}"
-    else
-      command = "#{imcl} #{command}"
-    end
+  # returns a file handle by opening the registry file
+  # easier to mock when extracted to method like this
+  def registry_file
+    '/var/ibm/InstallationManager/installed.xml'
+  end
 
-    command += " #{resource[:options]}" if resource[:options]
+  def imcl(cmd_options)
+    command = "#{imcl_command_path} #{cmd_options}"
+    Puppet::Util::Execution.execute(command, :uid => resource[:user], :combine => true, :failonfail => true)
+  end
 
-    self.debug "Executing #{command}"
-    result = Puppet::Util::Execution.execute(command, :uid => resource[:user], :combine => true)
-    self.debug result
+  # returns a file handle by opening the registry file
+  # easier to mock when extracted to method like this
+  def self.registry_file
+    '/var/ibm/InstallationManager/installed.xml'
+  end
 
-    if result =~ /ERROR/
-      raise Puppet::Error, "Failed: #{result}"
-    end
-
-    unless result =~ /(Installed|Updated)/
-      raise Puppet::Error, "Failed? #{result}"
+  def getps
+    case Facter.value(:operatingsystem)
+      when 'OpenWrt'
+        'ps www'
+      when 'FreeBSD', 'NetBSD', 'OpenBSD', 'Darwin', 'DragonFly'
+        'ps auxwww'
+      else
+        'ps -ef'
     end
   end
 
@@ -101,7 +104,7 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
   ## directory and kill it.  We've got to come up with something better for
   ## this.
   def stopprocs
-    ps = Facter.value :ps
+    ps = getps
     regex = Regexp.new(resource[:target])
     self.debug "Executing '#{ps}' to find processes that match #{resource[:target]}"
     pid = []
@@ -123,7 +126,6 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
       end
       begin
         self.debug "Attempting to kill PID #{pids}"
-        command = "/bin/kill #{pids}"
         output = kill(pids, :combine => true, :failonfail => false)
       rescue Puppet::ExecutionFailure
         err = <<-EOF
@@ -132,71 +134,127 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
         all related processes need to be stopped.
         Output of 'kill #{thepid}': #{output}
         EOF
-
         @resource.fail Puppet::Error, err, $!
       end
     end
+  end
 
+  # returns target, version and package by reading the response file
+  def self.response_file_properties(response_file)
+    fail("Cannot open response file #{response_file}") unless File.exists?(response_file)
+    resp = {}
+    debug("Reading the response file at : #{response_file}")
+    begin
+      File.open(response_file) do |file|
+        doc = REXML::Document.new(file)
+        resp[:repository] = XPath.first(doc, '//agent-input/server/repository').attributes['location']
+        resp[:target] = XPath.first(doc, '//agent-input/profile').attributes['installLocation']
+        resp[:version] = XPath.first(doc, '//agent-input/install/offering').attributes['version']
+        resp[:package] = XPath.first(doc, '//agent-input/install/offering').attributes['id']
+      end
+    rescue  Errno::ENOENT => e
+      fail(e.message)
+    end
+    resp
   end
 
   def create
-    unless resource[:response]
-      install = 'install ' + resource[:package] + '_' + resource[:version]
-      install += ' -repositories ' + resource[:repository] + ' -installationDirectory '
-      install += resource[:target] + ' -acceptLicense'
+    if resource[:response]
+      cmd_options = "input #{resource[:response]} -acceptLicense"
     else
-      install = nil
+      cmd_options =  "install #{resource[:package]}_#{resource[:version]}"
+      cmd_options << " -repositories #{resource[:repository]} -installationDirectory #{resource[:target]}"
+      cmd_options << " -acceptLicense"
     end
+    #cmd_options.push(resource[:options]) if resource[:options]
+    stopprocs  # stop related processes before we install
+    imcl(cmd_options)
+    # change owner
 
-    stopprocs
-
-    imcl(install)
-
-    if resource.manage_ownership?
-      chown(['-R', "#{resource[:package_owner]}:#{resource[:package_group]}", "#{resource[:target]}"])
+    if resource.manage_ownership? and File.exists?(resource[:target])
+      FileUtils.chown_R(resource[:package_owner], resource[:package_group], resource[:target])
     end
   end
 
   def exists?
+    @property_hash[:ensure] == :present
+  end
+
+  def destroy
+    cmd_options = "uninstall #{resource[:package]}_#{resource[:version]} -s -installationDirectory #{resource[:target]}"
+    imcl(cmd_options)
+  end
+
+  # returns boolean true if the package and resource are the same
+  # if a reponse file is given it returns true if the attributes
+  # in the response file are the same
+  def self.compare_package(package, resource)
+      value = (package.target == resource[:target] && package.version == resource[:version] && package.package == resource[:package])
+  end
+
+  ## If the name matches, we consider the package to exist.
+  ## The combination of id (package name), version, and path is what makes
+  ## it unique.  You can have the same package/version installed to a
+  ## different path. By prefetching here our exists? method becomes simple since
+  def self.prefetch(resources)
+    packages = instances
+    if packages
+      resources.each do | name, resource|
+        if resource[:response]
+          props = response_file_properties(resource[:response])
+          # pre populate the things that were missing when the response file was parsed
+          resource[:target] = props[:target]
+          resource[:version] = props[:version]
+          resource[:package] = props[:package]
+        end
+        if provider = packages.find {|package| compare_package(package, resource) }
+          resources[name].provider = provider
+        end
+      end
+    end
+  end
+
+  def self.installed_packages
     ## Determine if the specified package has been installed to the specified
     ## location by parsing IBM IM's "installed.xml" file.
     ## I *think* this is a pretty safe bet.  This seems to be a pretty hard-
     ## coded path for it on Linux and AIX.
-    registry = '/var/ibm/InstallationManager/installed.xml'
-
-    xml_data = File.open(registry)
-
-    doc = REXML::Document.new(xml_data)
-
-    product = XPath.first(doc, "//installInfo/location[@path='#{resource[:target]}']")
-    path    = XPath.first(product, "@path") if product
-    package = XPath.first(product, "package[@id='#{resource[:package]}']") if product
-    id      = XPath.first(package, "@id") if package
-    version = XPath.first(package, "@version") if package
-
-    ## If everything matches, we consider the package to exist.
-    ## The combination of id (package name), version, and path is what makes
-    ## it unique.  You can have the same package/version installed to a
-    ## different path.
-    if version
-      self.debug "#{resource[:package]}: Current: #{version} Specified: #{resource[:version]}"
-      compare = Puppet::Util::Package.versioncmp(version.to_s, resource[:version])
-      self.debug "versioncmp: #{compare}"
-      if compare >= 0
-        self.debug "Version: #{version.to_s} >= #{resource[:version]}; Satisfied"
-        return true
-      else
-        return false
+    registry = File.open(self.registry_file)
+    doc = REXML::Document.new(registry)
+    packages = []
+    doc.elements.each("/installInfo/location") do |item|
+      product_name = item.attributes["id"]   # IBM Installation Manager
+      path         = item.attributes["path"]  # /opt/Apps/WebSphere/was8.5/product/eclipse
+      XPath.each(item, "package") do |package|
+        id           = package.attributes['id']  # com.ibm.cic.agent
+        version      = package.attributes['version'] # 1.6.2000.20130301_2248
+        repository   = package.elements.find {|i| i.attributes['name'] == 'agent.sourceRepositoryLocation'}.attributes['value']
+        packages << {
+          :name => "#{id}_#{version}_#{path}",
+          :product_name => product_name,
+          :path         => path,
+          :package_id   => id,
+          :version      => version,
+          :repository   => "#{repository}"
+        }
       end
     end
-
+    registry.close
+    packages
   end
 
-  def destroy
-    remove = 'uninstall ' + resource[:package] + '_' + resource[:version]
-    remove += ' -s -installationDirectory ' + resource[:target]
-
-    imcl(remove)
-  end
+  def self.instances
+    # get a list of installed packages
+    installed_packages.collect do |package|
+      new(
+        :ensure => :present,
+        :package => package[:package_id],
+        :name => package[:name],
+        :version => package[:version],
+        :target  => package[:path],
+        :repository => package[:repository]
+      )
+    end
+ end
 
 end
