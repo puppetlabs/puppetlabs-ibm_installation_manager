@@ -17,25 +17,31 @@ RSpec.configure do |c|
     install_pkg_path = "#{module_root}/spec/fixtures/modules/spec_files/files"
     hosts.each do |host|
       on host, puppet('module','install','puppetlabs-stdlib'), { :acceptable_exit_codes => [0,1] }
-      on host, puppet('module','install','nanliu-staging'), { :acceptable_exit_codes => [0,1] }
-
-      pp = <<-EOS
-        package { 'unzip':
-          ensure => present,
-        }
-      EOS
-      apply_manifest_on(host, pp, :catch_failures => true)
+      on host, puppet('module','install','puppet-archive'), { :acceptable_exit_codes => [0,1] }
 
       # scp the ibm installation manager installer
       scp_to host, "#{install_pkg_path}/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip", "/tmp/"
       # scp
       scp_to host, "#{install_pkg_path}/was.repo.8550.liberty.ndtrial.zip", "/tmp/"
-      on host, "/usr/bin/unzip /tmp/was.repo.8550.liberty.ndtrial.zip -d /tmp/ndtrial/"
-      # scp and unzip ibm java7 installer
-      #%w(part1 part2 part3).each do |part|
-      #  scp_to host, "#{install_pkg_path}/was.repo.8550.ndtrial_#{part}.zip", "/tmp/"
-      #  on host, "/usr/bin/unzip /tmp/was.repo.8550.ndtrial_#{part}.zip -d /tmp/ndtrial/"
-      #end
+      pp = <<-EOS
+        package { 'unzip':
+          ensure => present,
+          before => Archive['/tmp/ndtrial/was.repo.8550.liberty.ndtrial.zip'],
+        }
+
+        file { '/tmp/ndtrial':
+          ensure => directory,
+        }
+
+        archive { '/tmp/ndtrial/was.repo.8550.liberty.ndtrial.zip':
+          source       => 'file:///tmp/was.repo.8550.liberty.ndtrial.zip',
+          extract      => true,
+          extract_path => '/tmp/ndtrial',
+          creates      => '/tmp/ndtrial/repository.config',
+          require      => File['/tmp/ndtrial'],
+        }
+      EOS
+      apply_manifest_on(host, pp, :catch_failures => true)
     end
   end
 end

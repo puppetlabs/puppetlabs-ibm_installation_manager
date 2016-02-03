@@ -33,18 +33,23 @@ class ibm_installation_manager (
       path    => '/bin:/usr/bin:/sbin:/usr/sbin',
     }
 
+    package { 'unzip':
+      ensure => present,
+      before => Archive[$source],
+    }
+
     file { $source_dir:
       ensure => 'directory',
       owner  => $user,
       group  => $group,
     }
 
-    staging::deploy { 'ibm_im.zip':
-      source  => $source,
-      target  => $source_dir,
-      creates => "${source_dir}/tools/imcl",
-      require => File[$source_dir],
-      before  => Exec['Install IBM Installation Manager'],
+    archive { $source:
+      extract      => true,
+      extract_path => $source_dir,
+      creates      => "${source_dir}/tools/imcl",
+      require      => File[$source_dir],
+      before       => Exec['Install IBM Installation Manager'],
     }
   }
 
