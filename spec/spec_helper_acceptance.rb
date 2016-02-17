@@ -8,8 +8,20 @@ RSpec.configure do |c|
 
   c.formatter = :documentation
 
-  # Configure all nodes in nodeset
+  # Determine install zip files location
+  # Defaults to a Puppet Labs internal repository, to run this externally
+  # you must specify a directory on the host or url with the necessary files:
+  #  - agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip
+  #  - was.repo.8550.liberty.ndtrial.zip
+  # are located.
+  # To specify a directory you can use:
+  #     "file:///directory/of/the/zips"
+  # To specify a url:
+  #     "http://path.of/zip_files"
+  #
+  INSTALL_FILE_PATH = ENV['IBM_INSTALL_SOURCE'] || 'http://int-resources.ops.puppetlabs.net/modules/ibm_installation_manager/'
 
+  # Configure all nodes in nodeset
   c.before :suite do
     #install module
     puppet_module_install(:source => module_root, :module_name => 'ibm_installation_manager')
@@ -19,11 +31,13 @@ RSpec.configure do |c|
       on host, puppet('module','install','puppetlabs-stdlib'), { :acceptable_exit_codes => [0,1] }
       on host, puppet('module','install','puppet-archive'), { :acceptable_exit_codes => [0,1] }
 
-      # scp the ibm installation manager installer
-      scp_to host, "#{install_pkg_path}/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip", "/tmp/"
-      # scp
-      scp_to host, "#{install_pkg_path}/was.repo.8550.liberty.ndtrial.zip", "/tmp/"
+      # Retrieve the install files for tests.
       pp = <<-EOS
+        archive { '/tmp/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip':
+          source       => "#{INSTALL_FILE_PATH}/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip",
+          extract      => false,
+        }
+
         package { 'unzip':
           ensure => present,
           before => Archive['/tmp/ndtrial/was.repo.8550.liberty.ndtrial.zip'],
@@ -34,7 +48,7 @@ RSpec.configure do |c|
         }
 
         archive { '/tmp/ndtrial/was.repo.8550.liberty.ndtrial.zip':
-          source       => 'file:///tmp/was.repo.8550.liberty.ndtrial.zip',
+          source       => "#{INSTALL_FILE_PATH}/was.repo.8550.liberty.ndtrial.zip",
           extract      => true,
           extract_path => '/tmp/ndtrial',
           creates      => '/tmp/ndtrial/repository.config',
