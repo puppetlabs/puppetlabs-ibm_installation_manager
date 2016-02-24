@@ -4,36 +4,30 @@
 
 #### Table of Contents
 
-1. [Overview](#overview)
-2. [Module Description](#module-description)
-3. [Setup - The basics of getting started with ibm_installation_manager](#setup)
-    * [What ibm_installation_manager affects](#what-ibm_installation_manager-affects)
+
+1. [Module Description](#module-description)
+2. [Setup - The basics of getting started with ibm_installation_manager](#setup)
     * [Beginning with ibm_installation_manager](#beginning-with-ibm_installation_manager)
-4. [Usage - Configuration options and additional functionality](#usage)
-5. [Reference - Classes and Parameters](#reference)
-6. [Limitations - OS compatibility, etc.](#limitations)
-7. [Dependencies](#dependencies)
-8. [Development and Contributing](#development-and-contributing)
-9. [Authors](#authors)
-
-## Overview
-
-Manages the installation of
-[IBM Installation Manager](http://www-947.ibm.com/support/entry/portal/product/rational/ibm_installation_manager?productContext=-57272472)
-(yo dawg?)
+3. [Usage - Configuration options and additional functionality](#usage)
+    * [Installing Installation Manager](#installing-installation-manager)
+    * [Installing software packages](#installing-software-packages)
+4. [Reference - Classes and Parameters](#reference)
+5. [Limitations - OS compatibility, etc.](#limitations)
+6. [Dependencies](#dependencies)
+7. [Development and Contributing](#development-and-contributing)
+8. [Authors](#authors)
 
 ## Module Description
 
-This module will install the IBM Installation Manager.  Optionally, it can
-deploy the installation from a source such as HTTP or a local file path.
+This module installs the [IBM Installation Manager](http://www-947.ibm.com/support/entry/portal/product/rational/ibm_installation_manager?productContext=-57272472). Optionally, it can deploy the installation from a source such as HTTP or a local file path.
 
-A type and provider is also included that can be used to manage the
-installation of IBM software from IBM packages (e.g. WebSphere, IHS).
+This module can also manage the installation of software from IBM packages (for example, WebSphere, IHS).
 
 ## Usage
 
-Example usage for installing Installation Manager from a source archive from
-an HTTP repository:
+### Installing Installation Manager
+
+To install Installation Manager from an HTTP repository source archive:
 
 ```puppet
 class { 'ibm_installation_manager':
@@ -42,8 +36,7 @@ class { 'ibm_installation_manager':
 }
 ```
 
-Example usage for installing Installation Manager from an existing path on
-the filesystem.  As in, an already extracted archive from IBM:
+If you've already extracted the archive, install Installation Manager from the existing path:
 
 ```puppet
 class { 'ibm_installation_manager':
@@ -51,7 +44,7 @@ class { 'ibm_installation_manager':
 }
 ```
 
-Example usage for installing to a custom location:
+To install Installation Manager to a custom location, specify the target location:
 
 ```puppet
 class { 'ibm_installation_manager':
@@ -60,9 +53,14 @@ class { 'ibm_installation_manager':
 }
 ```
 
-Example of using the included `ibm_pkg` type.  This will install a
-WebSphere 8.5 package from an extracted source at `/vagrant/ibm/websphere/` to
-`/opt/IBM/WebSphere85`
+### Installing software packages
+
+To install software with IBM Installation Manager, use the `ibm_pkg` type. This type includes the `imcl` provider, which uses the Installation Manager's `imcl` command-line tool to handle installation.
+
+This provider installs the specified version _or greater_ is installed. This is partly due to the nature of how IBM software
+is deployed (by a downloaded/extracted archive).
+
+To install a package from an extracted source:
 
 ```puppet
 ibm_pkg { 'com.ibm.websphere.NDTRIAL.v85':
@@ -74,7 +72,9 @@ ibm_pkg { 'com.ibm.websphere.NDTRIAL.v85':
 }
 ```
 
-Example of using the included `ibm_pkg` type with a custom response file.
+The above code installs a WebSphere 8.5 package from an extracted source at `/vagrant/ibm/websphere/` to `/opt/IBM/WebSphere85`
+
+You can also provide the package source and other parameters in a custom response file:
 
 ```puppet
 ibm_pkg { 'com.ibm.websphere.NDTRIAL.v85':
@@ -85,6 +85,14 @@ ibm_pkg { 'com.ibm.websphere.NDTRIAL.v85':
 
 ## Reference
 
+### Class
+
+* [`ibm_installation_manager`](#class-ibm_installation_manager)
+
+### Type
+
+* [`ibm_pkg`](#ibm_pkg)
+
 ### Class: ibm_installation_manager
 
 #### Parameters
@@ -92,138 +100,103 @@ ibm_pkg { 'com.ibm.websphere.NDTRIAL.v85':
 ##### deploy_source
 
 Specifies whether this module should be responsible for deploying the source
-package for Installation Manager.  Valid values are `true` and `false`.
+package for Installation Manager. Valid values are `true` and `false`.
 Defaults to `false`
 
 ##### source
 
-Required if `deploy_source` is true.  If `deploy_source` is true, a source
-should be specified here.  This can be an absolute path to the source or an
-HTTP address.  This expects a compressed archive from IBM (zip).
+**Required** if `deploy_source` is true. Specifies the source. This can be either an absolute path to the source or an HTTP address. This expects a compressed archive from IBM (zip).
 
 ##### source_dir
 
-Absolute path to the directory to deploy the installer to and/or run out of.
-Basically, where is the `installc` binary?
-Defaults to `/opt/IBM/tmp`.  If you extracted the archive yourself, you should
-point this parameter to that location.
+Specifies the absolute path to the directory to deploy the installer from. (This is the directory containing the `installc` binary.) If you extracted the archive yourself, point this parameter to the extracted archive. Defaults to `/opt/IBM/tmp`. 
 
 ##### target
 
-Absolute path to the _base_ location that IBM Installation Manager will be
-installed to.  Defaults to `/opt/IBM/InstallationManager`
+Specifies the absolute path to the base location where you want to install IBM Installation Manager. Defaults to `/opt/IBM/InstallationManager`.
 
 ##### user
 
-The user to run the installation as.  Defaults to `root`. Note that installing
-as a different user will have weird affects.  Consult IBM's documentation for
-details.  Basically, it'll be a self-contained installation, and that might
-be undesirable.
+Specifies the user to run the installation as. Defaults to `root`. Note that installing
+as a different user might cause undefined behavior. Consult IBM's documentation for
+details. 
+
+Note that installing as a user other than `root` might result in undefined behavior. Consult IBM's documentation for details. Installations by a non-root user won't share installation data with the rest of the system.
 
 ##### group
 
-The group to run the installation as.  Defaults to `root`. Note that installing
-as a different user will have weird affects.  Consult IBM's documentation for
-details.  Basically, it'll be a self-contained installation, and that might
-be undesirable.
+Specifies the group to run the installation as. Defaults to `root`. 
+
+Note that installing as a user other than `root` might result in undefined behavior. Consult IBM's documentation for details. Installations by a non-root user won't share installation data with the rest of the system.
 
 ##### options
 
-Options to pass to the installer.  Defaults to `-acceptLicense -s -log
-/tmp/IM_install.${timestamp}.log.xml -installationDirectory ${target}`
+Specifies options to pass to the installer. Defaults to `-acceptLicense -s -log/tmp/IM_install.${timestamp}.log.xml -installationDirectory ${target}`.
 
 ##### timeout
 
-A timeout for the installation.  Basically, how long should we wait for
-Installation Manager to install, in seconds?  It can take a while.  Puppet's
-default is 300, which can easily be exceeded by Installation Manager.  The
-module's default is 900.  You may need to increase this if you run into issues
-where Puppet gives up (exeeded timeout) before the installation has completed.
+Specifies the timeout for the installation, in seconds. Defaults to 900. Installation Manager can take a long time to install, so if you have issues with Puppet timing out before the installation is complete, you might need to increase this parameter.
 
 ### Type: ibm_pkg
 
-A custom type called `ibm_pkg` is provided that can be used to install
-software with IBM Installation Manager.  By default, this includes an `imcl`
-provider, which uses the Installation Manager's `imcl` command-line tool to
+This type installs software with IBM Installation Manager. The `ibm_pkg` type includes an `imcl` provider, which uses the Installation Manager's `imcl` command-line tool to
 handle installation.
 
-The resource does not currently handle upgrading packages in the traditional
-sense.  Basically, the provider will make sure that the specified version _or
-greater_ is installed.  This is partly due to the nature of how IBM software
-is deployed (by a downloaded/extracted archive).
+This resource does not upgrade packages, but installs the specified version _or
+greater_.
 
 #### Parameters
 
 ##### ensure
 
-Valid values are `present` and `absent`.  Defaults to `present`
+Valid values are `present` and `absent`. Defaults to `present`.
 
 Specifies the presence of the specified package.
 
 ##### name
 
-Defaults to the resource title.  This is only used for identifying the resource
-within Puppet, not the actual name of the IBM package.
+Defaults to the resource title. This parameter is used only for identifying the resource
+within Puppet; it is not the actual name of the IBM package.
 
 ##### imcl_path
 
-This is optional.  This should be the absolute path to the `imcl` command-line
-tool for IBM Installation Manager.  By default, this will attempt to be
-discovered by parsin `/var/ibm/InstallationManager/installed.xml` on the
-system.  IBM's default location is
-`/opt/IBM/InstallationManager/eclipse/tools/imcl`
+**Optional.** Specifies the absolute path to the `imcl` command-line tool for IBM Installation Manager. By default, this tries to discover the correct location by parsing `/var/ibm/InstallationManager/installed.xml` on the system. IBM's default location is `/opt/IBM/InstallationManager/eclipse/tools/imcl`.
 
 ##### target
 
-The absolute path to the directory that you want to install the specified
-package to.  This maps to the `imcl` argument `-installationDirectory`.
-If you're using a response file, this is optional.  Otherwise, it is required.
+**Required**, or optional with a response file. Specifies the absolute path to the directory in which to install the specified package. This maps to the `imcl` argument `-installationDirectory`.
 
 ##### package
 
-The IBM package name.  For example: `com.ibm.websphere.IBMJAVA.v71`.
-This is the _first_ part of the traditional IBM full package name - _before_
-the first underscore. If you're installing with a response file, this
-parameter is optional.  Otherwise, it is required.
+**Required**, or optional with a response file. Specifies the IBM package name, for example, `com.ibm.websphere.IBMJAVA.v71`.
+This is the first part of the traditional IBM full package name, **before**
+the first underscore.
 
 ##### version
 
-The IBM version of the package.  For example: `7.1.2000.20141116_0823`. This
-is the _second_ part of the traditional IBM full package name - _after_ the
-first underscore. If you're installing with a response file, this parameter
-is optional.  Otherwise, it is required.
+**Required**, or optional with a response file. Specifies the IBM version of the package, for example, `7.1.2000.20141116_0823`. This is the second part of the traditional IBM full package name, after the first underscore.
 
 ##### repository
 
-The full path to the `repository.config` file for installing this package.
-When downloading and extracting a package from IBM, a `repository.config` file
-is provided.  The value of this parameter should point to that.  If you're
-installing with a response file, this parameter is optional.  Otherwise, it
-is required.
+**Required**, or optional with a response file. Specifies the full path to the `repository.config` file for installing this package. The `repository.config` file
+is provided when you download and extract a package from IBM.
 
 ##### options
 
-Any custom options to pass to the `imcl` tool for installing the package. This
-is optional.
+**Optional**. Specifies any custom options to pass to the `imcl` tool for installing the package.
 
 ##### response
 
-The absolute path to a response file to use for installing the package. If
-you're using a response file, the `package`, `version`, `target`, and
-`repository` parameters are optional.  However, ensure that your response file
-includes the needed values for these options.  You can also mix and match.
-This simply passes a response file to the `imcl` tool.
+Specifies the absolute path to a response file for installing the package. If
+you're using a response file, you can include the `package`, `version`, `target`, and
+`repository` values either in the response file or as the parameters listed for this type.
+TODO: are these the only values that you can have in this file, or should there be others?
 
 ##### user
 
-The user to run the `imcl` command as.  Defaults to `root`.  Basically, what
-user are we installing this as?  Ensure that this user has the necessary
-permissions for reading/writing to all the needed resources.
+Specifies the user to run the `imcl` command as. This user must have the necessary permissions for reading/writing to the needed resources. Defaults to `root`. 
 
-Note that installing as a different user will have weird affects.  Consult
-IBM's documentation for details.  Basically, it'll be a self-contained
-installation, and that might be undesirable.  It won't share installation
-data with the rest of the system.  You probably want to install as root.
+Note that installing as a user other than `root` might result in undefined behavior. Consult IBM's documentation for details. Installations by a non-root user won't share installation data with the rest of the system.
 
 ## Limitations
 
@@ -231,49 +204,27 @@ Tested with RHEL 6 x86_64 and IBM Installation Manager 1.8.1 and 1.6.x
 
 Tested on AIX 6.1 and 7.1
 
-## Caveats
+TODO: Update this testing/support info?
 
-The installer will exit 0 even if it failed.  Not a lot we can _reasonably_ do
-about that.
+## Known Issues
 
-    ERROR: java.lang.IllegalStateException: No metadata found for installed
-    package com.ibm.cic.agent 1.6.2000.20130301_2248.
+The installer exits 0 even if it failed. TODO: is this still true? If so, what is a more helpful note about it? What does it mean or is there something the user should do?
 
-This likely means there's a stale `/var/ibm` stuck around.
+```
+ERROR: java.lang.IllegalStateException: No metadata found for installed package com.ibm.cic.agent 1.6.2000.20130301_2248.
+```
 
 ## Dependencies
 
 * [puppetlabs/stdlib](https://forge.puppetlabs.com/puppetlabs/stdlib)
-
-If you want the module to extract the Zip file for you:
-
-* [nanliu/staging](https://forge.puppetlabs.com/nanliu/staging)
-
-You only need _nanliu/staging_ if you want the module to extract the source
-for you.
+* If you want the module to extract the Zip file for you, [nanliu/staging](https://forge.puppetlabs.com/nanliu/staging).
 
 ## Development and Contributing
 
-If you're masochistic enough to use this software and feel up for it, I'd
-greatly appreciate contributions.
+Puppet Labs modules on the Puppet Forge are open projects, and community contributions are essential for keeping them great. We can’t access the huge number of platforms and myriad hardware, software, and deployment configurations that Puppet is intended to serve. We want to keep it as easy as possible to contribute changes so that our modules work in your environment. There are a few guidelines that we need contributors to follow so that we can have a chance of keeping on top of things. For more information, see our [module contribution guide.](https://docs.puppetlabs.com/forge/contributing.html)
 
-You can download trials of IBM's software from their website.
+To download trials of IBM Installation Manager, visit IBM's [download page](https://www14.software.ibm.com/webapp/iwm/web/reg/download.do?source=swerpws-wasnd85&S_PKG=500026211&S_TACT=109J87BW&lang=en_US&cp=UTF-8). You must have an account to download trials from IBM.
 
-Visit [https://www14.software.ibm.com/webapp/iwm/web/reg/download.do?source=swerpws-wasnd85&S_PKG=500026211&S_TACT=109J87BW&lang=en_US&cp=UTF-8](https://www14.software.ibm.com/webapp/iwm/web/reg/download.do?source=swerpws-wasnd85&S_PKG=500026211&S_TACT=109J87BW&lang=en_US&cp=UTF-8)
+## Contributors
 
-You'll need an account there - IBM doesn't make it easy to try their stuff.
-
-Once there, look for the __"IBM Installation Manager"__ section and find the
-appropriate package for your platform.  Probably something like
-`agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip` for a standard
-Linux box.  It says PPC, but it appears to be x86_64.) It also says "gtk",
-but you don't actually need X11 or GTK to use the thing (and this module
-doesn't).
-
-I'm particuarily interested in help with the custom types/providers. Someone
-with more Ruby experience and familiarity with Puppet's type/provider API
-would be a huge help.
-
-## Authors
-
-Josh Beard <beard@puppetlabs.com>
+This module was contributed to by [Josh Beard](https://github.com/joshbeard) and [other contributors](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/graphs/contributors).
