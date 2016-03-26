@@ -32,12 +32,16 @@ Puppet::Type.newtype(:ibm_pkg) do
     'Install IBM Installation Manager'
   end
 
+  # TODO this does not work when using puppet resource
   validate do
     unless self[:response]
-      fail("target is required when a response file is not provided") if self[:target].nil?
-      fail("package is required when a response file is not provided") if self[:package].nil?
-      fail("version is required when a response file is not provided") if self[:version].nil?
-      fail("repository is required when a response file is not provided") if self[:repository].nil?
+      #fail("target is required when a response file is not provided") if self[:target].nil?
+      #fail("package is required when a response file is not provided") if self[:package].nil?
+      #fail("version is required when a response file is not provided") if self[:version].nil?
+      #fail("repository is required when a response file is not provided") if self[:repository].nil?
+      # unless File.exists?(resource[:repository])
+      #   raise Puppet::Error, "Ibm_pkg[#{resource[:package]}]: #{resource[:repository]} not found."
+      # end
     end
 
     fail("Invalid user #{self[:user]}") unless :user =~ /^[0-9A-Za-z_-]+$/
@@ -69,6 +73,16 @@ Puppet::Type.newtype(:ibm_pkg) do
         ]
       ]
     end
+  newparam(:name) do
+    ## We don't really care about this - we can install the same package
+    ## multiple times as long as it's in a separate path.  The path can also
+    ## have different packages installed *to* it.
+    #defalutto "#{id}_#{version}_#{path}"
+    isnamevar
+    validate do |value|
+      fail("invalid name #{value}") unless value.instance_of?(String)
+    end
+  end
 
   newparam(:imcl_path) do
     desc "The full path to the IBM Installation Manager location
@@ -78,20 +92,20 @@ Puppet::Type.newtype(:ibm_pkg) do
     provide a specific path, you may do so with this parameter."
   end
 
-  newparam(:target) do
+  newproperty(:target) do
     isnamevar
-
     desc "The full path to install the specified package to.
     Corresponds to the 'imcl' option '-installationDirectory'"
   end
 
-  newparam(:package) do
+  newproperty(:package) do
     isnamevar
-
     desc "The IBM package name. Example: com.ibm.websphere.IBMJAVA.v71
     This is the first part of the traditional IBM full package name,
     before the first underscore."
-
+    validate do |value|
+      fail("invalid package #{value}") unless value.instance_of?(String)
+    end
     ## How to best validate this? Are package names consistent?
   end
 
@@ -107,17 +121,21 @@ Puppet::Type.newtype(:ibm_pkg) do
     responsible for ensuring this file is present."
   end
 
-  newparam(:version) do
+  newproperty(:version) do
     desc "The version of the package. Example: 7.1.2000.20141116_0823
     This is the second part of the traditional IBM full package name,
     after the first underscore."
-
+    validate do |value|
+      fail("invalid version #{value}") unless value.instance_of?(String)
+    end
     ## How to best validate this?  Is the versioning consistent?
   end
 
   newparam(:options) do
-    desc "Any custom options to pass to the 'imcl' tool for installing the
-    package"
+    desc "Any custom options to pass to the 'imcl' tool for installing the package"
+    validate do |value|
+      fail("invalid options #{value}") unless value.instance_of?(String)
+    end
   end
 
 
@@ -133,11 +151,17 @@ Puppet::Type.newtype(:ibm_pkg) do
 
   newparam(:package_owner) do
     desc 'The user that should own this package installation. Only used if manage_ownership is true.'
+    validate do |value|
+      fail("invalid package_owner #{value}") unless value.instance_of?(String)
+    end
     defaultto 'root'
   end
 
   newparam(:package_group) do
     desc 'The group that should own this package installation. Only used if manage_ownership is true.'
+    validate do |value|
+      fail("invalid package_group #{value}") unless value.instance_of?(String)
+    end
     defaultto 'root'
   end
 end

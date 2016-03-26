@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?installInfo version='0.0.3'?>
+<?xml-stylesheet type='text/xsl' href='installed.xsl'?>
+<installInfo xmlns:xsi='http://www.ibm.com/rational/com.ibm.cic.installed' xmlns:installed='http://www.ibm.com/rational/com.ibm.cic.installed' xsi:schemaLocation='http://www.ibm.com/rational/com.ibm.cic.installed'>
+  <property name='agent.launch.command' value='/opt/IBM/tmp/InstallationManager/installc'/>
+  <property name='agent.install.location' value='/opt/Apps/WebSphere/was8.5/product/eclipse'/>
+  <property name='cic.appDataLocation' value='/var/ibm/InstallationManager'/>
+  <property name='accessRights' value='admin'/>
+  <location id='IBM Installation Manager' kind='self' path='/opt/Apps/WebSphere/was8.5/product/eclipse'>
+    <property name='eclipseLocation' value='/opt/Apps/WebSphere/was8.5/product/eclipse'/>
+    <property name='eclipseContext' value='com.ibm.sdp.eclipse.ide'/>
+    <property name='user.import.profile' value='false'/>
+    <property name='cic.selector.nl' value='de,no,fi,ru,hr,fr,hu,sk,sl,sv,ko,el,en,pt_BR,it,iw,zh,es,cs,ar,zh_HK,zh_TW,th,ja,pl,da,tr,nl'/>
+    <property name='cic.selector.os' value='linux'/>
+    <property name='cic.selector.arch' value='x86_64'/>
+    <property name='cic.selector.ws' value='gtk'/>
+    <property name='agent.java.home' value='/opt/Apps/WebSphere/was8.5/product/eclipse/jre_6.0.0.sr9_20110208_03/jre'/>
+    <property name='agent.jre' value='/opt/Apps/WebSphere/was8.5/product/eclipse/jre_6.0.0.sr9_20110208_03/jre/bin/java'/>
+    <property name='agent.launcher' value='/opt/Apps/WebSphere/was8.5/product/eclipse/IBMIM'/>
+    <package kind='offering' name='IBM® Installation Manager' id='com.ibm.cic.agent' version='1.6.2000.20130301_2248'>
+      <property name='cic.info.name' value='IBM® Installation Manager'/>
+      <property name='cic.info.version' value='1.6.2'/>
+      <property name='agent.sourceRepositoryLocation' value='/opt/IBM/tmp/InstallationManager'/>
+      <property name='offering.RequiresAdmin' value='false'/>
+      <property name='offering.SupportsGroupMode' value='true'/>
+      <property name='beta.compatible' value='true'/>
+      <property name='default.location' value='${defaultInstallRootLocation}/IBM/InstallationManager/eclipse'/>
+      <property name='default.user.location.win32' value='${defaultInstallRootLocation}\IBM\Installation Manager\eclipse'/>
+      <property name='default.commonlocation.win32' value='${specialFolder:PROGRAM_FILES}\IBM\SDP70Shared'/>
+      <property name='default.commonlocation.linux' value='/opt/IBM/SDP70Shared'/>
+      <property name='default.commonlocation.macosx' value='/Applications/IBM/SDP70Shared'/>
+      <property name='default.commonlocation.solaris' value='/opt/IBM/SDP70Shared'/>
+      <property name='default.commonlocation.aix' value='/opt/IBM/SDP70Shared'/>
+      <property name='default.commonlocation.zos' value='/InstallationManager/sharedResource'/>
+      <property name='default.commonlocation.os400' value='/QIBM/ProdData/SDP70Shared'/>
+      <property name='default.location.win32' value='${specialFolder:PROGRAM_FILES}\IBM\Installation Manager\eclipse'/>
+      <property name='default.location.linux' value='/opt/IBM/InstallationManager/eclipse'/>
+      <property name='default.location.macosx' value='/Applications/IBM/InstallationManager/eclipse'/>
+      <property name='default.location.solaris' value='/opt/IBM/InstallationManager/eclipse'/>
+      <property name='default.location.aix' value='/opt/IBM/InstallationManager/eclipse'/>
+      <property name='default.location.zos' value='/InstallationManager/bin/eclipse'/>
+      <property name='default.location.os400' value='/QIBM/ProdData/InstallationManager/eclipse'/>
+      <property name='default.user.commonlocation.zos' value='${homeLocation}/InstallationManager/sharedResource'/>
+      <property name='default.user.location.zos' value='${homeLocation}/InstallationManager/bin/eclipse'/>
+      <property name='default.group.location.zos' value='/InstallationManager/bin/eclipse'/>
+      <property name='default.group.commonlocation.zos' value='/InstallationManager/sharedResource'/>
+      <property name='offering.supports64bits' value='true'/>
+      <property name='default.profile' value='IBM Installation Manager'/>
+      <property name='localeLanguages' value='ar,pt_BR,hr,cs,da,nl,en,fi,fr,de,el,iw,hu,it,ja,ko,no,pl,ru,zh,sk,sl,es,sv,th,zh_TW,zh_HK,tr'/>
+      <property name='maxCacheLocationPathLength.win32' value='80'/>
+      <property name='maxInstallLocationPathLength.win32' value='80'/>
+      <property name='profileShare' value='false'/>
+      <property name='rollback.allowed.version' value='none'/>
+      <property name='vendor.name' value='IBM'/>
+      <property name='offering.service.repositories' value='http://public.dhe.ibm.com/software/rationalsdp/v7/im/updates'/>
+      <property name='warnVistaVirtualizationDirectories' value='false'/>
+      <property name='supports.console.mode' value='true'/>
+      <property name='supportedWindowSystems' value='(|         (&amp; (ws=gtk) (os=aix) (| (arch=ppc) (arch=ppc64)))         (&amp; (ws=gtk) (os=hpux) (| (arch=ia64_32) (arch=ia64)))         )'/>
+      <property name='eclipseCompatibility' value='classic'/>
+      <property name='offering.license.type' value=''/>
+      <property name='offering.license.expiration' value=''/>
+      <package kind='feature' id='agent_core'>
+        <property name='cic.info.name' value='Required Files'/>
+        <property name='cic.feature.kind' value='RequiredAndNotVisible'/>
+      </package>
+      <package kind='feature' id='agent_jre'>
+        <property name='cic.info.name' value='Java Runtime Environment'/>
+        <property name='cic.feature.kind' value='RequiredAndNotVisible'/>
+      </package>
+    </package>
+  </location>
+</installInfo>

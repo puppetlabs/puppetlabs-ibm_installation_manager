@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--The "acceptLicense" attribute has been deprecated. Use "-acceptLicense" command line option to accept license agreements.-->
+<agent-input acceptLicense='true'>
+  <server>
+    <repository location='https://mycompany.com:8001/repo'/>
+  </server>
+  <profile id='IBM HTTP Server for WebSphere Application Server V8.5' installLocation='/opt/IBM/WebSphere/was8.5/IBMHttpServer'>
+    <data key='eclipseLocation' value='/opt/IBM/WebSphere/was8.5/IBMHttpServer'/>
+    <data key='user.import.profile' value='false'/>
+    <data key='user.ihs.httpPort' value='8080'/>
+    <data key='cic.selector.nl' value='en'/>
+  </profile>
+  <install modify='false'>
+    <offering id='com.ibm.websphere.IHS.v85' version='8.5.5006.20150529_0536'
+    profile='IBM HTTP Server for WebSphere Application Server V8.5'
+    features='core.feature,arch.64bit' installFixes='none'/>
+  </install>
+  <preference name='com.ibm.cic.common.core.preferences.eclipseCache' value='/opt/IBM/WebSphere/was8.5/IMShared'/>
+  <preference name='offering.service.repositories.areUsed' value='true'/>
+  <preference name='com.ibm.cic.common.core.preferences.ssl.nonsecureMode' value='true'/>
+  <preference name='com.ibm.cic.common.core.preferences.preserveDownloadedArtifacts' value='true'/>
+  <preference name='com.ibm.cic.common.core.preferences.keepFetchedFiles' value='false'/>
+  <preference name='com.ibm.cic.agent.ui.displayInternalVersion' value='false'/>
+</agent-input>
