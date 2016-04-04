@@ -11,7 +11,6 @@ class ibm_installation_manager (
 ) {
 
   validate_bool($deploy_source)
-  validate_absolute_path($source_dir, $target)
   validate_string($options, $user, $group)
   validate_integer($timeout)
 
