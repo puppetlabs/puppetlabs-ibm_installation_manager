@@ -48,6 +48,7 @@ group :system_tests do
   gem 'beaker-puppet_install_helper', :require => false
   gem 'serverspec',                   :require => false
   gem 'master_manipulator', '1.1.2',  :require => false
+  gem 'scooter', '~>2.1',             :require => false
 end
 
 # vim:ft=ruby

@@ -14,10 +14,15 @@ teardown do
   end
 end
 
+if agent['platform'] =~ /aix/
+  source = 'http://int-resources.ops.puppetlabs.net/QA_resources/ibm_websphere/agent.installer.aix.gtk.ppc_1.8.4000.20151125_0201.zip'
+elsif agent['platform'] =~ /linux/
+  source = 'http://int-resources.ops.puppetlabs.net/QA_resources/ibm_websphere/agent.installer.linux.gtk.x86_64_1.8.3000.20150606_0047.zip'
+end
 pp = <<-MANIFEST
 class { 'ibm_installation_manager':
     deploy_source => true,
-    source        => 'http://int-resources.ops.puppetlabs.net/QA_resources/ibm_websphere/agent.installer.linux.gtk.x86_64_1.8.3000.20150606_0047.zip',
+    source        => "#{source}",
     target        =>  "#{custom_location}"
 }
 MANIFEST
@@ -29,7 +34,7 @@ inject_site_pp(master, get_site_pp_path(master), site_pp)
 step 'Run Puppet Agent to install IBM Installation Manager to a custom location'
 confine_block(:except, :roles => %w{master dashboard database}) do
   agents.each do |agent|
-    on(agent, puppet('agent -t --environment production'), :acceptable_exit_codes => [0,2]) do |result|
+    on(agent, "/opt/puppetlabs/puppet/bin/puppet agent -t", :acceptable_exit_codes => [0,2]) do |result|
       assert_no_match(/Error:/, result.stderr, 'Unexpected error was detected!')
     end
 
