@@ -230,7 +230,7 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
         version      = package.attributes['version'] # 1.6.2000.20130301_2248
         repository   = package.elements.find {|i| i.attributes['name'] == 'agent.sourceRepositoryLocation'}.attributes['value']
         packages << {
-          :name => "#{id}_#{version}_#{path}",
+          :name         => "#{id}_#{version}_#{path}",
           :product_name => product_name,
           :path         => path,
           :package_id   => id,
@@ -246,14 +246,15 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
   def self.instances
     # get a list of installed packages
     installed_packages.collect do |package|
-      new(
-        :ensure => :present,
-        :package => package[:package_id],
-        :name => package[:name],
-        :version => package[:version],
-        :target  => package[:path],
+      hash = {
+        :ensure     => :present,
+        :package    => package[:package_id],
+        :name       => package[:name],
+        :version    => package[:version],
+        :target     => package[:path],
         :repository => package[:repository]
-      )
+      }
+      new(hash)
     end
  end
 

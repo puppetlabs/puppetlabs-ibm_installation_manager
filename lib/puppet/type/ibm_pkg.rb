@@ -33,18 +33,20 @@ Puppet::Type.newtype(:ibm_pkg) do
   end
 
   validate do
-    unless self[:response]
-      fail("target is required when a response file is not provided") if self[:target].nil?
-      fail("package is required when a response file is not provided") if self[:package].nil?
-      fail("version is required when a response file is not provided") if self[:version].nil?
-      fail("repository is required when a response file is not provided") if self[:repository].nil?
-    end
+    if self.catalog
+      unless self[:response]
+        fail("target is required when a response file is not provided") if self[:target].nil?
+        fail("package is required when a response file is not provided") if self[:package].nil?
+        fail("version is required when a response file is not provided") if self[:version].nil?
+        fail("repository is required when a response file is not provided") if self[:repository].nil?
+      end
 
-    fail("Invalid user #{self[:user]}") unless :user =~ /^[0-9A-Za-z_-]+$/
+      fail("Invalid user #{self[:user]}") unless :user =~ /^[0-9A-Za-z_-]+$/
 
-    [:imcl_path, :target, :repository, :response].each do |value|
-      if self[value]
-        fail("#{value.to_s} must be an absolute path: #{self[value]}") unless Pathname.new(self[value]).absolute? 
+      [:imcl_path, :target, :repository, :response].each do |value|
+        if self[value]
+          fail("#{value.to_s} must be an absolute path: #{self[value]}") unless Pathname.new(self[value]).absolute? 
+        end
       end
     end
   end
@@ -69,6 +71,10 @@ Puppet::Type.newtype(:ibm_pkg) do
         ]
       ]
     end
+
+  newparam(:name) do
+    desc "The name of the resource"
+  end
 
   newparam(:imcl_path) do
     desc "The full path to the IBM Installation Manager location
