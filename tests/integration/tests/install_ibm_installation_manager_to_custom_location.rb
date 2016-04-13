@@ -9,12 +9,7 @@ source_link = nil
 teardown do
   confine_block(:except, :roles => %w{master dashboard database}) do
     agents.each do |agent|
-      on(agent, "/var/ibm/InstallationManager/uninstall/uninstallc",
-         :acceptable_exit_codes => [0,127]) do |result|
-        assert_no_match(/Error/, result.stderr, 'Failed to uninstall IBM Installation Manager')
-      end
-      on(agent, "rm -rf #{custom_location}")
-      on(agent, "rm -rf /tmp/*")
+      clean_test_box(agent, " #{custom_location} /tmp/*")
     end
   end
 end

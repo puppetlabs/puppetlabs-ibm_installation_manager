@@ -110,11 +110,37 @@ end
 #
 # get_resource_link
 def get_source_link(host)
-  source = nil
   if (host['platform'] =~ /aix/)
-    source = 'http://int-resources.ops.puppetlabs.net/QA_resources/ibm_websphere/agent.installer.aix.gtk.ppc_1.8.4000.20151125_0201.zip'
+    return 'http://int-resources.ops.puppetlabs.net/QA_resources/ibm_websphere/agent.installer.aix.gtk.ppc_1.8.4000.20151125_0201.zip'
   elsif (host['platform'] =~ /linux/)
-    source = 'http://int-resources.ops.puppetlabs.net/QA_resources/ibm_websphere/agent.installer.linux.gtk.x86_64_1.8.3000.20150606_0047.zip'
+    return 'http://int-resources.ops.puppetlabs.net/QA_resources/ibm_websphere/agent.installer.linux.gtk.x86_64_1.8.3000.20150606_0047.zip'
   end
-  return source
+end
+
+# uninstall IBM Installation Manager and clean the box
+# either for Linux or AIX agent
+#
+# ==== Attributes
+#
+# * +host+ - The target host where IBM Installation Manager needs to be uninstalled.
+# * +remove_directories+ - The directories need to be deleted from the host.
+# ==== Returns
+#
+# The test box should be cleaned after each test
+#
+# ==== Raises
+#
+# +none+
+#
+# ==== Examples
+#
+# clean_test_box(agent, '/opt/IBM')
+def clean_test_box(host, remove_directories=nil)
+  on(host, '/var/ibm/InstallationManager/uninstall/uninstallc',
+     :acceptable_exit_codes => [0,127]) do |result|
+    assert_no_match(/Error/, result.stderr, 'Failed to uninstall IBM Installation Manager')
+  end
+  if remove_directories
+    on(host, 'rm -rf remove_directories', :acceptable_exit_codes => [0,127])
+  end
 end

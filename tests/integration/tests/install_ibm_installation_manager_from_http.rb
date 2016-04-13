@@ -2,18 +2,13 @@ require 'im_helper'
 require 'master_manipulator'
 test_name 'FM-3804 - C94723 - Install Installation Manager from an HTTP repository'
 
-#target = '/opt/IBM/InstallationManager'
 source_link = nil
 
 # Teardown
 teardown do
   confine_block(:except, :roles => %w{master dashboard database}) do
     agents.each do |agent|
-      on(agent, "/var/ibm/InstallationManager/uninstall/uninstallc",
-         :acceptable_exit_codes => [0,127]) do |result|
-        assert_no_match(/Error/, result.stderr, 'Failed to uninstall IBM Installation Manager')
-      end
-      on(agent, "rm -rf /opt/IBM")
+      clean_test_box(agent, '/opt/IBM')
     end
   end
 end
