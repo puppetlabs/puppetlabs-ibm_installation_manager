@@ -11,7 +11,6 @@ fi
 
 export pe_dist_dir="http://pe-releases.puppetlabs.lan/2015.3.3"
 export GEM_SOURCE=http://rubygems.delivery.puppetlabs.net
-export BEAKER_VERSION=2.39.0
 
 bundle install --without build development test --path .bundle/gems
 

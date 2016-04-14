@@ -45,10 +45,12 @@ group :system_tests do
   else
     gem 'beaker-rspec',  :require => false
   end
+  if ENV['GEM_SOURCE']
+    gem 'scooter', '~> 3.2', :require => false
+  end
   gem 'beaker-puppet_install_helper', :require => false
   gem 'serverspec',                   :require => false
   gem 'master_manipulator', '1.1.2',  :require => false
-  gem 'scooter', '~>2.1',             :require => false
 end
 
 # vim:ft=ruby
