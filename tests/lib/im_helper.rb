@@ -141,6 +141,6 @@ def clean_test_box(host, remove_directories=nil)
     assert_no_match(/Error/, result.stderr, 'Failed to uninstall IBM Installation Manager')
   end
   if remove_directories
-    on(host, 'rm -rf remove_directories', :acceptable_exit_codes => [0,127])
+    on(host, "rm -rf #{remove_directories}", :acceptable_exit_codes => [0,127])
   end
 end

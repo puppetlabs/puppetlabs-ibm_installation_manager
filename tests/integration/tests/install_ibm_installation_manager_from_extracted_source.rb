@@ -34,6 +34,8 @@ step 'Run Puppet Agent to install IBM Installation Manager from extracted source
 confine_block(:except, :roles => %w{master dashboard database}) do
   agents.each do |agent|
     download_and_uncompress(agent, source_link, extracted_source)
+
+    sleep(20)
     on(agent, "/opt/puppetlabs/puppet/bin/puppet agent -t",
        :acceptable_exit_codes => [0,2]) do |result|
       assert_no_match(/Error:/, result.stderr, 'Unexpected error was detected!')
