@@ -1,4 +1,6 @@
 require 'master_manipulator'
+require 'scooter'
+
 test_name 'FM-3804 - C61700 - Install Puppet Enterprise'
 
 # Init
