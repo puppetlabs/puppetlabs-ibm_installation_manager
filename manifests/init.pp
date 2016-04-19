@@ -34,7 +34,7 @@ class ibm_installation_manager (
 
     package { 'unzip':
       ensure => present,
-      before => Archive[$source],
+      before => Archive['/tmp/ibm-agent_installer.zip],
     }
 
     file { $source_dir:
@@ -43,9 +43,10 @@ class ibm_installation_manager (
       group  => $group,
     }
 
-    archive { $source:
+    archive { '/tmp/ibm-agent_installer.zip':
       extract      => true,
       extract_path => $source_dir,
+      source       => $source,
       creates      => "${source_dir}/tools/imcl",
       require      => File[$source_dir],
       before       => Exec['Install IBM Installation Manager'],
