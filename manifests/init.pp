@@ -34,7 +34,7 @@ class ibm_installation_manager (
 
     package { 'unzip':
       ensure => present,
-      before => Archive['/tmp/ibm-agent_installer.zip],
+      before => Archive["${source_dir}/ibm-agent_installer.zip"],
     }
 
     file { $source_dir:
@@ -43,7 +43,7 @@ class ibm_installation_manager (
       group  => $group,
     }
 
-    archive { '/tmp/ibm-agent_installer.zip':
+    archive { "${source_dir}/ibm-agent_installer.zip":
       extract      => true,
       extract_path => $source_dir,
       source       => $source,
