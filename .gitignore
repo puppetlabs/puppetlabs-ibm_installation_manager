@@ -14,7 +14,11 @@ tmtags
 *.swp
 tags
 
+## Vagrant
+.vagrant
+
 pkg/
+log/
 .vendor
 .bundler
 .bundle
