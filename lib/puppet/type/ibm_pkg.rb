@@ -57,6 +57,14 @@ Puppet::Type.newtype(:ibm_pkg) do
       identity = lambda {|x| x}
       [
         [
+        /^(.*):(.*):(.*)$/,
+          [
+            [:target, identity ],
+            [:package, identity ],
+            [:version, identity ]
+          ]
+        ],
+        [
         /^(.*):(.*)$/,
           [
             [:target, identity ],
@@ -114,6 +122,8 @@ Puppet::Type.newtype(:ibm_pkg) do
   end
 
   newparam(:version) do
+    isnamevar
+
     desc "The version of the package. Example: 7.1.2000.20141116_0823
     This is the second part of the traditional IBM full package name,
     after the first underscore."
