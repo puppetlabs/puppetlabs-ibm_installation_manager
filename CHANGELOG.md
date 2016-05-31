@@ -1,3 +1,10 @@
+## Release 0.2.1
+### Summary
+This small bugfix release that fixes a potential duplicate resource problem.
+
+#### Bugfixes
+- Fixes a possible duplicate resource problem
+
 ## Release 0.2.0
 ### Summary
 This release includes feature to manage ibm packages via `puppet resource` as well as some bugfixes.
