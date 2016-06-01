@@ -38,7 +38,7 @@ end
 
 group :system_tests do
   if beaker_version
-    gem 'beaker', *location_for(beaker_version || '~> 2.26')
+    gem 'beaker', *location_for(beaker_version)
   end
   if beaker_rspec_version
     gem 'beaker-rspec', *location_for(beaker_rspec_version)
