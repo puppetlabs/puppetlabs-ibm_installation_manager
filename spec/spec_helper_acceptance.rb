@@ -36,6 +36,7 @@ RSpec.configure do |c|
         archive { '/tmp/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip':
           source       => "#{INSTALL_FILE_PATH}/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip",
           extract      => false,
+          extract_path => '/tmp',
         }
 
         package { 'unzip':
@@ -52,7 +53,6 @@ RSpec.configure do |c|
           extract      => true,
           extract_path => '/tmp/ndtrial',
           creates      => '/tmp/ndtrial/repository.config',
-          require      => File['/tmp/ndtrial'],
         }
       EOS
       apply_manifest_on(host, pp, :catch_failures => true)
