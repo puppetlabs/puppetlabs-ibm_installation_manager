@@ -53,35 +53,8 @@ Puppet::Type.newtype(:ibm_pkg) do
 
   ensurable
 
-    def self.title_patterns
-      identity = lambda {|x| x}
-      [
-        [
-        /^(.*):(.*):(.*)$/,
-          [
-            [:target, identity ],
-            [:package, identity ],
-            [:version, identity ]
-          ]
-        ],
-        [
-        /^(.*):(.*)$/,
-          [
-            [:target, identity ],
-            [:package, identity ]
-          ]
-        ],
-        [
-        /^(.*)$/,
-          [
-            [:target, identity ]
-          ]
-        ]
-      ]
-    end
+  newparam(:name, :namevar => true) do
 
-  newparam(:name) do
-    desc "The name of the resource"
   end
 
   newparam(:imcl_path) do
@@ -93,15 +66,11 @@ Puppet::Type.newtype(:ibm_pkg) do
   end
 
   newparam(:target) do
-    isnamevar
-
     desc "The full path to install the specified package to.
     Corresponds to the 'imcl' option '-installationDirectory'"
   end
 
   newparam(:package) do
-    isnamevar
-
     desc "The IBM package name. Example: com.ibm.websphere.IBMJAVA.v71
     This is the first part of the traditional IBM full package name,
     before the first underscore."
@@ -115,15 +84,11 @@ Puppet::Type.newtype(:ibm_pkg) do
   end
 
   newparam(:response) do
-    isnamevar
-
     desc "Full path to an optional response file to use. The user is
     responsible for ensuring this file is present."
   end
 
   newparam(:version) do
-    isnamevar
-
     desc "The version of the package. Example: 7.1.2000.20141116_0823
     This is the second part of the traditional IBM full package name,
     after the first underscore."

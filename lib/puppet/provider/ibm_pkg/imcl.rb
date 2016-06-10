@@ -55,10 +55,10 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
       if resource[:imcl_path]
         @imcl_command_path = resource[:imcl_path]
       else
-        registry = File.open(self.registry_file)
-        doc = REXML::Document.new(registry)
+        installed = File.open(self.installed_file)
+        doc = REXML::Document.new(installed)
         path = XPath.first(doc, '//installInfo/location[@id="IBM Installation Manager"]/@path').value
-        registry.close
+        installed.close
         @imcl_command_path = File.join(path, 'tools','imcl')
       end
     end
@@ -68,21 +68,21 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
     @imcl_command_path
   end
 
-  # returns a file handle by opening the registry file
+  # returns a file handle by opening the install file
   # easier to mock when extracted to method like this
-  def registry_file
+  def self.installed_file
     '/var/ibm/InstallationManager/installed.xml'
-  end
-
-  def imcl(cmd_options)
-    command = "#{imcl_command_path} #{cmd_options}"
-    Puppet::Util::Execution.execute(command, :uid => resource[:user], :combine => true, :failonfail => true)
   end
 
   # returns a file handle by opening the registry file
   # easier to mock when extracted to method like this
   def self.registry_file
-    '/var/ibm/InstallationManager/installed.xml'
+    '/var/ibm/InstallationManager/installRegistry.xml'
+  end
+
+  def imcl(cmd_options)
+    command = "#{imcl_command_path} #{cmd_options}"
+    Puppet::Util::Execution.execute(command, :uid => resource[:user], :combine => true, :failonfail => true)
   end
 
   def getps
@@ -199,15 +199,15 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
   def self.prefetch(resources)
     packages = instances
     if packages
-      resources.each do | name, resource|
-        if resource[:response]
-          props = response_file_properties(resource[:response])
+      resources.keys.each do |name|
+        if resources[name][:response]
+          props = response_file_properties(resources[name][:response])
           # pre populate the things that were missing when the response file was parsed
-          resource[:target] = props[:target]
-          resource[:version] = props[:version]
-          resource[:package] = props[:package]
+          resources[name][:target] = props[:target]
+          resources[name][:version] = props[:version]
+          resources[name][:package] = props[:package]
         end
-        if provider = packages.find {|package| compare_package(package, resource) }
+        if provider = packages.find {|package| compare_package(package, resources[name]) }
           resources[name].provider = provider
         end
       end
@@ -222,21 +222,22 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
     registry = File.open(self.registry_file)
     doc = REXML::Document.new(registry)
     packages = []
-    doc.elements.each("/installInfo/location") do |item|
+    doc.elements.each("/installRegistry/profile") do |item|
       product_name = item.attributes["id"]   # IBM Installation Manager
-      path         = item.attributes["path"]  # /opt/Apps/WebSphere/was8.5/product/eclipse
-      XPath.each(item, "package") do |package|
-        id           = package.attributes['id']  # com.ibm.cic.agent
-        version      = package.attributes['version'] # 1.6.2000.20130301_2248
-        repository   = package.elements.find {|i| i.attributes['name'] == 'agent.sourceRepositoryLocation'}.attributes['value']
-        packages << {
-          :name         => "#{id}_#{version}_#{path}",
-          :product_name => product_name,
-          :path         => path,
-          :package_id   => id,
-          :version      => version,
-          :repository   => "#{repository}"
-        }
+      path         = XPath.first(item, 'property[@name="installLocation"]/@value').value # /opt/Apps/WebSphere/was8.5/product/eclipse
+      XPath.each(item, "offering") do |offering|
+        id           = offering.attributes['id']  # com.ibm.cic.agent
+        XPath.each(offering, "version") do |package|
+          version      = package.attributes['value'] # 1.6.2000.20130301_2248
+          repository   = package.attributes['repoInfo'].split(',')[0].split('=')[1]
+          packages << {
+            :product_name => product_name,
+            :path         => path,
+            :package_id   => id,
+            :version      => version,
+            :repository   => repository
+          }
+        end
       end
     end
     registry.close
@@ -249,13 +250,12 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
       hash = {
         :ensure     => :present,
         :package    => package[:package_id],
-        :name       => package[:name],
+        :name       => "#{package[:path]}:#{package[:package_id]}:#{package[:version]}",
         :version    => package[:version],
         :target     => package[:path],
         :repository => package[:repository]
       }
       new(hash)
     end
- end
-
+  end
 end
