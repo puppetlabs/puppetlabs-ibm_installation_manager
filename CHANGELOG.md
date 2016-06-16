@@ -1,3 +1,10 @@
+## Release 0.2.2
+### Summary
+This small bugfix release that fixes an idempotency problem when installing fixpacks
+
+#### Bugfixes
+- Fixes idempotency problem when installing fixpacks
+
 ## Release 0.2.1
 ### Summary
 This small bugfix release that fixes a potential duplicate resource problem.
