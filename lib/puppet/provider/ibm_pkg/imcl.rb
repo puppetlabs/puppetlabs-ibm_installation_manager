@@ -70,7 +70,7 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
 
   # returns a file handle by opening the install file
   # easier to mock when extracted to method like this
-  def self.installed_file
+  def installed_file
     '/var/ibm/InstallationManager/installed.xml'
   end
 
