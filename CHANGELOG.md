@@ -1,3 +1,10 @@
+## Release 0.2.3
+### Summary
+This small bugfix release that fixes a failure to read the install_file
+
+#### Bugfixes
+- Fixes a failure to read the install file.
+
 ## Release 0.2.2
 ### Summary
 This small bugfix release that fixes an idempotency problem when installing fixpacks
