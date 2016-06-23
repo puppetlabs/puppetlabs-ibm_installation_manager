@@ -1,6 +1,6 @@
 {
   "name": "puppetlabs-ibm_installation_manager",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "author": "puppetlabs",
   "summary": "Manages IBM Installation Manager and IBM packages",
   "license": "Apache-2.0",
