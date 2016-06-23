@@ -160,13 +160,14 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
 
   def create
     if resource[:response]
-      cmd_options = "input #{resource[:response]} -acceptLicense"
+      cmd_options = "input #{resource[:response]}"
     else
       cmd_options =  "install #{resource[:package]}_#{resource[:version]}"
       cmd_options << " -repositories #{resource[:repository]} -installationDirectory #{resource[:target]}"
-      cmd_options << " -acceptLicense"
     end
-    #cmd_options.push(resource[:options]) if resource[:options]
+    cmd_options << " -acceptLicense"
+    cmd_options << " #{resource[:options]}" if resource[:options]
+
     stopprocs  # stop related processes before we install
     imcl(cmd_options)
     # change owner
