@@ -1,3 +1,10 @@
+## Release 0.2.4
+### Summary
+This small bugfix release that fixes a failure to append install options
+
+#### Bugfixes
+- Fixes a failure to append install options to imcl command
+
 ## Release 0.2.3
 ### Summary
 This small bugfix release that fixes a failure to read the install_file
