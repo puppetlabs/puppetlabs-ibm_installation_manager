@@ -11,14 +11,17 @@ def location_for(place, fake_version = nil)
 end
 
 group :development, :test do
-  gem 'rake',                    :require => false
-  gem 'rspec-core',              :require => false
-  gem 'rspec-puppet',            :require => false
-  gem 'puppetlabs_spec_helper',  :require => false
-  gem 'puppet-lint',             :require => false
-  gem 'simplecov',               :require => false
-  gem 'puppet_facts',            :require => false
-  gem 'json',                    :require => false
+  gem 'rake',                           :require => false
+  gem 'rspec-core',                     :require => false
+  gem 'rspec-puppet',                   :require => false
+  gem 'puppetlabs_spec_helper',         :require => false
+  gem 'puppet-lint',                    :require => false
+  gem 'simplecov',                      :require => false
+  gem 'puppet_facts',                   :require => false
+  gem 'json',                           :require => false
+  gem 'metadata-json-lint',             :require => false
+  gem 'puppet-blacksmith', '>= 3.4.0',  :require => false
+  gem 'json_pure', '<=2.0.1',           :require => false if RUBY_VERSION =~ /^1\./
 end
 
 beaker_version = ENV['BEAKER_VERSION']
