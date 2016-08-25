@@ -1,0 +1,4 @@
+# acceptance tests require access to internal resources
+---
+.travis.yml:
+  docker_sets: []
