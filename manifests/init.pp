@@ -53,8 +53,15 @@ class ibm_installation_manager (
     }
   }
 
+  if $user == 'root' {
+    $installc = 'installc'
+  }
+  else {
+    $installc = 'userinstc'
+  }
+
   exec { 'Install IBM Installation Manager':
-    command => "${source_dir}/installc ${_options}",
+    command => "${source_dir}/${installc} ${_options}",
     creates => "${target}/eclipse/tools/imcl",
     cwd     => $source_dir,
     user    => $user,
