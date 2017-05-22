@@ -1,3 +1,16 @@
+## Release 0.2.5
+### Summary
+This small bugfix release that fixes install command options, and module sync changes.
+
+#### Bugfixes
+- When user is root, use 'installc' as the installation command
+
+#### Maintenance
+- Many modulesync changes
+- Update parallel_tests
+- Mocha version update
+- Add locales directory structure
+
 ## Release 0.2.4
 ### Summary
 This small bugfix release that fixes a failure to append install options
