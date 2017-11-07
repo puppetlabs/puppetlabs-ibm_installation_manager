@@ -81,8 +81,11 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
   end
 
   def imcl(cmd_options)
+    cwd = Dir.pwd
+    Dir.chdir(Dir.home(resource[:user]))
     command = "#{imcl_command_path} #{cmd_options}"
     Puppet::Util::Execution.execute(command, :uid => resource[:user], :combine => true, :failonfail => true)
+    Dir.chdir(cwd)
   end
 
   def getps
