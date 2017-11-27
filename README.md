@@ -53,6 +53,17 @@ class { 'ibm_installation_manager':
 }
 ```
 
+To install the Installation Manager as a non-root user, specify that user's name and its home directory, as well as the installation_mode
+
+```puppet
+class { 'ibm_installation_manager':
+  deploy_source => true,
+  source        => 'http://internal.lan/packages/IM.zip',
+  user          => 'iim_user',
+  user_home     => '/home/iim_user',
+}
+```
+
 ### Installing software packages
 
 To install software with IBM Installation Manager, use the `ibm_pkg` type. This type includes the `imcl` provider, which uses the Installation Manager's `imcl` command-line tool to handle installation.
@@ -123,6 +134,10 @@ details.
 
 Note that installing as a user other than `root` might result in undefined behavior. Consult IBM's documentation for details. Installations by a non-root user won't share installation data with the rest of the system.
 
+##### user_home
+
+Specifies the home directory for the specified user. Required if you're installing in a mode other than 'administrator'.
+
 ##### group
 
 Specifies the group to run the installation as. Defaults to `root`. 
@@ -136,6 +151,14 @@ Specifies options to pass to the installer. Defaults to `-acceptLicense -s -log/
 ##### timeout
 
 Specifies the timeout for the installation, in seconds. Defaults to 900. Installation Manager can take a long time to install, so if you have issues with Puppet timing out before the installation is complete, you might need to increase this parameter.
+
+##### installation_mode
+
+Specifies which 'installation mode' you want to use to install the IBM Installation Manager.
+
+Values: 'administrator', 'nonadministrator', 'group'
+
+Default: 'administrator'
 
 ### Type: ibm_pkg
 
@@ -189,9 +212,7 @@ Specifies the absolute path to a response file for installing the package. If yo
 
 ##### user
 
-Specifies the user to run the `imcl` command as. This user must have the necessary permissions for reading/writing to the needed resources. Defaults to `root`. 
-
-Note that installing as a user other than `root` might result in undefined behavior. Consult IBM's documentation for details. Installations by a non-root user won't share installation data with the rest of the system.
+Specifies the user to run the `imcl` command as. This user must have the necessary permissions for reading/writing to the needed resources. If you installed the Installation Manager as a non-root user, pass the same user or user in a group to this paramter. Defaults to `root`. 
 
 ## Limitations
 
