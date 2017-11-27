@@ -1,14 +1,16 @@
 #
 class ibm_installation_manager (
-  $deploy_source = false,
-  $source        = undef,
-  $target        = '/opt/IBM/InstallationManager',
-  $source_dir    = '/opt/IBM/tmp/InstallationManager',
-  $user          = 'root',
-  $group         = 'root',
-  $options       = undef,
-  $timeout       = '900',
-) {
+  $deploy_source     = false,
+  $source            = undef,
+  $source_dir        = undef,
+  $target            = undef,
+  $user              = 'root',
+  $user_home         = undef,
+  $group             = 'root',
+  $options           = undef,
+  $timeout           = '900',
+  $installation_mode = 'administrator',
+  ) {
 
   validate_bool($deploy_source)
   validate_string($options, $user, $group)
@@ -20,21 +22,50 @@ class ibm_installation_manager (
 
   $timestamp  = chomp(generate('/bin/date', '+%Y%d%m_%H%M%S'))
 
-  if $options {
-    $_options = $options
-  } else {
-    $_options = "-acceptLicense -s -log /tmp/IM_install.${timestamp}.log.xml -installationDirectory ${target}"
-  }
-
-  if $deploy_source {
-    exec { "mkdir -p ${source_dir}":
-      creates => $source_dir,
-      path    => '/bin:/usr/bin:/sbin:/usr/sbin',
+  if $installation_mode == 'administrator' {
+    if $user != 'root' {
+      warning("You have set installation_mode to administrator, make sure ${user} has admin permissions.")
     }
 
+    $installc = 'installc'
+    $t = '/opt/IBM/InstallationManager'
+    $sd = '/opt/IBM/tmp/InstallationManager'
+    $_options = "-acceptLicense -s -log /tmp/IM_install.${timestamp}.log.xml"
+
+  } else {
+    if $installation_mode != 'nonadministrator' and $installation_mode != 'group' {
+      fail ("Designated installation_mode '${installation_mode}' not supported.")
+    }
+
+    if !$user or !$user_home or $user == 'root' {
+      fail("You have set installation_mode to ${installation_mode}. This requires a user and user_home to be set and user should not be 'root'.")
+    }
+
+    $_options = "-acceptLicense -accessRights nonAdmin -s -log /tmp/IM_install.${timestamp}.log.xml"
+
+    file { $user_home:
+      owner => $user,
+      recurse => true,
+      ignore => 'QA_resources',
+    }
+
+    if $installation_mode == 'nonadministrator' {
+      $installc = 'userinstc'
+      $t            = "${user_home}/IBM/InstallationManager"
+      $sd        = "${user_home}/IBM/tmp/InstallationManager"
+
+    } elsif $installation_mode == 'group' {
+        $installc = 'groupinstc'
+        $t            = "${user_home}/IBM/InstallationManager_Group"
+        $sd        = "${user_home}/IBM/tmp/InstallationManager"
+    }
+  }
+
+
+  if $deploy_source {
     package { 'unzip':
       ensure => present,
-      before => Archive["${source_dir}/ibm-agent_installer.zip"],
+      before => Archive["${_source_dir}/ibm-agent_installer.zip"],
     }
 
     file { $source_dir:
@@ -45,25 +76,47 @@ class ibm_installation_manager (
 
     archive { "${source_dir}/ibm-agent_installer.zip":
       extract      => true,
-      extract_path => $source_dir,
+      extract_path => $_source_dir,
       source       => $source,
-      creates      => "${source_dir}/tools/imcl",
-      require      => File[$source_dir],
+      creates      => "${_source_dir}/tools/imcl",
+      user         => $user,
+      group        => $group,
+      require      => File[$_source_dir],
       before       => Exec['Install IBM Installation Manager'],
     }
   }
 
-  if $user == 'root' {
-    $installc = 'installc'
-  }
-  else {
-    $installc = 'userinstc'
+  if $target {
+    $_target = $target
+  } else {
+    $_target = $t
   }
 
+  if $source_dir {
+    $_source_dir = $source_dir
+  } else {
+    $_source_dir = $sd
+  }
+
+  $config_opt = "-configuration ${_source_dir}/configuration"
+  $install_opt = "-installationDirectory ${_target}"
+
+  if $options {
+    $final_opt = $options
+  } else {
+    if $installation_mode != 'administrator' {
+      $final_opt = "${_options} ${config_opt} ${install_opt}"
+    } else {
+      $final_opt = "${_options} ${install_opt}"
+    }
+  }
+
+  $final_cmd = "${_source_dir}/${installc} ${final_opt}"
+
   exec { 'Install IBM Installation Manager':
-    command => "${source_dir}/${installc} ${_options}",
-    creates => "${target}/eclipse/tools/imcl",
-    cwd     => $source_dir,
+    command => $final_cmd,
+    creates => "${_target}/eclipse/tools/imcl",
+    cwd     => $_source_dir,
     user    => $user,
     timeout => $timeout,
   }

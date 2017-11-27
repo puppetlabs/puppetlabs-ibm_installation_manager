@@ -41,7 +41,7 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
 
   commands :kill => 'kill'
   commands :chown => 'chown'
-  confine  :exists => '/var/ibm/InstallationManager/installed.xml'
+  confine  :exists => @installxml
   # presumbly this could work on windows but we have some hard coded paths which
   # breaks these things on windows where the paths are different.
   confine  :true => Facter.value(:kernel) != 'windows'
@@ -55,6 +55,7 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
       if resource[:imcl_path]
         @imcl_command_path = resource[:imcl_path]
       else
+        require 'pry'; binding.pry
         installed = File.open(self.installed_file)
         doc = REXML::Document.new(installed)
         path = XPath.first(doc, '//installInfo/location[@id="IBM Installation Manager"]/@path').value
@@ -71,13 +72,22 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
   # returns a file handle by opening the install file
   # easier to mock when extracted to method like this
   def installed_file
-    '/var/ibm/InstallationManager/installed.xml'
+    if resource[:user] == 'root'
+      @installxml = '/var/ibm/InstallationManager/installed.xml'
+    else
+      @installxml = "/home/#{resource[:user]}/var/ibm/InstallationManager/installed.xml"
+    end
+    @installxml
   end
 
   # returns a file handle by opening the registry file
   # easier to mock when extracted to method like this
   def self.registry_file
-    '/var/ibm/InstallationManager/installRegistry.xml'
+    if resource[:user] == 'root'
+      '/var/ibm/InstallationManager/installRegistry.xml'
+    else
+      "/home/#{resource[:user]}/var/ibm/InstallationManager/installRegistry.xml"
+    end
   end
 
   def imcl(cmd_options)
@@ -165,8 +175,13 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
     if resource[:response]
       cmd_options = "input #{resource[:response]}"
     else
-      cmd_options =  "install #{resource[:package]}_#{resource[:version]}"
-      cmd_options << " -repositories #{resource[:repository]} -installationDirectory #{resource[:target]}"
+      if resource[:user] == 'root'
+        cmd_options =  "install #{resource[:package]}_#{resource[:version]}"
+        cmd_options << " -repositories #{resource[:repository]} -installationDirectory #{resource[:target]}"
+      else
+        cmd_options =  "install #{resource[:package]}_#{resource[:version]}"
+        cmd_options << " -repositories #{resource[:repository]} -installationDirectory #{resource[:target]} -accessRights nonAdmin"
+      end
     end
     cmd_options << " -acceptLicense"
     cmd_options << " #{resource[:options]}" if resource[:options]
