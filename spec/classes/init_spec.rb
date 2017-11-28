@@ -3,13 +3,14 @@ describe 'ibm_installation_manager' do
 
   context 'defaults' do
     context 'administrator' do
+
       it { should contain_class('ibm_installation_manager') }
       it { should contain_exec('Install IBM Installation Manager').with({
         :command => /\/opt\/IBM\/tmp\/InstallationManager\/installc -acceptLicense -s -log.*-installationDirectory \/opt\/IBM\/InstallationManager/,
         :creates => '/opt/IBM/InstallationManager/eclipse/tools/imcl',
         :user    => 'root',
         :timeout => '900',
-    })}
+      })}
     end
 
     context 'nonadministrator' do
@@ -71,6 +72,35 @@ describe 'ibm_installation_manager' do
     })}
   end
 
+  context 'deploy source = true' do
+    let(:params) {
+      {
+        deploy_source: true,
+      }
+    }
+    describe 'with a source' do
+      let(:params) { super().merge({ source: '/opt/IBM/tmp/InstallationManager/ibm-agent_installer.zip' }) }
+
+      it { is_expected.to contain_archive('/opt/IBM/tmp/InstallationManager/ibm-agent_installer.zip') }
+    end
+
+    describe 'without a source' do
+      it { is_expected.to raise_error Puppet::PreformattedError, /source parameter to be set/ }
+    end
+  end
+
+  context 'deploy source = false' do
+    let(:params) {
+      {
+        deploy_source: false,
+        source: '/opt/IBM/tmp/InstallationManager/ibm-agent_installer.zip'
+      }
+    }
+    describe 'with a source' do
+      it { is_expected.not_to contain_archive('/opt/IBM/tmp/InstallationManager/ibm-agent_installer.zip') }
+    end
+  end
+
   describe 'expect failure when' do
     context 'invalid mode' do
       let(:params) {
@@ -81,7 +111,7 @@ describe 'ibm_installation_manager' do
         }
       }
 
-      it { is_expected.to raise_error RuntimeError, /installation_mode foo not supported/}
+      it { is_expected.to raise_error Puppet::PreformattedError, /installation_mode 'foo' not supported/}
     end
     context 'non-administrator mode' do
       let(:params) { { installation_mode: 'nonadministrator' } }

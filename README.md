@@ -57,10 +57,11 @@ To install the Installation Manager as a non-root user, specify that user's name
 
 ```puppet
 class { 'ibm_installation_manager':
-  deploy_source => true,
-  source        => 'http://internal.lan/packages/IM.zip',
-  user          => 'iim_user',
-  user_home     => '/home/iim_user',
+  deploy_source     => true,
+  source            => 'http://internal.lan/packages/IM.zip',
+  user              => 'iim_user',
+  user_home         => '/home/iim_user',
+  installation_mode => 'nonadministrator',
 }
 ```
 

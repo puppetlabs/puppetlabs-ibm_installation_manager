@@ -17,6 +17,7 @@ describe 'ibm installation manager ibm_pkg:' do
           target        => '/opt/IBM/WebSphere0/AppServer',
           package_owner => 'root',
           package_group => 'root',
+          user          => 'root',
         }
       EOS
       apply_manifest(pp, :catch_failures => true)
@@ -26,6 +27,46 @@ describe 'ibm installation manager ibm_pkg:' do
     describe file('/var/ibm/InstallationManager/installed.xml') do
       it { should be_file }
       it { should contain '/opt/IBM/WebSphere0/AppServer' }
+    end
+  end
+
+  context 'installs package with non-root user' do
+    it 'should install package' do
+      pp = <<-EOS
+        class { 'ibm_installation_manager':
+          deploy_source => true,
+          source        => '/tmp/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip',
+          user          => 'webadmin',
+          user_home     => '/home/webadmin',
+          installation_mode => 'nonadministrator',
+        }
+        group { 'webadmins':
+          ensure => 'present',
+        }
+        user { 'webadmin':
+          ensure => 'present',
+          gid    => 'webadmins',
+        }
+        ibm_pkg { 'Websphere0':
+          ensure        => 'present',
+          package       => 'com.ibm.websphere.liberty.NDTRIAL.v85',
+          version       => '8.5.5000.20130514_1313',
+          repository    => "/tmp/ndtrial/repository.config",
+          target        => '/home/webadmin/IBM/WebSphere0/AppServer',
+          package_owner => 'webadmin',
+          package_group => 'webadmin',
+        }
+      EOS
+      apply_manifest(pp, :catch_failures => true)
+      apply_manifest(pp, :catch_changes => true)
+    end
+
+    describe file('/home/webadmin/var/ibm/InstallationManager/installed.xml') do
+      it { should be_file }
+    end
+
+    describe file('/home/webadmin/IBM/WebSphere0/AppServer') do
+      it { should be_directory }
     end
   end
 

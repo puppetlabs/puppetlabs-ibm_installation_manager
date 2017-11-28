@@ -43,12 +43,6 @@ class ibm_installation_manager (
 
     $_options = "-acceptLicense -accessRights nonAdmin -s -log /tmp/IM_install.${timestamp}.log.xml"
 
-    file { $user_home:
-      owner => $user,
-      recurse => true,
-      ignore => 'QA_resources',
-    }
-
     if $installation_mode == 'nonadministrator' {
       $installc = 'userinstc'
       $t            = "${user_home}/IBM/InstallationManager"
@@ -61,20 +55,36 @@ class ibm_installation_manager (
     }
   }
 
-
-  if $deploy_source {
-    package { 'unzip':
-      ensure => present,
-      before => Archive["${_source_dir}/ibm-agent_installer.zip"],
+  if $target {
+    $_target = $target
+    } else {
+      $_target = $t
     }
 
-    file { $source_dir:
+    if $source_dir {
+      $_source_dir = $source_dir
+    } else {
+      $_source_dir = $sd
+    }
+
+  if $deploy_source {
+    exec { "mkdir -p ${_source_dir}":
+      creates => $_source_dir,
+      path    => '/bin:/usr/bin:/sbin:/usr/sbin'
+    }
+
+    file { $_source_dir:
       ensure => 'directory',
       owner  => $user,
       group  => $group,
     }
 
-    archive { "${source_dir}/ibm-agent_installer.zip":
+    package { 'unzip':
+      ensure => present,
+      before => Archive["${_source_dir}/ibm-agent_installer.zip"],
+    }
+
+    archive { "${_source_dir}/ibm-agent_installer.zip":
       extract      => true,
       extract_path => $_source_dir,
       source       => $source,
@@ -84,18 +94,6 @@ class ibm_installation_manager (
       require      => File[$_source_dir],
       before       => Exec['Install IBM Installation Manager'],
     }
-  }
-
-  if $target {
-    $_target = $target
-  } else {
-    $_target = $t
-  }
-
-  if $source_dir {
-    $_source_dir = $source_dir
-  } else {
-    $_source_dir = $sd
   }
 
   $config_opt = "-configuration ${_source_dir}/configuration"
@@ -112,6 +110,14 @@ class ibm_installation_manager (
   }
 
   $final_cmd = "${_source_dir}/${installc} ${final_opt}"
+
+  if $user_home {
+    file { $user_home:
+      owner   => $user,
+      recurse => true,
+      ignore  => 'QA_resources',
+    }
+  }
 
   exec { 'Install IBM Installation Manager':
     command => $final_cmd,
