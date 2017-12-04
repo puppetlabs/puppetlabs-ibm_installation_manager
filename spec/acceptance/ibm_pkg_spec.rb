@@ -36,16 +36,10 @@ describe 'ibm installation manager ibm_pkg:' do
         class { 'ibm_installation_manager':
           deploy_source => true,
           source        => '/tmp/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip',
+          manage_user   => true,
           user          => 'webadmin',
           user_home     => '/home/webadmin',
           installation_mode => 'nonadministrator',
-        }
-        group { 'webadmins':
-          ensure => 'present',
-        }
-        user { 'webadmin':
-          ensure => 'present',
-          gid    => 'webadmins',
         }
         ibm_pkg { 'Websphere0':
           ensure        => 'present',

@@ -6,11 +6,12 @@ class ibm_installation_manager (
   $target            = undef,
   $user              = 'root',
   $user_home         = undef,
+  $manage_user       = false,
   $group             = 'root',
   $options           = undef,
   $timeout           = '900',
   $installation_mode = 'administrator',
-  ) {
+) {
 
   validate_bool($deploy_source)
   validate_string($options, $user, $group)
@@ -42,6 +43,18 @@ class ibm_installation_manager (
     }
 
     $_options = "-acceptLicense -accessRights nonAdmin -s -log /tmp/IM_install.${timestamp}.log.xml"
+
+    if $manage_user {
+      group { $group:
+        ensure => present,
+      }
+      user { $user:
+        ensure => present,
+        gid => $group,
+        managehome => true,
+        home => $user_home,
+      }
+    }
 
     if $installation_mode == 'nonadministrator' {
       $installc = 'userinstc'
@@ -109,15 +122,16 @@ class ibm_installation_manager (
     }
   }
 
-  $final_cmd = "${_source_dir}/${installc} ${final_opt}"
-
   if $user_home {
-    file { $user_home:
-      owner   => $user,
-      recurse => true,
-      ignore  => 'QA_resources',
+    file { $_target:
+      ensure => 'directory',
+      owner  => $user,
+      group  => $group,
+      mode   => '0755',
     }
   }
+
+  $final_cmd = "${_source_dir}/${installc} ${final_opt}"
 
   exec { 'Install IBM Installation Manager':
     command => $final_cmd,
