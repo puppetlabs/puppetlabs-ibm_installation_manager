@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Puppet::Type.type(:ibm_pkg).provider(:imcl) do
-
   describe '#installed_file' do
     context 'non-root user' do
       let (:resource) do

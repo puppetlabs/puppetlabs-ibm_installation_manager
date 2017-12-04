@@ -21,7 +21,7 @@ class ibm_installation_manager (
     fail("${module_name} requires a source parameter to be set.")
   }
 
-  $timestamp  = chomp(generate('/bin/date', '+%Y%d%m_%H%M%S'))
+  $timestamp = chomp(generate('/bin/date', '+%Y%d%m_%H%M%S'))
 
   if $installation_mode == 'administrator' {
     if $user != 'root' {
@@ -49,22 +49,22 @@ class ibm_installation_manager (
         ensure => present,
       }
       user { $user:
-        ensure => present,
-        gid => $group,
+        ensure     => present,
+        gid        => $group,
         managehome => true,
-        home => $user_home,
+        home       => $user_home,
       }
     }
 
     if $installation_mode == 'nonadministrator' {
       $installc = 'userinstc'
-      $t            = "${user_home}/IBM/InstallationManager"
-      $sd        = "${user_home}/IBM/tmp/InstallationManager"
+      $t        = "${user_home}/IBM/InstallationManager"
+      $sd       = "${user_home}/IBM/tmp/InstallationManager"
 
     } elsif $installation_mode == 'group' {
         $installc = 'groupinstc'
-        $t            = "${user_home}/IBM/InstallationManager_Group"
-        $sd        = "${user_home}/IBM/tmp/InstallationManager"
+        $t        = "${user_home}/IBM/InstallationManager_Group"
+        $sd       = "${user_home}/IBM/tmp/InstallationManager"
     }
   }
 

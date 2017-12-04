@@ -49,6 +49,8 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
 
   # returns the path to the command
   # this is required because it is unlikely that the system would have this in the path
+  #
+  # @return [String] path to imcl executable
   def imcl_command_path
     unless @imcl_command_path
       if resource[:imcl_path]
@@ -69,6 +71,8 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
 
   # returns a file handle by opening the install file
   # easier to mock when extracted to method like this
+  #
+  # @return [String] path to installed.xml file
   def installed_file
     if resource[:user] == 'root'
       xml_path = '/var/ibm/InstallationManager/installed.xml'
@@ -78,6 +82,7 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
     xml_path
   end
 
+  # wrapper for imcl function
   def imcl(cmd_options)
     cwd = Dir.pwd
     Dir.chdir(Dir.home(resource[:user]))
@@ -87,6 +92,9 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
     Dir.chdir(cwd)
   end
 
+  # get correct `ps` command based on operating system
+  #
+  # @return [String] string form of ps command with appropriate flags
   def getps
     case Facter.value(:operatingsystem)
       when 'OpenWrt'

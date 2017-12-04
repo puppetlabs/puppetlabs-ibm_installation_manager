@@ -127,11 +127,15 @@ Specifies the absolute path to the directory to deploy the installer from. (This
 
 Specifies the absolute path to the base location where you want to install IBM Installation Manager. Defaults to `/opt/IBM/InstallationManager`.
 
+##### manage_user
+
+Whether or not to manage the user/group that will be installing the IBM IM.
+
+Default: `false`.
+
 ##### user
 
-Specifies the user to run the installation as. Defaults to `root`. Note that installing
-as a different user might cause undefined behavior. Consult IBM's documentation for
-details. 
+Specifies the user to run the installation as. Defaults to `root`. Note that installing as a different user might cause undefined behavior. Consult IBM's documentation for details. 
 
 Note that installing as a user other than `root` might result in undefined behavior. Consult IBM's documentation for details. Installations by a non-root user won't share installation data with the rest of the system.
 
@@ -147,7 +151,11 @@ Note that installing as a user other than `root` might result in undefined behav
 
 ##### options
 
-Specifies options to pass to the installer. Defaults to `-acceptLicense -s -log/tmp/IM_install.${timestamp}.log.xml -installationDirectory ${target}`.
+Specifies options to pass to the installer. 
+
+Default:
+- administrator mode: `-acceptLicense -s -log/tmp/IM_install.${timestamp}.log.xml -installationDirectory ${target}`.
+- nonadministrator/group mode: `-acceptLicense -accessRights nonAdmin -s -log /tmp/IM_install.${timestamp}.log.xml`
 
 ##### timeout
 
