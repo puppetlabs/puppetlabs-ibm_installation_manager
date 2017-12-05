@@ -129,7 +129,7 @@ Specifies the absolute path to the base location where you want to install IBM I
 
 ##### manage_user
 
-Whether or not to manage the user/group that will be installing the IBM IM.
+Whether or not to manage the user that will be installing the IBM IM.
 
 Default: `false`.
 
@@ -142,6 +142,12 @@ Note that installing as a user other than `root` might result in undefined behav
 ##### user_home
 
 Specifies the home directory for the specified user. Required if you're installing in a mode other than 'administrator'.
+
+##### manage_group
+
+When in 'group' mode, whether or not to manage the group that will be installing the IBM IM.
+
+Default: `false`.
 
 ##### group
 

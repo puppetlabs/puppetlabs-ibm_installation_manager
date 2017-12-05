@@ -1,12 +1,35 @@
+# ibm_installation_manager
+#
+# @summary Init class for installing the IBM Installation Manager.
+# @param deploy_source
+#   Set to true to deploy your own IBM zip
+# @param source
+#   Full path to source file
+# @param source_dir
+#   Path to directory containing source file
+# @param target
+#   Target directory for installation
+# @param user
+#
+# @param user_home
+#
+# @param group
+#
+# @param options
+#
+# @param timeout
+#
+# @param installation_mode
 #
 class ibm_installation_manager (
   $deploy_source     = false,
   $source            = undef,
   $source_dir        = undef,
   $target            = undef,
+  $manage_user       = false,
   $user              = 'root',
   $user_home         = undef,
-  $manage_user       = false,
+  $manage_group      = false,
   $group             = 'root',
   $options           = undef,
   $timeout           = '900',
@@ -45,12 +68,8 @@ class ibm_installation_manager (
     $_options = "-acceptLicense -accessRights nonAdmin -s -log /tmp/IM_install.${timestamp}.log.xml"
 
     if $manage_user {
-      group { $group:
-        ensure => present,
-      }
       user { $user:
         ensure     => present,
-        gid        => $group,
         managehome => true,
         home       => $user_home,
       }
@@ -62,9 +81,15 @@ class ibm_installation_manager (
       $sd       = "${user_home}/IBM/tmp/InstallationManager"
 
     } elsif $installation_mode == 'group' {
-        $installc = 'groupinstc'
-        $t        = "${user_home}/IBM/InstallationManager_Group"
-        $sd       = "${user_home}/IBM/tmp/InstallationManager"
+
+      if $manage_group {
+        group { $group:
+          ensure => present,
+        }
+      }
+      $installc = 'groupinstc'
+      $t        = "${user_home}/IBM/InstallationManager_Group"
+      $sd       = "${user_home}/IBM/tmp/InstallationManager"
     }
   }
 
@@ -83,6 +108,8 @@ class ibm_installation_manager (
   if $deploy_source {
     exec { "mkdir -p ${_source_dir}":
       creates => $_source_dir,
+      user    => $user,
+      group   => $group,
       path    => '/bin:/usr/bin:/sbin:/usr/sbin'
     }
 

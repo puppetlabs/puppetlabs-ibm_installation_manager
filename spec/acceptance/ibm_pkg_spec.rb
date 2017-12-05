@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'ibm installation manager ibm_pkg:' do
+describe 'ibm_installation_manager::ibm_pkg' do
   context 'installs package' do
     it 'should install package' do
       pp = <<-EOS
@@ -39,6 +39,7 @@ describe 'ibm installation manager ibm_pkg:' do
           source        => '/tmp/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip',
           manage_user   => true,
           user          => 'webadmin',
+          group         => 'webadmins',
           user_home     => '/home/webadmin',
           installation_mode => 'nonadministrator',
         }
@@ -49,7 +50,7 @@ describe 'ibm installation manager ibm_pkg:' do
           repository    => "/tmp/ndtrial/repository.config",
           target        => '/home/webadmin/IBM/WebSphere0/AppServer',
           package_owner => 'webadmin',
-          package_group => 'webadmin',
+          package_group => 'webadmins',
         }
         EOS
         apply_manifest(pp, :catch_failures => true)
