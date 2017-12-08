@@ -31,13 +31,14 @@ describe 'ibm_installation_manager::ibm_pkg' do
   end
 
   context 'installs package with non-root user' do
-    context 'with manage_user' do
+    context 'with manage_user and manage_group' do
       it do
         pp = <<-EOS
         class { 'ibm_installation_manager':
           deploy_source => true,
           source        => '/tmp/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip',
           manage_user   => true,
+          manage_group  => true,
           user          => 'webadmin',
           group         => 'webadmins',
           user_home     => '/home/webadmin',
@@ -66,12 +67,9 @@ describe 'ibm_installation_manager::ibm_pkg' do
       end
     end
 
-    context 'wihout manage_user' do
+    context 'wihout manage_user with manage_group' do
       it do
         pp = <<-EOS
-        group { 'webadmins':
-          ensure => present,
-        }
         user { 'webadmin':
           ensure => present,
           gid    => 'webadmins',
@@ -83,6 +81,8 @@ describe 'ibm_installation_manager::ibm_pkg' do
           source        => '/tmp/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip',
           user          => 'webadmin',
           user_home     => '/home/webadmin',
+          manage_group  => true,
+          group         => 'webadmins',
           installation_mode => 'nonadministrator',
         }
         ibm_pkg { 'Websphere0':
