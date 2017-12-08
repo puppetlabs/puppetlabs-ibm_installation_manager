@@ -82,12 +82,13 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
     xml_path
   end
 
-  # wrapper for imcl function
+  # wrapper for imcl command
+  #
+  # @param [String] cmd_options - options to be passed to the imcl command
   def imcl(cmd_options)
     cwd = Dir.pwd
     Dir.chdir(Dir.home(resource[:user]))
     command = "#{imcl_command_path} #{cmd_options}"
-
     Puppet::Util::Execution.execute(command, :uid => resource[:user], :combine => true, :failonfail => true)
     Dir.chdir(cwd)
   end
@@ -191,7 +192,6 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
       FileUtils.chown_R(resource[:package_owner], resource[:package_group], resource[:target])
     end
   end
-
 
   def exists?
     @property_hash[:ensure] == :present

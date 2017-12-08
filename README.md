@@ -53,7 +53,7 @@ class { 'ibm_installation_manager':
 }
 ```
 
-To install the Installation Manager as a non-root user, specify that user's name and its home directory, as well as the installation_mode
+To install the Installation Manager as a non-root user, specify that user's name and its home directory, and set the installation_mode to 'nonadministrator'
 
 ```puppet
 class { 'ibm_installation_manager':

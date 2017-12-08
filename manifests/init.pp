@@ -1,25 +1,46 @@
 # ibm_installation_manager
 #
-# @summary Init class for installing the IBM Installation Manager.
+# @summary
+#  Init class for installing the IBM Installation Manager.
+#
 # @param deploy_source
-#   Set to true to deploy your own IBM zip
+#  Specifies whether this module should be responsible for deploying the source package for Installation Manager. Valid values are `true` and `false`. Defaults to `false`
+#
 # @param source
-#   Full path to source file
+#  **Required** if `deploy_source` is true. Specifies the source. This can be either an absolute path to the source or an HTTP address. This expects a compressed archive from IBM (zip).
+#
 # @param source_dir
-#   Path to directory containing source file
+#  Specifies the absolute path to the directory to deploy the installer from. (This is the directory containing the `installc` binary.) If you extracted the archive yourself, point this parameter to the extracted archive. Defaults to `/opt/IBM/tmp`.
+#
 # @param target
-#   Target directory for installation
+#  Specifies the absolute path to the base location where you want to install IBM Installation Manager. Defaults to `/opt/IBM/InstallationManager`.
+#
+# @param manage_user
+#  Whether or not to manage the user that will be installing the IBM IM. Default: `false`.
+#
 # @param user
+#  Specifies the user to run the installation as. Defaults to `root`. Note that installing as a different user might cause undefined behavior. Consult IBM's documentation for details.
+#  Note that installing as a user other than `root` might result in undefined behavior. Consult IBM's documentation for details. Installations by a non-root user won't share installation data with the rest of the system.
 #
 # @param user_home
+#  Specifies the home directory for the specified user. Required if you're installing in a mode other than 'administrator'.
+#
+# @param manage_group
+#  When in 'group' mode, whether or not to manage the group that will be installing the IBM IM. Default: `false`.
 #
 # @param group
+#  Specifies the group to run the installation as. Defaults to `root`.
+#  Note that installing as a user other than `root` might result in undefined behavior. Consult IBM's documentation for details. Installations by a non-root user won't share installation data with the rest of the system.
 #
 # @param options
+#  Specifies options to pass to the installer.
+#  Default: - administrator mode: `-acceptLicense -s -log/tmp/IM_install.${timestamp}.log.xml -installationDirectory ${target}`. - nonadministrator/group mode: `-acceptLicense -accessRights nonAdmin -s -log /tmp/IM_install.${timestamp}.log.xml`
 #
 # @param timeout
+#  Specifies the timeout for the installation, in seconds. Defaults to 900. Installation Manager can take a long time to install, so if you have issues with Puppet timing out before the installation is complete, you might need to increase this parameter.
 #
 # @param installation_mode
+#  Specifies which 'installation mode' you want to use to install the IBM Installation Manager. Values: 'administrator', 'nonadministrator', 'group'. Default: 'administrator'
 #
 class ibm_installation_manager (
   $deploy_source     = false,
@@ -55,7 +76,6 @@ class ibm_installation_manager (
     $t = '/opt/IBM/InstallationManager'
     $sd = '/opt/IBM/tmp/InstallationManager'
     $_options = "-acceptLicense -s -log /tmp/IM_install.${timestamp}.log.xml"
-
   } else {
     if $installation_mode != 'nonadministrator' and $installation_mode != 'group' {
       fail ("Designated installation_mode '${installation_mode}' not supported.")
@@ -79,9 +99,7 @@ class ibm_installation_manager (
       $installc = 'userinstc'
       $t        = "${user_home}/IBM/InstallationManager"
       $sd       = "${user_home}/IBM/tmp/InstallationManager"
-
     } elsif $installation_mode == 'group' {
-
       if $manage_group {
         group { $group:
           ensure => present,
