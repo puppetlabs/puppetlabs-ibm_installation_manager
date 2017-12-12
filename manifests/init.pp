@@ -87,6 +87,12 @@ class ibm_installation_manager (
 
     $_options = "-acceptLicense -accessRights nonAdmin -s -log /tmp/IM_install.${timestamp}.log.xml"
 
+    if $manage_group {
+      group { $group:
+        ensure => present,
+      }
+    }
+
     if $manage_user {
       user { $user:
         ensure     => present,
@@ -100,11 +106,6 @@ class ibm_installation_manager (
       $t        = "${user_home}/IBM/InstallationManager"
       $sd       = "${user_home}/IBM/tmp/InstallationManager"
     } elsif $installation_mode == 'group' {
-      if $manage_group {
-        group { $group:
-          ensure => present,
-        }
-      }
       $installc = 'groupinstc'
       $t        = "${user_home}/IBM/InstallationManager_Group"
       $sd       = "${user_home}/IBM/tmp/InstallationManager"
