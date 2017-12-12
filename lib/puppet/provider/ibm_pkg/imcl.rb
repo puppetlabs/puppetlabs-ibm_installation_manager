@@ -41,7 +41,6 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
 
   commands :kill => 'kill'
   commands :chown => 'chown'
-  confine  :exists => '/var/ibm/InstallationManager/installed.xml'
   # presumbly this could work on windows but we have some hard coded paths which
   # breaks these things on windows where the paths are different.
   confine  :true => Facter.value(:kernel) != 'windows'
@@ -50,6 +49,8 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
 
   # returns the path to the command
   # this is required because it is unlikely that the system would have this in the path
+  #
+  # @return [String] path to imcl executable
   def imcl_command_path
     unless @imcl_command_path
       if resource[:imcl_path]
@@ -70,16 +71,20 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
 
   # returns a file handle by opening the install file
   # easier to mock when extracted to method like this
+  #
+  # @return [String] path to installed.xml file
   def installed_file
-    '/var/ibm/InstallationManager/installed.xml'
+    if resource[:user] == 'root'
+      xml_path = '/var/ibm/InstallationManager/installed.xml'
+    else
+      xml_path = "/home/#{resource[:user]}/var/ibm/InstallationManager/installed.xml"
+    end
+    xml_path
   end
 
-  # returns a file handle by opening the registry file
-  # easier to mock when extracted to method like this
-  def self.registry_file
-    '/var/ibm/InstallationManager/installRegistry.xml'
-  end
-
+  # wrapper for imcl command
+  #
+  # @param [String] cmd_options - options to be passed to the imcl command
   def imcl(cmd_options)
     cwd = Dir.pwd
     Dir.chdir(Dir.home(resource[:user]))
@@ -88,6 +93,9 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
     Dir.chdir(cwd)
   end
 
+  # get correct `ps` command based on operating system
+  #
+  # @return [String] string form of ps command with appropriate flags
   def getps
     case Facter.value(:operatingsystem)
       when 'OpenWrt'
@@ -165,8 +173,13 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
     if resource[:response]
       cmd_options = "input #{resource[:response]}"
     else
-      cmd_options =  "install #{resource[:package]}_#{resource[:version]}"
-      cmd_options << " -repositories #{resource[:repository]} -installationDirectory #{resource[:target]}"
+      if resource[:user] == 'root'
+        cmd_options =  "install #{resource[:package]}_#{resource[:version]}"
+        cmd_options << " -repositories #{resource[:repository]} -installationDirectory #{resource[:target]}"
+      else
+        cmd_options =  "install #{resource[:package]}_#{resource[:version]}"
+        cmd_options << " -repositories #{resource[:repository]} -installationDirectory #{resource[:target]} -accessRights nonAdmin"
+      end
     end
     cmd_options << " -acceptLicense"
     cmd_options << " #{resource[:options]}" if resource[:options]
@@ -201,7 +214,7 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
   ## it unique.  You can have the same package/version installed to a
   ## different path. By prefetching here our exists? method becomes simple since
   def self.prefetch(resources)
-    packages = instances
+    packages = instances(resources)
     if packages
       resources.keys.each do |name|
         if resources[name][:response]
@@ -218,12 +231,22 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
     end
   end
 
-  def self.installed_packages
+  def self.installed_packages(catalog)
     ## Determine if the specified package has been installed to the specified
     ## location by parsing IBM IM's "installed.xml" file.
     ## I *think* this is a pretty safe bet.  This seems to be a pretty hard-
     ## coded path for it on Linux and AIX.
-    registry = File.open(self.registry_file)
+    # returns a file handle by opening the registry file
+    # easier to mock when extracted to method like this
+    registry_file = nil
+    catalog.keys.each do |name|
+      if catalog[name][:user] == 'root'
+        registry_file = '/var/ibm/InstallationManager/installRegistry.xml'
+      else
+        registry_file = "/home/#{catalog[name][:user]}/var/ibm/InstallationManager/installRegistry.xml"
+      end
+    end
+    registry = File.open(registry_file)
     doc = REXML::Document.new(registry)
     packages = []
     doc.elements.each("/installRegistry/profile") do |item|
@@ -248,9 +271,9 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
     packages
   end
 
-  def self.instances
+  def self.instances(catalog = nil)
     # get a list of installed packages
-    installed_packages.collect do |package|
+    installed_packages(catalog).collect do |package|
       hash = {
         :ensure     => :present,
         :package    => package[:package_id],
