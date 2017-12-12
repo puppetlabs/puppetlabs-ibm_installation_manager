@@ -231,7 +231,7 @@ Specifies the user to run the `imcl` command as. This user must have the necessa
 
 ## Limitations
 
-Tested with RHEL 6 x86_64 and IBM Installation Manager 1.8.1 and 1.6.x
+Tested with RHEL 5, 6, and 7 x86_64 and IBM Installation Manager 1.8.3 and 1.6.x
 
 ## Known Issues
 
@@ -244,13 +244,11 @@ ERROR: java.lang.IllegalStateException: No metadata found for installed package 
 ## Dependencies
 
 * [puppetlabs/stdlib](https://forge.puppetlabs.com/puppetlabs/stdlib)
-* If you want the module to extract the Zip file for you, [nanliu/staging](https://forge.puppetlabs.com/nanliu/staging).
+* If you want the module to extract the Zip file for you, [puppet/archive](https://forge.puppetlabs.com/puppet/archive).
 
 ## Development and Contributing
 
-Puppet Labs modules on the Puppet Forge are open projects, and community contributions are essential for keeping them great. We can’t access the huge number of platforms and myriad hardware, software, and deployment configurations that Puppet is intended to serve. We want to keep it as easy as possible to contribute changes so that our modules work in your environment. There are a few guidelines that we need contributors to follow so that we can have a chance of keeping on top of things. For more information, see our [module contribution guide.](https://docs.puppetlabs.com/forge/contributing.html)
-
-To download trials of IBM Installation Manager, visit IBM's [download page](https://www14.software.ibm.com/webapp/iwm/web/reg/download.do?source=swerpws-wasnd85&S_PKG=500026211&S_TACT=109J87BW&lang=en_US&cp=UTF-8). You must have an account to download trials from IBM.
+Puppet Labs modules on the Puppet Forge are open projects, and community contributions are essential for keeping them great. We can’t access the huge number of platforms and myriad hardware, software, and deployment configurations that Puppet is intended to serve. We want to keep it as easy as possible to contribute changes so that our modules work in your environment. There are a [few guidelines](CONTRIBUTING.md) that we need contributors to follow so that we can have a chance of keeping on top of things. For more information, see our [module contribution guide.](https://docs.puppetlabs.com/forge/contributing.html)
 
 ## Contributors
 
