@@ -35,13 +35,13 @@ describe 'ibm_installation_manager::ibm_pkg' do
       it do
         pp = <<-EOS
         class { 'ibm_installation_manager':
-          deploy_source => true,
-          source        => '/tmp/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip',
-          manage_user   => true,
-          manage_group  => true,
-          user          => 'webadmin',
-          group         => 'webadmins',
-          user_home     => '/home/webadmin',
+          deploy_source     => true,
+          source            => '/tmp/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip',
+          manage_user       => true,
+          manage_group      => true,
+          user              => 'webadmin',
+          group             => 'webadmins',
+          user_home         => '/home/webadmin',
           installation_mode => 'nonadministrator',
         }
         ibm_pkg { 'Websphere0':
@@ -50,6 +50,7 @@ describe 'ibm_installation_manager::ibm_pkg' do
           version       => '8.5.5000.20130514_1313',
           repository    => "/tmp/ndtrial/repository.config",
           target        => '/home/webadmin/IBM/WebSphere0/AppServer',
+          user          => 'webadmin',
           package_owner => 'webadmin',
           package_group => 'webadmins',
         }
@@ -71,18 +72,18 @@ describe 'ibm_installation_manager::ibm_pkg' do
       it do
         pp = <<-EOS
         user { 'webadmin':
-          ensure => present,
-          gid    => 'webadmins',
+          ensure     => present,
+          gid        => 'webadmins',
           managehome => true,
-          home => '/home/webadmin',
+          home       => '/home/webadmin',
         }
         class { 'ibm_installation_manager':
-          deploy_source => true,
-          source        => '/tmp/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip',
-          user          => 'webadmin',
-          user_home     => '/home/webadmin',
-          manage_group  => true,
-          group         => 'webadmins',
+          deploy_source     => true,
+          source            => '/tmp/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip',
+          user              => 'webadmin',
+          user_home         => '/home/webadmin',
+          manage_group      => true,
+          group             => 'webadmins',
           installation_mode => 'nonadministrator',
         }
         ibm_pkg { 'Websphere0':
@@ -91,8 +92,9 @@ describe 'ibm_installation_manager::ibm_pkg' do
           version       => '8.5.5000.20130514_1313',
           repository    => "/tmp/ndtrial/repository.config",
           target        => '/home/webadmin/IBM/WebSphere0/AppServer',
+          user          => 'webadmin',
           package_owner => 'webadmin',
-          package_group => 'webadmin',
+          package_group => 'webadmins',
         }
         EOS
         apply_manifest(pp, :catch_failures => true)
@@ -173,9 +175,9 @@ describe 'ibm_installation_manager::ibm_pkg' do
           repository       => "/tmp/ndtrial/repository.config",
           target           => '/opt/IBM/WebSphere2/AppServer',
           manage_ownership => 'false',
-          package_owner => 'webadmin',
-          package_group => 'webadmins',
-          require       => User['webadmin'],
+          package_owner    => 'webadmin',
+          package_group    => 'webadmins',
+          require          => User['webadmin'],
         }
       EOS
       apply_manifest(pp, :catch_failures => true)

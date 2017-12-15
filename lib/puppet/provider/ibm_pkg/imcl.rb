@@ -2,6 +2,7 @@
 # Manager.  This could almost be a provider for the package resource, but I'm
 # not sure how.  We need to be able to support multiple installations of the
 # exact same package of the exact same version but in different locations.
+
 #
 # This could also use some work.  I'm obviously lacking in Ruby experience and
 # familiarity with the Puppet development APIs.
@@ -56,7 +57,7 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
       if resource[:imcl_path]
         @imcl_command_path = resource[:imcl_path]
       else
-        installed = File.open(self.installed_file)
+        installed = File.open(self.class.installed_file(resource[:user]))
         doc = REXML::Document.new(installed)
         path = XPath.first(doc, '//installInfo/location[@id="IBM Installation Manager"]/@path').value
         installed.close
@@ -69,17 +70,46 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
     @imcl_command_path
   end
 
+
+  # searches for installed.xml
+  #
+  # @return [Array] array of potential paths to installed.xml
+  def self.installed_xml_paths
+    require 'find'
+    glob = Dir.glob('/home/*/var/ibm/') # returns list of dirs
+
+    installed_xml_paths = Array.new
+
+    begin
+      # pass in the glob and /opt/
+      Find.find("/var/ibm/", *glob) do |path|
+        installed_xml_paths.push(path) if path.match(/InstallationManager\/installed.xml/)
+      end
+    rescue Errno::ENOENT => e
+      raise("There was a problem finding installed.xml: #{e}")
+    end
+
+    installed_xml_paths
+  end
+
   # returns a file handle by opening the install file
   # easier to mock when extracted to method like this
   #
   # @return [String] path to installed.xml file
-  def installed_file
-    if resource[:user] == 'root'
-      xml_path = '/var/ibm/InstallationManager/installed.xml'
+  def self.installed_file(user)
+    if installed_xml_paths.length > 1
+      installed_xml_paths.each do |path|
+        if user == 'root'
+          return path if path.match(/^\/var\//)
+        else
+          return path if path.match(/\/#{user}\//)
+        end
+      end
+    elsif installed_xml_paths.length == 1
+      return installed_xml_paths[0]
     else
-      xml_path = "/home/#{resource[:user]}/var/ibm/InstallationManager/installed.xml"
+      fail("Could not find installed.xml.")
     end
-    xml_path
   end
 
   # wrapper for imcl command
@@ -240,7 +270,7 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
     # easier to mock when extracted to method like this
     registry_file = nil
     catalog.keys.each do |name|
-      if catalog[name][:user] == 'root'
+      if installed_file(catalog[name][:user]).match(/^\/var\/ibm\//) || catalog[name][:user] == 'root'
         registry_file = '/var/ibm/InstallationManager/installRegistry.xml'
       else
         registry_file = "/home/#{catalog[name][:user]}/var/ibm/InstallationManager/installRegistry.xml"
