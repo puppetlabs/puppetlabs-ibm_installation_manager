@@ -175,6 +175,13 @@ class ibm_installation_manager (
       group  => $group,
       mode   => '0755',
     }
+
+    file { "${user_home}/var/ibm/InstallationManager":
+      ensure => 'directory',
+      owner  => $user,
+      group  => $group,
+      mode   => '0755',
+    }
   }
 
   $final_cmd = "${_source_dir}/${installc} ${final_opt}"
