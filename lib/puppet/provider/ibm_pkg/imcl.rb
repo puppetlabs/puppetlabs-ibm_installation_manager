@@ -2,7 +2,6 @@
 # Manager.  This could almost be a provider for the package resource, but I'm
 # not sure how.  We need to be able to support multiple installations of the
 # exact same package of the exact same version but in different locations.
-
 #
 # This could also use some work.  I'm obviously lacking in Ruby experience and
 # familiarity with the Puppet development APIs.

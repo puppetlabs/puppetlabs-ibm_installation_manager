@@ -1,7 +1,18 @@
-# ibm_installation_manager
-#
 # @summary
 #  Init class for installing the IBM Installation Manager.
+#
+# @example Installing Installation Manager to the default location of '/opt/IBM/InstallationManager'. In this example, we've downloaded and  extracted the Installation Manager packages (installer) to '/vagrant/ibm/IM'
+#  class { 'ibm_installation_manager':
+
+#    source_dir => '/vagrant/ibm/IM',
+#  }
+#
+# @example Providing a zip source and a custom install location. This will retrieve the zip file from /mnt/IBM and extract it to /opt/IBM/tmp/InstallationManager.  Installation Manager will then be installed to '/opt/myorg/InstallationManager'
+#  class { 'ibm_installation_manager':
+#   source     => '/mnt/IBM/im.zip',
+#   source_dir => '/opt/IBM/tmp/InstallationManager',
+#   target     => '/opt/myorg/InstallationManager',
+#  }
 #
 # @param deploy_source
 #  Specifies whether this module should be responsible for deploying the source package for Installation Manager. Valid values are `true` and `false`. Defaults to `false`
@@ -85,8 +96,6 @@ class ibm_installation_manager (
       fail("You have set installation_mode to ${installation_mode}. This requires a user and user_home to be set and user should not be 'root'.")
     }
 
-    $_options = "-acceptLicense -accessRights nonAdmin -s -log /tmp/IM_install.${timestamp}.log.xml"
-
     if $manage_group {
       group { $group:
         ensure => present,
@@ -101,28 +110,42 @@ class ibm_installation_manager (
       }
     }
 
+    $ibm_root = "${user_home}/IBM/"
+
     if $installation_mode == 'nonadministrator' {
       $installc = 'userinstc'
       $t        = "${user_home}/IBM/InstallationManager"
       $sd       = "${user_home}/IBM/tmp/InstallationManager"
+      $_options = "-acceptLicense -accessRights nonAdmin -s -log /tmp/IM_install.${timestamp}.log.xml"
     } elsif $installation_mode == 'group' {
       $installc = 'groupinstc'
       $t        = "${user_home}/IBM/InstallationManager_Group"
       $sd       = "${user_home}/IBM/tmp/InstallationManager"
+      $_options = "-acceptLicense -accessRights group -s -log /tmp/IM_install.${timestamp}.log.xml"
+    }
+
+    file { [$ibm_root,
+            "${user_home}/var/",
+            "${user_home}/var/ibm/",
+            "${user_home}/var/ibm/InstallationManager"]:
+      ensure => 'directory',
+      owner  => $user,
+      group  => $group,
+      mode   => '0755',
     }
   }
 
   if $target {
     $_target = $target
-    } else {
-      $_target = $t
-    }
+  } else {
+    $_target = $t
+  }
 
-    if $source_dir {
-      $_source_dir = $source_dir
-    } else {
-      $_source_dir = $sd
-    }
+  if $source_dir {
+    $_source_dir = $source_dir
+  } else {
+    $_source_dir = $sd
+  }
 
   if $deploy_source {
     exec { "mkdir -p ${_source_dir}":
@@ -175,13 +198,6 @@ class ibm_installation_manager (
       group  => $group,
       mode   => '0755',
     }
-
-    file { "${user_home}/var/ibm/InstallationManager":
-      ensure => 'directory',
-      owner  => $user,
-      group  => $group,
-      mode   => '0755',
-    }
   }
 
   $final_cmd = "${_source_dir}/${installc} ${final_opt}"
@@ -191,6 +207,7 @@ class ibm_installation_manager (
     creates => "${_target}/eclipse/tools/imcl",
     cwd     => $_source_dir,
     user    => $user,
+    group   => $group,
     timeout => $timeout,
   }
 }
