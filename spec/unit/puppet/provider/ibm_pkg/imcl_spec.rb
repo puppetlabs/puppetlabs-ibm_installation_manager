@@ -1,37 +1,44 @@
 require 'spec_helper'
 
 describe Puppet::Type.type(:ibm_pkg).provider(:imcl) do
-  describe '#installed_xml_paths' do
+  describe '#installed_file' do
     let (:provider) { Puppet::Type.type(:ibm_pkg).provider(:imcl) }
 
     context 'nonadministrator' do
       let (:nonroot_path) { '/home/webadmin/var/ibm/InstallationManager/installed.xml' }
 
-      it 'returns the nonadministrator path' do
-        Dir.stubs(:glob).with('/home/*/var/ibm/').returns(nonroot_path)
-        File.stubs(:exist?).with(nonroot_path).returns true
-        File.stubs(:exist?).with('/var/ibm/').returns true
-        Find.stubs(:find).with('/var/ibm/', nonroot_path).yields(nonroot_path).yields('/var/')
+      context 'user happy path' do
+        it 'returns the nonadministrator path' do
+          File.stubs(:exist?).with('/home/webadmin/var/ibm/').returns true
+          File.stubs(:exist?).with(nonroot_path).returns true
+          Find.stubs(:find).with('/home/webadmin/var/ibm/').yields(nonroot_path)
+          File.stubs(:file?).with(nonroot_path).returns true
 
-        arr = provider.installed_xml_paths
+          expect(provider.installed_file('webadmin')).to eq (nonroot_path)
+        end
+      end
 
-        expect(arr.length).to eq 1
-        expect(arr).to include(nonroot_path)
+      context 'user does not have installed.xml' do
+        it 'raises an error' do
+          File.stubs(:exist?).with('/home/webadmin/var/ibm/').returns false
+          File.stubs(:exist?).with(nonroot_path).returns false
+          Find.stubs(:find).with('/home/webadmin/var/ibm/').yields(nil)
+          File.stubs(:file?).with(nil).returns false
+
+          expect { provider.installed_file('webadmin') }.to raise_error RuntimeError, "No installed.xml found."
+        end
       end
     end
     context 'administrator' do
       let (:root_path) { '/var/ibm/InstallationManager/installed.xml' }
 
       it 'returns the administrator path' do
-        Dir.stubs(:glob).with('/home/*/var/ibm/').returns('/home/webadmin/var/ibm/InstallationManager/installed.xml')
-        File.stubs(:exist?).with('/home/webadmin/var/ibm/InstallationManager/installed.xml').returns true
         File.stubs(:exist?).with('/var/ibm/').returns true
-        Find.stubs(:find).with('/var/ibm/','/home/webadmin/var/ibm/InstallationManager/installed.xml').yields(root_path).yields('/var/ibm/InstallationManager/blah.xml')
+        File.stubs(:exist?).with('/var/ibm/').returns true
+        Find.stubs(:find).with('/var/ibm/').yields(root_path).yields('/var/ibm/InstallationManager/installed.xml')
+        File.stubs(:file?).with(root_path).returns true
 
-        arr = provider.installed_xml_paths
-
-        expect(arr.length).to eq 1
-        expect(arr).to include(root_path)
+        expect(provider.installed_file('root')).to eq (root_path)
       end
     end
   end

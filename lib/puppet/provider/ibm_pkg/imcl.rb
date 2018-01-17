@@ -70,25 +70,21 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
   end
 
 
-  # searches for installed.xml
+  # searches for installed.xml in potential appDataLocation dirs
   #
-  # @return [Array] array of potential paths to installed.xml
-  def self.installed_xml_paths
+  # @return [String] installed.xml path if it is found
+  def self.find_installed_xml(user)
     require 'find'
-    glob = Dir.glob('/home/*/var/ibm/') # returns list of dirs
 
-    installed_xml_paths = Array.new
+    installed_xml_path = nil
 
-    begin
-      # pass in the glob and /opt/
-      Find.find("/var/ibm/", *glob) do |path|
-        installed_xml_paths.push(path) if path.match(/InstallationManager\/installed.xml/)
-      end
-    rescue Errno::ENOENT => e
-      raise("There was a problem finding installed.xml: #{e}")
+    user_path = user == 'root' ? '/var/ibm/' : "/home/#{user}/var/ibm/"
+
+    if File.exist? user_path
+      Find.find(user_path) { |path| installed_xml_path = path if path.match(/InstallationManager\/installed.xml$/) }
     end
 
-    installed_xml_paths
+    installed_xml_path if File.file?(installed_xml_path)
   end
 
   # returns a file handle by opening the install file
@@ -96,19 +92,9 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
   #
   # @return [String] path to installed.xml file
   def self.installed_file(user)
-    if installed_xml_paths.length > 1
-      installed_xml_paths.each do |path|
-        if user == 'root'
-          return path if path.match(/^\/var\//)
-        else
-          return path if path.match(/\/#{user}\//)
-        end
-      end
-    elsif installed_xml_paths.length == 1
-      return installed_xml_paths[0]
-    else
-      fail("Could not find installed.xml.")
-    end
+    file = find_installed_xml(user)
+    return file unless file.nil?
+    fail('No installed.xml found.')
   end
 
   # wrapper for imcl command
