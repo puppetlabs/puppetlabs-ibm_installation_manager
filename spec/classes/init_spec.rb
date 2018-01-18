@@ -39,7 +39,7 @@ describe 'ibm_installation_manager' do
       }
       it { is_expected.to contain_class('ibm_installation_manager') }
       it { is_expected.to contain_exec('Install IBM Installation Manager').with({
-        :command => /\/home\/webadmin\/IBM\/tmp\/InstallationManager\/groupinstc -acceptLicense -accessRights nonAdmin -s -log.*-installationDirectory \/home\/webadmin\/IBM\/InstallationManager_Group/,
+        :command => /\/home\/webadmin\/IBM\/tmp\/InstallationManager\/groupinstc -acceptLicense -accessRights group -s -log.*-installationDirectory \/home\/webadmin\/IBM\/InstallationManager_Group/,
         :creates => '/home/webadmin/IBM/InstallationManager_Group/eclipse/tools/imcl',
         :user    => 'webadmin',
         :timeout => '900',
