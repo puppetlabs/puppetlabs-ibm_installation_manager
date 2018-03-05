@@ -107,6 +107,11 @@ Puppet::Type.newtype(:ibm_pkg) do
     defaultto 'root'
   end
 
+  newparam(:user_home) do
+    desc "The home directory for the installation user."
+    defaultto '/home/webadmin'
+  end
+
   newparam(:manage_ownership, :boolean => true, :parent => Puppet::Parameter::Boolean) do
     desc 'Whether or not to manage the ownership of installed packages. Allows for packages to not be installed as root.'
     defaultto true
