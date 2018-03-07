@@ -109,7 +109,6 @@ Puppet::Type.newtype(:ibm_pkg) do
 
   newparam(:user_home) do
     desc "The home directory for the installation user."
-    defaultto '/home/webadmin'
   end
 
   newparam(:manage_ownership, :boolean => true, :parent => Puppet::Parameter::Boolean) do
