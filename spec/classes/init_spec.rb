@@ -8,7 +8,7 @@ describe 'ibm_installation_manager' do
         :command => /\/opt\/IBM\/tmp\/InstallationManager\/installc -acceptLicense -s -log.*-installationDirectory \/opt\/IBM\/InstallationManager/,
         :creates => '/opt/IBM/InstallationManager/eclipse/tools/imcl',
         :user    => 'root',
-        :timeout => '900',
+        :timeout => 900,
       })}
     end
 
@@ -17,16 +17,15 @@ describe 'ibm_installation_manager' do
         {
           installation_mode: 'nonadministrator',
           user: 'webadmin',
-          user_home: '/home/webadmin'
+          user_home: '/home/webadmin',
         }
       }
       it { is_expected.to contain_class('ibm_installation_manager') }
-      it { is_expected.to contain_exec('Install IBM Installation Manager').with({
+      it { is_expected.to contain_exec('Install IBM Installation Manager').with(
         :command => /\/home\/webadmin\/IBM\/tmp\/InstallationManager\/userinstc -acceptLicense -accessRights nonAdmin -s -log.*-installationDirectory \/home\/webadmin\/IBM\/InstallationManager/,
         :creates => '/home/webadmin/IBM/InstallationManager/eclipse/tools/imcl',
-        :user    => 'webadmin',
-        :timeout => '900',
-      })}
+        :timeout => 900,
+      )}
     end
 
     context 'group' do
@@ -34,7 +33,7 @@ describe 'ibm_installation_manager' do
         {
           installation_mode: 'group',
           user: 'webadmin',
-          user_home: '/home/webadmin'
+          user_home: '/home/webadmin',
         }
       }
       it { is_expected.to contain_class('ibm_installation_manager') }
@@ -42,7 +41,7 @@ describe 'ibm_installation_manager' do
         :command => /\/home\/webadmin\/IBM\/tmp\/InstallationManager\/groupinstc -acceptLicense -accessRights nonAdmin -s -log.*-installationDirectory \/home\/webadmin\/IBM\/InstallationManager_Group/,
         :creates => '/home/webadmin/IBM/InstallationManager_Group/eclipse/tools/imcl',
         :user    => 'webadmin',
-        :timeout => '900',
+        :timeout => 900,
       })}
     end
   end
@@ -52,14 +51,14 @@ describe 'ibm_installation_manager' do
       {
         :target     => '/opt/myorg/InstallationManager',
         :source_dir => '/opt/myorg/tmp/InstallationManager',
-        :timeout    => '1200',
+        :timeout    => 1200,
       }
     }
     it { is_expected.to contain_exec('Install IBM Installation Manager').with({
       :command => /\/opt\/myorg\/tmp\/InstallationManager\/installc -acceptLicense -s -log.*-installationDirectory \/opt\/myorg\/InstallationManager/,
       :creates => '/opt/myorg/InstallationManager/eclipse/tools/imcl',
       :user    => 'root',
-      :timeout => '1200',
+      :timeout => 1200,
     })}
   end
 

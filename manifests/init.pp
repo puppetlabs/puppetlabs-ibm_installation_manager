@@ -43,23 +43,19 @@
 #  Specifies which 'installation mode' you want to use to install the IBM Installation Manager. Values: 'administrator', 'nonadministrator', 'group'. Default: 'administrator'
 #
 class ibm_installation_manager (
-  $deploy_source     = false,
-  $source            = undef,
-  $source_dir        = undef,
-  $target            = undef,
-  $manage_user       = false,
-  $user              = 'root',
-  $user_home         = undef,
-  $manage_group      = false,
-  $group             = 'root',
-  $options           = undef,
-  $timeout           = '900',
-  $installation_mode = 'administrator',
+  Boolean $deploy_source       = false,
+  Boolean $manage_user         = false,
+  String $user                 = 'root',
+  Boolean $manage_group        = false,
+  String $group                = 'root',
+  Integer $timeout             = 900,
+  String $installation_mode    = 'administrator',
+  Optional[String] $source     = undef,
+  Optional[String] $source_dir = undef,
+  Optional[String] $target     = undef,
+  Optional[String] $user_home  = undef,
+  Optional[String] $options    = undef,
 ) {
-
-  validate_bool($deploy_source)
-  validate_string($options, $user, $group)
-  validate_integer($timeout)
 
   if $deploy_source and ! $source {
     fail("${module_name} requires a source parameter to be set.")
@@ -76,40 +72,37 @@ class ibm_installation_manager (
     $t = '/opt/IBM/InstallationManager'
     $sd = '/opt/IBM/tmp/InstallationManager'
     $_options = "-acceptLicense -s -log /tmp/IM_install.${timestamp}.log.xml"
-  } else {
-    if $installation_mode != 'nonadministrator' and $installation_mode != 'group' {
-      fail ("Designated installation_mode '${installation_mode}' not supported.")
-    }
 
+  } elsif $installation_mode == 'nonadministrator' or $installation_mode == 'group' {
     if !$user or !$user_home or $user == 'root' {
       fail("You have set installation_mode to ${installation_mode}. This requires a user and user_home to be set and user should not be 'root'.")
-    }
+    } else {
+      if $installation_mode == 'nonadministrator' {
+        $installc = 'userinstc'
+        $t        = "${user_home}/IBM/InstallationManager"
+      } elsif $installation_mode == 'group' {
+        $installc = 'groupinstc'
+        $t        = "${user_home}/IBM/InstallationManager_Group"
+      }
+      $sd       = "${user_home}/IBM/tmp/InstallationManager"
+      $_options = "-acceptLicense -accessRights nonAdmin -s -log /tmp/IM_install.${timestamp}.log.xml"
 
-    $_options = "-acceptLicense -accessRights nonAdmin -s -log /tmp/IM_install.${timestamp}.log.xml"
+      if $manage_group {
+        group { $group:
+          ensure => present,
+        }
+      }
 
-    if $manage_group {
-      group { $group:
-        ensure => present,
+      if $manage_user {
+        user { $user:
+          ensure     => present,
+          managehome => true,
+          home       => $user_home,
+        }
       }
     }
-
-    if $manage_user {
-      user { $user:
-        ensure     => present,
-        managehome => true,
-        home       => $user_home,
-      }
-    }
-
-    if $installation_mode == 'nonadministrator' {
-      $installc = 'userinstc'
-      $t        = "${user_home}/IBM/InstallationManager"
-      $sd       = "${user_home}/IBM/tmp/InstallationManager"
-    } elsif $installation_mode == 'group' {
-      $installc = 'groupinstc'
-      $t        = "${user_home}/IBM/InstallationManager_Group"
-      $sd       = "${user_home}/IBM/tmp/InstallationManager"
-    }
+  } else {
+    fail ("Designated installation_mode '${installation_mode}' not supported.")
   }
 
   if $target {
@@ -129,7 +122,7 @@ class ibm_installation_manager (
       creates => $_source_dir,
       user    => $user,
       group   => $group,
-      path    => '/bin:/usr/bin:/sbin:/usr/sbin'
+      path    => '/bin:/usr/bin:/sbin:/usr/sbin',
     }
 
     file { $_source_dir:

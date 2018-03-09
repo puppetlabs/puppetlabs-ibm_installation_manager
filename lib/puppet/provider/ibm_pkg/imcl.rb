@@ -76,8 +76,11 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
   def installed_file
     if resource[:user] == 'root'
       xml_path = '/var/ibm/InstallationManager/installed.xml'
-    else
-      xml_path = "/home/#{resource[:user]}/var/ibm/InstallationManager/installed.xml"
+    elsif resource[:user] != 'root'
+      if resource[:user_home].nil?
+        raise ArgumentError, 'user_home is not specified for non-admin user %s.' % resource[:user]
+      end
+      xml_path = "#{resource[:user_home]}/var/ibm/InstallationManager/installed.xml"
     end
     xml_path
   end
@@ -87,7 +90,7 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
   # @param [String] cmd_options - options to be passed to the imcl command
   def imcl(cmd_options)
     cwd = Dir.pwd
-    Dir.chdir(Dir.home(resource[:user]))
+    Dir.chdir(resource[name][:user_home])
     command = "#{imcl_command_path} #{cmd_options}"
     Puppet::Util::Execution.execute(command, :uid => resource[:user], :combine => true, :failonfail => true)
     Dir.chdir(cwd)
@@ -244,7 +247,7 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
       if catalog[name][:user] == 'root'
         registry_file = '/var/ibm/InstallationManager/installRegistry.xml'
       else
-        registry_file = "/home/#{catalog[name][:user]}/var/ibm/InstallationManager/installRegistry.xml"
+        registry_file = "#{catalog[name][:user_home]}/var/ibm/InstallationManager/installRegistry.xml"
       end
     end
     registry = File.open(registry_file)
