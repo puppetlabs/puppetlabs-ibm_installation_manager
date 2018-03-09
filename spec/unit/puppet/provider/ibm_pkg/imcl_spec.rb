@@ -25,8 +25,8 @@ describe Puppet::Type.type(:ibm_pkg).provider(:imcl) do
       end
       let(:provider) { Puppet::Type.type(:ibm_pkg).provider(:imcl).new(resource) }
 
-      it 'should provide the wrong directory if user_home is not passed.' do
-        expect(provider.installed_file).not_to eq('/home/webadmin/var/ibm/InstallationManager/installed.xml')
+      it 'will error out if user_home is not passed.' do
+        expect { provider.installed_file }.to raise_error(ArgumentError, %r{user_home is not specified})
       end
     end
     context 'root user' do

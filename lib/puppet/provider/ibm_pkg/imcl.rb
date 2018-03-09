@@ -76,7 +76,10 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
   def installed_file
     if resource[:user] == 'root'
       xml_path = '/var/ibm/InstallationManager/installed.xml'
-    else
+    elsif resource[:user] != 'root'
+      if resource[:user_home].nil?
+        raise ArgumentError, 'user_home is not specified for non-admin user %s.' % resource[:user]
+      end
       xml_path = "#{resource[:user_home]}/var/ibm/InstallationManager/installed.xml"
     end
     xml_path

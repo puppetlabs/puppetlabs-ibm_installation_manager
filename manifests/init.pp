@@ -102,9 +102,7 @@ class ibm_installation_manager (
       }
     }
   } else {
-    if $installation_mode != 'nonadministrator' and $installation_mode != 'group' {
-      fail ("Designated installation_mode '${installation_mode}' not supported.")
-    }
+    fail ("Designated installation_mode '${installation_mode}' not supported.")
   }
 
   if $target {
