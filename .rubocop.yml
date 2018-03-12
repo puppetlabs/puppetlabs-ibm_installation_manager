@@ -96,3 +96,13 @@ Style/IfUnlessModifier:
   Enabled: false
 Style/SymbolProc:
   Enabled: false
+RSpec/ExampleLength:
+  Enabled: false
+RSpec/MultipleExpectations:
+  Enabled: false
+RSpec/NestedGroups:
+  Enabled: false
+Layout/EndOfLine:
+  Enabled: false
+RSpec/MessageSpies:
+  EnforcedStyle: receive
