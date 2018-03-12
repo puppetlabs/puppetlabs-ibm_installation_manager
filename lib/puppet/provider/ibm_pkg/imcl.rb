@@ -56,7 +56,7 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
       if resource[:imcl_path]
         @imcl_command_path = resource[:imcl_path]
       else
-        installed = File.open(self.installed_file)
+        installed = File.open(self.class.installed_file(resource[:user]))
         doc = REXML::Document.new(installed)
         path = XPath.first(doc, '//installInfo/location[@id="IBM Installation Manager"]/@path').value
         installed.close
@@ -69,17 +69,32 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
     @imcl_command_path
   end
 
+
+  # searches for installed.xml in potential appDataLocation dirs
+  #
+  # @return [String] installed.xml path if it is found
+  def self.find_installed_xml(user)
+    require 'find'
+
+    installed_xml_path = nil
+
+    user_path = user == 'root' ? '/var/ibm/' : "/home/#{user}/var/ibm/"
+
+    if File.exist? user_path
+      Find.find(user_path) { |path| installed_xml_path = path if path.match(/InstallationManager\/installed.xml$/) }
+    end
+
+    installed_xml_path if File.file?(installed_xml_path)
+  end
+
   # returns a file handle by opening the install file
   # easier to mock when extracted to method like this
   #
   # @return [String] path to installed.xml file
-  def installed_file
-    if resource[:user] == 'root'
-      xml_path = '/var/ibm/InstallationManager/installed.xml'
-    else
-      xml_path = "/home/#{resource[:user]}/var/ibm/InstallationManager/installed.xml"
-    end
-    xml_path
+  def self.installed_file(user)
+    file = find_installed_xml(user)
+    return file unless file.nil?
+    fail('No installed.xml found.')
   end
 
   # wrapper for imcl command
@@ -241,7 +256,7 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
     # easier to mock when extracted to method like this
     registry_file = nil
     catalog.keys.each do |name|
-      if catalog[name][:user] == 'root'
+      if installed_file(catalog[name][:user]).match(/^\/var\/ibm\//) || catalog[name][:user] == 'root'
         registry_file = '/var/ibm/InstallationManager/installRegistry.xml'
       else
         registry_file = "/home/#{catalog[name][:user]}/var/ibm/InstallationManager/installRegistry.xml"

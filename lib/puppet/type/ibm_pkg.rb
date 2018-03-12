@@ -58,9 +58,9 @@ Puppet::Type.newtype(:ibm_pkg) do
   end
 
   newparam(:imcl_path) do
-    desc "The full path to the IBM Installation Manager location
+    desc "The full path to the imcl executable.
     This is optional. The provider will attempt to locate imcl by
-    parsing /var/ibm/InstallationManager/installed.xml.  If, for
+    parsing /<appDataLocation>/InstallationManager/installed.xml.  If, for
     some reason, it cannot be discovered or if you need to
     provide a specific path, you may do so with this parameter."
   end
