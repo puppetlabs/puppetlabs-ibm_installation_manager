@@ -2,7 +2,7 @@ require 'spec_helper_acceptance'
 
 describe 'ibm_installation_manager::ibm_pkg' do
   context 'installs package' do
-    it 'should install package' do
+    it 'installs package' do
       pp = <<-EOS
         class { 'ibm_installation_manager':
           deploy_source => true,
@@ -20,13 +20,13 @@ describe 'ibm_installation_manager::ibm_pkg' do
           user          => 'root',
         }
       EOS
-      apply_manifest(pp, :catch_failures => true)
-      apply_manifest(pp, :catch_changes => true)
+      apply_manifest(pp, catch_failures: true)
+      apply_manifest(pp, catch_changes: true)
     end
 
     describe file('/var/ibm/InstallationManager/installed.xml') do
-      it { should be_file }
-      it { should contain '/opt/IBM/WebSphere0/AppServer' }
+      it { is_expected.to be_file }
+      it { is_expected.to contain '/opt/IBM/WebSphere0/AppServer' }
     end
   end
 
@@ -55,16 +55,16 @@ describe 'ibm_installation_manager::ibm_pkg' do
           package_group => 'webadmins',
         }
         EOS
-        apply_manifest(pp, :catch_failures => true)
-        apply_manifest(pp, :catch_changes => true)
+        apply_manifest(pp, catch_failures: true)
+        apply_manifest(pp, catch_changes: true)
       end
 
       describe file('/home/webadmin/var/ibm/InstallationManager/installed.xml') do
-        it { should be_file }
+        it { is_expected.to be_file }
       end
 
       describe file('/home/webadmin/IBM/WebSphere0/AppServer') do
-        it { should be_directory }
+        it { is_expected.to be_directory }
       end
     end
 
@@ -97,22 +97,22 @@ describe 'ibm_installation_manager::ibm_pkg' do
           package_group => 'webadmins',
         }
         EOS
-        apply_manifest(pp, :catch_failures => true)
-        apply_manifest(pp, :catch_changes => true)
+        apply_manifest(pp, catch_failures: true)
+        apply_manifest(pp, catch_changes: true)
       end
 
       describe file('/home/webadmin/var/ibm/InstallationManager/installed.xml') do
-        it { should be_file }
+        it { is_expected.to be_file }
       end
 
       describe file('/home/webadmin/IBM/WebSphere0/AppServer') do
-        it { should be_directory }
+        it { is_expected.to be_directory }
       end
     end
   end
 
   context 'installs package with manage user' do
-    it 'should install package with user' do
+    it 'installs package with user' do
       pp = <<-EOS
         class { 'ibm_installation_manager':
           deploy_source => true,
@@ -137,24 +137,24 @@ describe 'ibm_installation_manager::ibm_pkg' do
           require       => User['webadmin'],
         }
       EOS
-      apply_manifest(pp, :catch_failures => true)
-      apply_manifest(pp, :catch_changes => true)
+      apply_manifest(pp, catch_failures: true)
+      apply_manifest(pp, catch_changes: true)
     end
 
     describe file('/var/ibm/InstallationManager/installed.xml') do
-      it { should be_file }
-      it { should contain '/opt/IBM/WebSphere1/AppServer' }
+      it { is_expected.to be_file }
+      it { is_expected.to contain '/opt/IBM/WebSphere1/AppServer' }
     end
 
     describe file('/opt/IBM/WebSphere1/AppServer') do
-      it { should be_directory }
-      it { should be_owned_by 'webadmin' }
-      it { should be_grouped_into 'webadmins' }
+      it { is_expected.to be_directory }
+      it { is_expected.to be_owned_by 'webadmin' }
+      it { is_expected.to be_grouped_into 'webadmins' }
     end
   end
 
   context 'installs package without manage user' do
-    it 'should install package with user' do
+    it 'installs package with user' do
       pp = <<-EOS
         class { 'ibm_installation_manager':
           deploy_source => true,
@@ -180,19 +180,19 @@ describe 'ibm_installation_manager::ibm_pkg' do
           require          => User['webadmin'],
         }
       EOS
-      apply_manifest(pp, :catch_failures => true)
-      apply_manifest(pp, :catch_changes => true)
+      apply_manifest(pp, catch_failures: true)
+      apply_manifest(pp, catch_changes: true)
     end
 
     describe file('/var/ibm/InstallationManager/installed.xml') do
-      it { should be_file }
-      it { should contain '/opt/IBM/WebSphere2/AppServer' }
+      it { is_expected.to be_file }
+      it { is_expected.to contain '/opt/IBM/WebSphere2/AppServer' }
     end
 
     describe file('/opt/IBM/WebSphere2/AppServer') do
-      it { should be_directory }
-      it { should be_owned_by 'root' }
-      it { should be_grouped_into 'root' }
+      it { is_expected.to be_directory }
+      it { is_expected.to be_owned_by 'root' }
+      it { is_expected.to be_grouped_into 'root' }
     end
   end
 end

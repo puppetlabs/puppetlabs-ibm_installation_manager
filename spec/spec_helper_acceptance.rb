@@ -23,13 +23,13 @@ RSpec.configure do |c|
 
   # Configure all nodes in nodeset
   c.before :suite do
-    #install module
-    puppet_module_install(:source => module_root, :module_name => 'ibm_installation_manager')
+    # install module
+    puppet_module_install(source: module_root, module_name: 'ibm_installation_manager')
 
-    install_pkg_path = "#{module_root}/spec/fixtures/modules/spec_files/files"
+    _install_pkg_path = "#{module_root}/spec/fixtures/modules/spec_files/files"
     hosts.each do |host|
-      on host, puppet('module','install','puppetlabs-stdlib'), { :acceptable_exit_codes => [0,1] }
-      on host, puppet('module','install','puppet-archive'), { :acceptable_exit_codes => [0,1] }
+      on host, puppet('module', 'install', 'puppetlabs-stdlib'), acceptable_exit_codes: [0, 1]
+      on host, puppet('module', 'install', 'puppet-archive'), acceptable_exit_codes: [0, 1]
 
       # Retrieve the install files for tests.
       pp = <<-EOS
@@ -55,7 +55,7 @@ RSpec.configure do |c|
           creates      => '/tmp/ndtrial/repository.config',
         }
       EOS
-      apply_manifest_on(host, pp, :catch_failures => true)
+      apply_manifest_on(host, pp, catch_failures: true)
     end
   end
 end

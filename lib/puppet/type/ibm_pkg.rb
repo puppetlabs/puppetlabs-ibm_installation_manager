@@ -15,7 +15,6 @@ require 'pathname'
 require 'puppet/parameter/boolean'
 
 Puppet::Type.newtype(:ibm_pkg) do
-
   autorequire(:file) do
     self[:target]
   end
@@ -33,19 +32,19 @@ Puppet::Type.newtype(:ibm_pkg) do
   end
 
   validate do
-    if self.catalog
+    if catalog
       unless self[:response]
-        fail("target is required when a response file is not provided") if self[:target].nil?
-        fail("package is required when a response file is not provided") if self[:package].nil?
-        fail("version is required when a response file is not provided") if self[:version].nil?
-        fail("repository is required when a response file is not provided") if self[:repository].nil?
+        raise('target is required when a response file is not provided') if self[:target].nil?
+        raise('package is required when a response file is not provided') if self[:package].nil?
+        raise('version is required when a response file is not provided') if self[:version].nil?
+        raise('repository is required when a response file is not provided') if self[:repository].nil?
       end
 
-      fail("Invalid user #{self[:user]}") unless :user =~ /^[0-9A-Za-z_-]+$/
+      raise("Invalid user #{self[:user]}") unless :user =~ %r{^[0-9A-Za-z_-]+$}
 
       [:imcl_path, :target, :repository, :response].each do |value|
         if self[value]
-          fail("#{value.to_s} must be an absolute path: #{self[value]}") unless Pathname.new(self[value]).absolute? 
+          raise("#{value} must be an absolute path: #{self[value]}") unless Pathname.new(self[value]).absolute?
         end
       end
     end
@@ -53,8 +52,7 @@ Puppet::Type.newtype(:ibm_pkg) do
 
   ensurable
 
-  newparam(:name, :namevar => true) do
-
+  newparam(:name, namevar: true) do
   end
 
   newparam(:imcl_path) do
@@ -101,13 +99,12 @@ Puppet::Type.newtype(:ibm_pkg) do
     package"
   end
 
-
   newparam(:user) do
     desc "The user to run the 'imcl' command as. Defaults to 'root'"
     defaultto 'root'
   end
 
-  newparam(:manage_ownership, :boolean => true, :parent => Puppet::Parameter::Boolean) do
+  newparam(:manage_ownership, boolean: true, parent: Puppet::Parameter::Boolean) do
     desc 'Whether or not to manage the ownership of installed packages. Allows for packages to not be installed as root.'
     defaultto true
   end
