@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
+## Supported Release [0.4.0]
+### Summary
+This is a small feature release that makes several small fixes while at the same time updating the module to comply with the set rubocop rules and PDK convert.
+
+#### Added
+- The module has been updated to comply with the set Rubocop Rules.
+- The module has been updated to work with PDK Convert.
+- Migrated from stickler to artifactory.
+
+#### Fixed
+- Error message for 'stopprocs' method fixed.
+- Reverted to working version of 'stopprocs' method.
+
 ## Supported Release [0.3.0]
 ### Summary
 This is a feature release that allows the user to install as non-root.
@@ -68,6 +81,7 @@ This release includes feature to manage ibm packages via `puppet resource` as we
 - Adds more testing.
 - Cleanup of README.
 
+[0.4.0]:https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/compare/0.3.0...0.4.0
 [0.3.0]:https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/compare/0.2.5...0.3.0
 [0.2.5]:https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/compare/0.2.4...0.2.5
 [0.2.4]:https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/compare/0.2.3...0.2.4
