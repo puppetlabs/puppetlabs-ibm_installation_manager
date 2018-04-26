@@ -21,6 +21,7 @@ RSpec.configure do |c|
   #
   INSTALL_FILE_PATH = ENV['IBM_INSTALL_SOURCE'] || 'http://int-resources.ops.puppetlabs.net/modules/ibm_installation_manager/'
 
+  IIM_VERSIONS = ['1.6.2000.20130301_2248','1.8.7000.20171706_2137']
   # Configure all nodes in nodeset
   c.before :suite do
     # install module
@@ -32,13 +33,18 @@ RSpec.configure do |c|
       on host, puppet('module', 'install', 'puppet-archive'), acceptable_exit_codes: [0, 1]
 
       # Retrieve the install files for tests.
-      pp = <<-EOS
-        archive { '/tmp/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip':
-          source       => "#{INSTALL_FILE_PATH}/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip",
-          extract      => false,
-          extract_path => '/tmp',
-        }
+     IIM_VERSIONS.each do |version|
+        pp = <<-EOS
+          archive { '/tmp/agent.installer.linux.gtk.x86_64_#{version}.zip':
+            source       => "#{INSTALL_FILE_PATH}/agent.installer.linux.gtk.x86_64_#{version}.zip",
+            extract      => false,
+            extract_path => '/tmp',
+          }
+          EOS
+        apply_manifest_on(host, pp, catch_failures: true)
+      end
 
+      pp = <<-EOS
         package { 'unzip':
           ensure => present,
           before => Archive['/tmp/ndtrial/was.repo.8550.liberty.ndtrial.zip'],

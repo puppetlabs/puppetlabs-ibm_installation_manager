@@ -231,7 +231,7 @@ Specifies the user to run the `imcl` command as. This user must have the necessa
 
 ## Limitations
 
-Tested with RHEL 5, 6, and 7 x86_64 and IBM Installation Manager 1.8.3 and 1.6.x
+Tested with RHEL 5, 6, and 7 x86_64 and IBM Installation Manager 1.8.7 and 1.6.x
 
 ## Known Issues
 
