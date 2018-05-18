@@ -6,14 +6,14 @@ source_link = nil
 
 # Teardown
 teardown do
-  confine_block(:except, roles: %w[master dashboard database]) do
+  confine_block(:except, roles: ['master', 'dashboard', 'database']) do
     agents.each do |agent|
       clean_test_box(agent, '/opt/IBM')
     end
   end
 end
 
-confine_block(:except, roles: %w[master dashboard database]) do
+confine_block(:except, roles: ['master', 'dashboard', 'database']) do
   agents.each do |agent|
     source_link = get_source_link(agent)
   end
@@ -30,7 +30,7 @@ step 'Inject "site.pp" on Master'
 site_pp = create_site_pp(master, manifest: pp)
 inject_site_pp(master, get_site_pp_path(master), site_pp)
 
-confine_block(:except, roles: %w[master dashboard database]) do
+confine_block(:except, roles: ['master', 'dashboard', 'database']) do
   agents.each do |agent|
     step 'Run Puppet Agent to install IBM Installation Manager from HTTP repository'
     expect_failure('Expect to fail due to FM-5115') do

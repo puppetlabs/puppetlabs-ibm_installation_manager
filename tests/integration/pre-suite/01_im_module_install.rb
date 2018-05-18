@@ -1,12 +1,12 @@
 test_name 'FM-3804 - C94728 - Plug-in Sync Module from Master with Prerequisites Satisfied on Agent'
 
 step 'install IBM_Installation_Manager dependencies:'
-%w[puppet-archive puppetlabs-stdlib puppetlabs-concat].each do |dep|
+['puppet-archive', 'puppetlabs-stdlib', 'puppetlabs-concat'].each do |dep|
   on(master, puppet("module install #{dep}"))
 end
 
 step 'Install dsestero/download_uncompress module on the agent'
-confine_block(:except, roles: %w[master dashboard database]) do
+confine_block(:except, roles: ['master', 'dashboard', 'database']) do
   agents.each do |agent|
     on(agent, '/opt/puppetlabs/puppet/bin/puppet module install dsestero-download_uncompress')
   end
