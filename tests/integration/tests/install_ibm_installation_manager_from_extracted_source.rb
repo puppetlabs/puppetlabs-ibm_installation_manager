@@ -7,14 +7,14 @@ source_link = nil
 
 # Teardown
 teardown do
-  confine_block(:except, roles: %w[master dashboard database]) do
+  confine_block(:except, roles: ['master', 'dashboard', 'database']) do
     agents.each do |agent|
       clean_test_box(agent, "/opt/IBM #{extracted_source}/*")
     end
   end
 end
 
-confine_block(:except, roles: %w[master dashboard database]) do
+confine_block(:except, roles: ['master', 'dashboard', 'database']) do
   agents.each do |agent|
     source_link = get_source_link(agent)
   end
@@ -31,7 +31,7 @@ site_pp = create_site_pp(master, manifest: pp)
 inject_site_pp(master, get_site_pp_path(master), site_pp)
 
 step 'Run Puppet Agent to install IBM Installation Manager from extracted source'
-confine_block(:except, roles: %w[master dashboard database]) do
+confine_block(:except, roles: ['master', 'dashboard', 'database']) do
   agents.each do |agent|
     download_and_uncompress(agent, source_link, extracted_source)
 
