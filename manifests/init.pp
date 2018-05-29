@@ -3,7 +3,6 @@
 #
 # @example Installing Installation Manager to the default location of '/opt/IBM/InstallationManager'. In this example, we've downloaded and  extracted the Installation Manager packages (installer) to '/vagrant/ibm/IM'
 #  class { 'ibm_installation_manager':
-
 #    source_dir => '/vagrant/ibm/IM',
 #  }
 #
