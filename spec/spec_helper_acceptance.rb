@@ -19,7 +19,7 @@ RSpec.configure do |c|
   # To specify a url:
   #     "http://path.of/zip_files"
   #
-  INSTALL_FILE_PATH = ENV['IBM_INSTALL_SOURCE'] || 'http://int-resources.ops.puppetlabs.net/modules/ibm_installation_manager/'
+  INSTALL_FILE_PATH = ENV['IBM_INSTALL_SOURCE'] || 'http://int-resources.ops.puppetlabs.net/modules/ibm_installation_manager'
 
   # Configure all nodes in nodeset
   c.before :suite do
@@ -33,8 +33,8 @@ RSpec.configure do |c|
 
       # Retrieve the install files for tests.
       pp = <<-EOS
-        archive { '/tmp/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip':
-          source       => "#{INSTALL_FILE_PATH}/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip",
+        archive { '/tmp/agent.installer.linux.gtk.x86_64_1.8.7000.20170706_2137.zip':
+          source       => "#{INSTALL_FILE_PATH}/agent.installer.linux.gtk.x86_64_1.8.7000.20170706_2137.zip",
           extract      => false,
           extract_path => '/tmp',
         }

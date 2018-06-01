@@ -6,7 +6,7 @@ describe 'should install ibm software' do
       pp = <<-EOS
         class { 'ibm_installation_manager':
           deploy_source => true,
-          source        => '/tmp/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip',
+          source        => '/tmp/agent.installer.linux.gtk.x86_64_1.8.7000.20170706_2137.zip',
           target        => '/opt/IBM/InstallationManager',
         }
       EOS
@@ -35,7 +35,7 @@ describe 'should install ibm software' do
           manage_user       => true,
           user              => 'webadmin',
           user_home         => '/home/webadmin',
-          source            => '/tmp/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip',
+          source            => '/tmp/agent.installer.linux.gtk.x86_64_1.8.7000.20170706_2137.zip',
         }
       EOS
       apply_manifest(pp, catch_failures: true)
@@ -67,7 +67,7 @@ describe 'should install ibm software' do
           user              => 'webadmin',
           group             => 'webadmins',
           user_home         => '/home/webadmin',
-          source            => '/tmp/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip',
+          source            => '/tmp/agent.installer.linux.gtk.x86_64_1.8.7000.20170706_2137.zip',
         }
       EOS
       apply_manifest(pp, catch_failures: true)

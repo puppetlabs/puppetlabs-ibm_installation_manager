@@ -15,6 +15,8 @@ require 'pathname'
 require 'puppet/parameter/boolean'
 
 Puppet::Type.newtype(:ibm_pkg) do
+  desc "Custom type for installing an IBM package."
+
   autorequire(:file) do
     self[:target]
   end
@@ -53,6 +55,17 @@ Puppet::Type.newtype(:ibm_pkg) do
   ensurable
 
   newparam(:name, namevar: true) do
+  end
+
+  newparam(:jdk_package_name) do
+    desc "If a JDK must be installed separately (as in the case of Websphere Application Server 9), specify
+    the package_name here (everything before the underscore in the IBM package name)."
+  end
+
+  newparam(:jdk_package_version) do
+    desc "If a JDK must be installed separately (as in the case of Websphere Application Server 9), specify
+    the version here. Like 'version', this parameter refers to the number after the underscore in the IBM
+    package name."
   end
 
   newparam(:imcl_path) do

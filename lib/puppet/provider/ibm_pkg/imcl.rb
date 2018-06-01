@@ -187,9 +187,11 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
       cmd_options = "input #{resource[:response]}"
     elsif resource[:user] == 'root'
       cmd_options =  "install #{resource[:package]}_#{resource[:version]}"
+      cmd_options << " #{resource[:jdk_package_name]}_#{resource[:jdk_package_version]}" unless resource[:jdk_package_name].nil?
       cmd_options << " -repositories #{resource[:repository]} -installationDirectory #{resource[:target]}"
     else
       cmd_options =  "install #{resource[:package]}_#{resource[:version]}"
+      cmd_options << " #{resource[:jdk_package_name]}_#{resource[:jdk_package_version]}" unless resource[:jdk_package_name].nil?
       cmd_options << " -repositories #{resource[:repository]} -installationDirectory #{resource[:target]} -accessRights nonAdmin"
     end
     cmd_options << ' -acceptLicense'
