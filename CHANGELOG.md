@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
+## Supported Release [0.5.0]
+### Summary
+This is a small feature release that adds support for IBM Installation Manager 1.8.7 and some new parameters for ibm_pkg
+
+#### Added
+- support for IIM 1.8.7 ([MODULES-4738](https://tickets.puppet.com/browse/MODULES-4738))
+- `jdk_package_name` and `jdk_package_version` paramters in the ibm_pkg type
+
+#### Fixed
+- issue for users with non-standard home directories ([MODULES-7204](https://tickets.puppet.com/browse/MODULES-7204))
+
 ## Supported Release [0.4.0]
 ### Summary
 This is a small feature release that makes several small fixes while at the same time updating the module to comply with the set rubocop rules and PDK convert.
