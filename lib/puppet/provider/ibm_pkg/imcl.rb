@@ -69,6 +69,19 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
     @imcl_command_path
   end
 
+  # finds a user's home directory
+  # 
+  # @param [String] user
+  #   Unix username
+  #
+  # @return [String] path to a given user's home
+  def self.find_user_home(user)
+    system_users = Puppet::Type.type(:user).instances
+    user_resource = system_users.find { |u| u.name == user }
+    return user_resource.provider.home unless (user_resource.nil? || user_resource.provider.home.empty?)
+    fail("Could not find home directory for user #{user}")
+  end
+
   # searches for installed.xml in potential appDataLocation dirs
   #
   # @return [String] installed.xml path if it is found
@@ -76,14 +89,23 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
     require 'find'
 
     installed_xml_path = nil
+    user_home = find_user_home(user) unless user == 'root'
 
-    user_path = (user == 'root') ? '/var/ibm/' : "/home/#{user}/var/ibm/"
+    user_path = if user == 'root'
+                  '/var/ibm/'
+                else
+                  "#{user_home}/var/ibm/"
+                end
 
     if File.exist? user_path
       Find.find(user_path) { |path| installed_xml_path = path if path =~ %r{InstallationManager/installed.xml$} }
     end
 
-    installed_xml_path if File.file?(installed_xml_path)
+    if File.file?(installed_xml_path)
+      return installed_xml_path
+    else
+      fail("Could not find installed.xml file at #{user_path}/InstallationManager/installed.xml")
+    end
   end
 
   # returns a file handle by opening the install file
@@ -252,7 +274,7 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
       registry_file = if installed_file(catalog[name][:user]).match(%r{^/var/ibm/}) || catalog[name][:user] == 'root'
                         '/var/ibm/InstallationManager/installRegistry.xml'
                       else
-                        "/home/#{catalog[name][:user]}/var/ibm/InstallationManager/installRegistry.xml"
+                        "#{find_user_home(catalog[name][:user])}/var/ibm/InstallationManager/installRegistry.xml"
                       end
     end
     registry = File.open(registry_file)
