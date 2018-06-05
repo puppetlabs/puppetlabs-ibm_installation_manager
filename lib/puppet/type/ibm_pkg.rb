@@ -55,6 +55,7 @@ Puppet::Type.newtype(:ibm_pkg) do
   ensurable
 
   newparam(:name, namevar: true) do
+    desc "An arbitrary name to identify the resource."
   end
 
   newparam(:jdk_package_name) do
@@ -71,7 +72,7 @@ Puppet::Type.newtype(:ibm_pkg) do
   end
 
   newparam(:target) do
-    desc "The full path to install the specified package to. Corresponds to the 'imcl' option '-installationDirectory'"
+    desc "The full path to install the specified package to. Corresponds to the 'imcl' option '-installationDirectory'."
   end
 
   newparam(:package) do
@@ -82,7 +83,7 @@ Puppet::Type.newtype(:ibm_pkg) do
   end
 
   newparam(:repository) do
-    desc "The full path to the 'repository.config' file for installing this package"
+    desc "The full path to the 'repository.config' file for installing this package."
   end
 
   newparam(:response) do
@@ -97,11 +98,11 @@ Puppet::Type.newtype(:ibm_pkg) do
   end
 
   newparam(:options) do
-    desc "Any custom options to pass to the 'imcl' tool for installing the package"
+    desc "Any custom options to pass to the 'imcl' tool for installing the package."
   end
 
   newparam(:user) do
-    desc "The user to run the 'imcl' command as. Defaults to 'root'"
+    desc "The user to run the 'imcl' command as."
     defaultto 'root'
   end
 

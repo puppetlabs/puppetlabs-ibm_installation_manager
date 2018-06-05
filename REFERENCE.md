@@ -43,7 +43,7 @@ The following parameters are available in the `ibm_installation_manager` class.
 
 Data type: `Any`
 
-Specifies whether this module should be responsible for deploying the source package for Installation Manager. Valid values are `true` and `false`. Defaults to `false`
+Specifies whether this module should be responsible for deploying the source package for Installation Manager.
 
 Default value: `false`
 
@@ -59,7 +59,7 @@ Default value: `undef`
 
 Data type: `Any`
 
-Specifies the absolute path to the directory to deploy the installer from. (This is the directory containing the `installc` binary.) If you extracted the archive yourself, point this parameter to the extracted archive. Defaults to `/opt/IBM/tmp`.
+Specifies the absolute path to the directory to deploy the installer from. (This is the directory containing the `installc` binary.) If you extracted the archive yourself, point this parameter to the extracted archive.
 
 Default value: `undef`
 
@@ -67,7 +67,7 @@ Default value: `undef`
 
 Data type: `Any`
 
-Specifies the absolute path to the base location where you want to install IBM Installation Manager. Defaults to `/opt/IBM/InstallationManager`.
+Specifies the absolute path to the base location where you want to install IBM Installation Manager. Set to `/opt/IBM/InstallationManager` as the default for the 'administrator' installation mode or '#{user_home}/IBM/InstallationManager' for 'nonadministrator' and 'group' installation modes.
 
 Default value: `undef`
 
@@ -75,7 +75,7 @@ Default value: `undef`
 
 Data type: `Any`
 
-Whether or not to manage the user that will be installing the IBM IM. Default: `false`.
+Whether or not to manage the user that will be installing the IBM Installation Manager.
 
 Default value: `false`
 
@@ -83,7 +83,7 @@ Default value: `false`
 
 Data type: `Any`
 
-Specifies the user to run the installation as. Defaults to `root`. Note that installing as a different user might cause undefined behavior. Consult IBM's documentation for details.
+Specifies the user to run the installation as. Note that installing as a different user might cause undefined behavior. Consult IBM's documentation for details.
 Note that installing as a user other than `root` might result in undefined behavior. Consult IBM's documentation for details. Installations by a non-root user won't share installation data with the rest of the system.
 
 Default value: 'root'
@@ -92,7 +92,7 @@ Default value: 'root'
 
 Data type: `Any`
 
-Specifies the home directory for the specified user. Required if you're installing in a mode other than 'administrator'.
+Specifies the home directory for the specified user. Required if you're using an installation_mode other than 'administrator'.
 
 Default value: `undef`
 
@@ -100,7 +100,7 @@ Default value: `undef`
 
 Data type: `Any`
 
-When in 'group' mode, whether or not to manage the group that will be installing the IBM IM. Default: `false`.
+When in 'group' mode, whether or not to manage the group that will be installing the IBM Installation Manager.
 
 Default value: `false`
 
@@ -108,8 +108,7 @@ Default value: `false`
 
 Data type: `Any`
 
-Specifies the group to run the installation as. Defaults to `root`.
-Note that installing as a user other than `root` might result in undefined behavior. Consult IBM's documentation for details. Installations by a non-root user won't share installation data with the rest of the system.
+Specifies the group to run the installation as. Note that installing as a user other than `root` might result in undefined behavior. Consult IBM's documentation for details. Installations by a non-root user won't share installation data with the rest of the system.
 
 Default value: 'root'
 
@@ -126,7 +125,7 @@ Default value: `undef`
 
 Data type: `Any`
 
-Specifies the timeout for the installation, in seconds. Defaults to 900. Installation Manager can take a long time to install, so if you have issues with Puppet timing out before the installation is complete, you might need to increase this parameter.
+Specifies the timeout for the installation, in seconds. Installation Manager can take a long time to install, so if you have issues with Puppet timing out before the installation is complete, you might need to increase this parameter.
 
 Default value: '900'
 
@@ -134,7 +133,7 @@ Default value: '900'
 
 Data type: `Any`
 
-Specifies which 'installation mode' you want to use to install the IBM Installation Manager. Values: 'administrator', 'nonadministrator', 'group'. Default: 'administrator'
+Specifies which 'installation mode' you want to use to install the IBM Installation Manager. Values: 'administrator', 'nonadministrator', 'group'.
 
 Default value: 'administrator'
 
@@ -164,7 +163,7 @@ The following parameters are available in the `ibm_pkg` type.
 
 namevar
 
-
+An arbitrary name to identify the resource.
 
 ##### `jdk_package_name`
 
@@ -181,7 +180,7 @@ This is optional. The provider will attempt to locate imcl by parsing /<appDataL
 
 ##### `target`
 
-The full path to install the specified package to. Corresponds to the 'imcl' option '-installationDirectory'
+The full path to install the specified package to. Corresponds to the 'imcl' option '-installationDirectory'.
 
 ##### `package`
 
@@ -190,7 +189,7 @@ This is the first part of the traditional IBM full package name, before the firs
 
 ##### `repository`
 
-The full path to the 'repository.config' file for installing this package
+The full path to the 'repository.config' file for installing this package.
 
 ##### `response`
 
@@ -203,11 +202,11 @@ This is the second part of the traditional IBM full package name, after the firs
 
 ##### `options`
 
-Any custom options to pass to the 'imcl' tool for installing the package
+Any custom options to pass to the 'imcl' tool for installing the package.
 
 ##### `user`
 
-The user to run the 'imcl' command as. Defaults to 'root'
+The user to run the 'imcl' command as.
 
 Default value: root
 
