@@ -55,65 +55,54 @@ Puppet::Type.newtype(:ibm_pkg) do
   ensurable
 
   newparam(:name, namevar: true) do
+    desc "An arbitrary name to identify the resource."
   end
 
   newparam(:jdk_package_name) do
-    desc "If a JDK must be installed separately (as in the case of Websphere Application Server 9), specify
-    the package_name here (everything before the underscore in the IBM package name)."
+    desc "If a JDK must be installed separately (as in the case of Websphere Application Server 9), specify the package_name here (everything before the underscore in the IBM package name)."
   end
 
   newparam(:jdk_package_version) do
-    desc "If a JDK must be installed separately (as in the case of Websphere Application Server 9), specify
-    the version here. Like 'version', this parameter refers to the number after the underscore in the IBM
-    package name."
+    desc "If a JDK must be installed separately (as in the case of Websphere Application Server 9), specify the version here. Like 'version', this parameter refers to the number after the underscore in the IBM package name."
   end
 
   newparam(:imcl_path) do
     desc "The full path to the imcl executable.
-    This is optional. The provider will attempt to locate imcl by
-    parsing /<appDataLocation>/InstallationManager/installed.xml.  If, for
-    some reason, it cannot be discovered or if you need to
-    provide a specific path, you may do so with this parameter."
+    This is optional. The provider will attempt to locate imcl by parsing /<appDataLocation>/InstallationManager/installed.xml.  If, for some reason, it cannot be discovered or if you need to provide a specific path, you may do so with this parameter."
   end
 
   newparam(:target) do
-    desc "The full path to install the specified package to.
-    Corresponds to the 'imcl' option '-installationDirectory'"
+    desc "The full path to install the specified package to. Corresponds to the 'imcl' option '-installationDirectory'."
   end
 
   newparam(:package) do
     desc "The IBM package name. Example: com.ibm.websphere.IBMJAVA.v71
-    This is the first part of the traditional IBM full package name,
-    before the first underscore."
+    This is the first part of the traditional IBM full package name, before the first underscore."
 
     ## How to best validate this? Are package names consistent?
   end
 
   newparam(:repository) do
-    desc "The full path to the 'repository.config' file for installing this
-    package"
+    desc "The full path to the 'repository.config' file for installing this package."
   end
 
   newparam(:response) do
-    desc "Full path to an optional response file to use. The user is
-    responsible for ensuring this file is present."
+    desc "Full path to an optional response file to use. The user is responsible for ensuring this file is present."
   end
 
   newparam(:version) do
     desc "The version of the package. Example: 7.1.2000.20141116_0823
-    This is the second part of the traditional IBM full package name,
-    after the first underscore."
+    This is the second part of the traditional IBM full package name, after the first underscore."
 
     ## How to best validate this?  Is the versioning consistent?
   end
 
   newparam(:options) do
-    desc "Any custom options to pass to the 'imcl' tool for installing the
-    package"
+    desc "Any custom options to pass to the 'imcl' tool for installing the package."
   end
 
   newparam(:user) do
-    desc "The user to run the 'imcl' command as. Defaults to 'root'"
+    desc "The user to run the 'imcl' command as."
     defaultto 'root'
   end
 
