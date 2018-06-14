@@ -44,7 +44,7 @@ Puppet::Type.newtype(:ibm_pkg) do
 
       raise("Invalid user #{self[:user]}") unless :user =~ %r{^[0-9A-Za-z_-]+$}
 
-      [:imcl_path, :target, :repository, :response].each do |value|
+      [:imcl_path, :target, :response].each do |value|
         if self[value]
           raise("#{value} must be an absolute path: #{self[value]}") unless Pathname.new(self[value]).absolute?
         end
