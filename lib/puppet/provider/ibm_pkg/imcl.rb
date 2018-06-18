@@ -298,6 +298,20 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
           }
         end
       end
+      XPath.each(item, 'fix') do |fix|
+        id = fix.attributes['id']
+        XPath.each(fix, 'version') do |package|
+          version      = package.attributes['value']
+          repository   = package.attributes['repoInfo'].split(',')[0].split('=')[1]
+          packages << {
+            product_name: product_name,
+            path: path,
+            package_id: id,
+            version: version,
+            repository: repository,
+          }
+        end
+      end
     end
     registry.close
     packages
