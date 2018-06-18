@@ -231,6 +231,7 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
   end
 
   def destroy
+    stopprocs
     cmd_options = "uninstall #{resource[:package]}_#{resource[:version]} -s -installationDirectory #{resource[:target]}"
     imcl(cmd_options)
   end
