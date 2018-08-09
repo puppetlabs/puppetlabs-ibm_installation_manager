@@ -103,6 +103,8 @@ See REFERENCE.md
 
 This module has only been tested with IBM Installation Manager 1.8.7.
 
+For an extensive list of supported operating systems, see [metadata.json](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/blob/master/metadata.json)
+
 ## Known Issues
 
 The installer exits 0 even if it failed. 
