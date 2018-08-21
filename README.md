@@ -97,7 +97,7 @@ ibm_pkg { 'com.ibm.websphere.NDTRIAL.v85':
 
 ## Reference
 
-See REFERENCE.md
+See [REFERENCE.md](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/blob/master/REFERENCE.md)
 
 ## Limitations
 
