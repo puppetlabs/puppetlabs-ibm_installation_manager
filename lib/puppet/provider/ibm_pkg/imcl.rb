@@ -70,7 +70,7 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
   end
 
   # finds a user's home directory
-  # 
+  #
   # @param [String] user
   #   Unix username
   #
@@ -78,8 +78,8 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
   def self.find_user_home(user)
     system_users = Puppet::Type.type(:user).instances
     user_resource = system_users.find { |u| u.name == user }
-    return user_resource.provider.home unless (user_resource.nil? || user_resource.provider.home.empty?)
-    fail("Could not find home directory for user #{user}")
+    return user_resource.provider.home unless user_resource.nil? || user_resource.provider.home.empty?
+    raise("Could not find home directory for user #{user}")
   end
 
   # searches for installed.xml in potential appDataLocation dirs
@@ -101,11 +101,8 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
       Find.find(user_path) { |path| installed_xml_path = path if path =~ %r{InstallationManager/installed.xml$} }
     end
 
-    if File.file?(installed_xml_path)
-      return installed_xml_path
-    else
-      fail("Could not find installed.xml file at #{user_path}/InstallationManager/installed.xml")
-    end
+    return installed_xml_path if File.file?(installed_xml_path)
+    raise("Could not find installed.xml file at #{user_path}/InstallationManager/installed.xml")
   end
 
   # returns a file handle by opening the install file

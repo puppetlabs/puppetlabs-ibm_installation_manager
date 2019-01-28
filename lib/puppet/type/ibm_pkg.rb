@@ -15,7 +15,7 @@ require 'pathname'
 require 'puppet/parameter/boolean'
 
 Puppet::Type.newtype(:ibm_pkg) do
-  desc "Custom type for installing an IBM package."
+  desc 'Custom type for installing an IBM package.'
 
   autorequire(:file) do
     self[:target]
@@ -55,20 +55,22 @@ Puppet::Type.newtype(:ibm_pkg) do
   ensurable
 
   newparam(:name, namevar: true) do
-    desc "An arbitrary name to identify the resource."
+    desc 'An arbitrary name to identify the resource.'
   end
 
   newparam(:jdk_package_name) do
-    desc "If a JDK must be installed separately (as in the case of Websphere Application Server 9), specify the package_name here (everything before the underscore in the IBM package name)."
+    desc 'If a JDK must be installed separately (as in the case of Websphere Application Server 9), specify the package_name here (everything before the underscore in the IBM package name).'
   end
 
   newparam(:jdk_package_version) do
-    desc "If a JDK must be installed separately (as in the case of Websphere Application Server 9), specify the version here. Like 'version', this parameter refers to the number after the underscore in the IBM package name."
+    desc "If a JDK must be installed separately (as in the case of Websphere Application Server 9), specify the version here.
+    Like 'version', this parameter refers to the number after the underscore in the IBM package name."
   end
 
   newparam(:imcl_path) do
     desc "The full path to the imcl executable.
-    This is optional. The provider will attempt to locate imcl by parsing /<appDataLocation>/InstallationManager/installed.xml.  If, for some reason, it cannot be discovered or if you need to provide a specific path, you may do so with this parameter."
+    This is optional. The provider will attempt to locate imcl by parsing /<appDataLocation>/InstallationManager/installed.xml.
+    If, for some reason, it cannot be discovered or if you need to provide a specific path, you may do so with this parameter."
   end
 
   newparam(:target) do
@@ -87,7 +89,7 @@ Puppet::Type.newtype(:ibm_pkg) do
   end
 
   newparam(:response) do
-    desc "Full path to an optional response file to use. The user is responsible for ensuring this file is present."
+    desc 'Full path to an optional response file to use. The user is responsible for ensuring this file is present.'
   end
 
   newparam(:version) do

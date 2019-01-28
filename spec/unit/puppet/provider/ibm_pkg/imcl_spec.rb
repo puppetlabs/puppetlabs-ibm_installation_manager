@@ -11,18 +11,18 @@ describe Puppet::Type.type(:ibm_pkg).provider(:imcl) do
     it 'returns the user home' do
       testuser.provider.stubs(:home).returns('/blah/foo/testuser')
       Puppet::Type.type(:user).stubs(:instances).returns([testuser])
-      expect(provider.find_user_home('testuser')).to eq "/blah/foo/testuser"
+      expect(provider.find_user_home('testuser')).to eq '/blah/foo/testuser'
     end
 
     it 'fails if there are no users' do
       Puppet::Type.type(:user).instances.stubs(:find).returns(nil)
-      expect{ provider.find_user_home('testuser')}.to raise_error RuntimeError, /Could not find home directory/
+      expect { provider.find_user_home('testuser') }.to raise_error RuntimeError, %r{Could not find home directory}
     end
 
     it 'fails if user home is empty' do
       testuser.provider.stubs(:home).returns('')
       Puppet::Type.type(:user).stubs(:instances).returns([testuser])
-      expect{ provider.find_user_home('testuser')}.to raise_error RuntimeError, /Could not find home directory/
+      expect { provider.find_user_home('testuser') }.to raise_error RuntimeError, %r{Could not find home directory}
     end
   end
 
@@ -50,7 +50,7 @@ describe Puppet::Type.type(:ibm_pkg).provider(:imcl) do
           Find.stubs(:find).with('/home/webadmin/var/ibm/').yields(nil)
           File.stubs(:file?).with(nil).returns false
 
-          expect { provider.installed_file('webadmin') }.to raise_error RuntimeError, /Could not find installed.xml/
+          expect { provider.installed_file('webadmin') }.to raise_error RuntimeError, %r{Could not find installed.xml}
         end
       end
     end
