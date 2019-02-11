@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [1.0.0](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/tree/1.0.0) (2019-02-11)
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/compare/0.6.0...1.0.0)
+
+### Changed
+
+- \(FM-7710\) - Remove Scientific 5 testing/support for IBM Installation Manager [\#105](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/pull/105) ([david22swan](https://github.com/david22swan))
+
+### Fixed
+
+- pdksync - \(FM-7655\) Fix rubygems-update for ruby \< 2.3 [\#102](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/pull/102) ([tphoney](https://github.com/tphoney))
+
 ## [0.6.0](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/tree/0.6.0) (2018-09-27)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/compare/0.5.0...0.6.0)
