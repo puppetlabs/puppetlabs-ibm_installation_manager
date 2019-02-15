@@ -22,7 +22,7 @@ RSpec.configure do |c|
   # To specify a url:
   #     "http://path.of/zip_files"
   #
-  INSTALL_FILE_PATH = ENV['IBM_INSTALL_SOURCE'] || 'http://10.234.0.63:8080/modules/ibm_installation_manager'
+  INSTALL_FILE_PATH = ENV['IBM_INSTALL_SOURCE'] || 'https://artifactory.delivery.puppetlabs.net/artifactory/list/generic/module_ci_resources/modules/ibm_installation_manager'
 
   # Configure all nodes in nodeset
   c.before :suite do
