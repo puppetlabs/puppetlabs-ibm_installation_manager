@@ -1,4 +1,11 @@
 ---
+.gitlab-ci.yml:
+  unmanaged: true
+
+.rubocop.yml:
+  default_configs:
+    inherit_from: .rubocop_todo.yml
+
 .travis.yml:
   docker_sets: []
   docker_defaults:
@@ -6,6 +13,9 @@
   secure: ""
   branches:
     - release
+
+appveyor.yml:
+  delete: true
 
 Gemfile:
   required:
@@ -24,16 +34,10 @@ Gemfile:
         ref: '20ee04ba1234e9e83eb2ffb5056e23d641c7a018'
         condition: "Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.2.2')"
 
-appveyor.yml:
-  delete: true
-
-.rubocop.yml:
-  default_configs:
-    inherit_from: .rubocop_todo.yml
-
 Rakefile:
   requires:
     - puppet-lint/tasks/puppet-lint
 
-.gitlab-ci.yml:
-  unmanaged: true
+spec/spec_helper.rb:
+  mock_with: ':rspec'
+  coverage_report: true
