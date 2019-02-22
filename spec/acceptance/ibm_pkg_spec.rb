@@ -20,8 +20,7 @@ describe 'ibm_installation_manager::ibm_pkg' do
           user          => 'root',
         }
       EOS
-      apply_manifest(pp, catch_failures: true)
-      apply_manifest(pp, catch_changes: true)
+      idempotent_apply(pp)
     end
 
     describe file('/var/ibm/InstallationManager/installed.xml') do
@@ -55,8 +54,7 @@ describe 'ibm_installation_manager::ibm_pkg' do
           package_group => 'webadmins',
         }
         EOS
-        apply_manifest(pp, catch_failures: true)
-        apply_manifest(pp, catch_changes: true)
+        idempotent_apply(pp)
       end
 
       describe file('/home/webadmin/var/ibm/InstallationManager/installed.xml') do
@@ -97,8 +95,7 @@ describe 'ibm_installation_manager::ibm_pkg' do
           package_group => 'webadmins',
         }
         EOS
-        apply_manifest(pp, catch_failures: true)
-        apply_manifest(pp, catch_changes: true)
+        idempotent_apply(pp)
       end
 
       describe file('/home/webadmin/var/ibm/InstallationManager/installed.xml') do
@@ -137,8 +134,7 @@ describe 'ibm_installation_manager::ibm_pkg' do
           require       => User['webadmin'],
         }
       EOS
-      apply_manifest(pp, catch_failures: true)
-      apply_manifest(pp, catch_changes: true)
+      idempotent_apply(pp)
     end
 
     describe file('/var/ibm/InstallationManager/installed.xml') do
@@ -180,8 +176,7 @@ describe 'ibm_installation_manager::ibm_pkg' do
           require          => User['webadmin'],
         }
       EOS
-      apply_manifest(pp, catch_failures: true)
-      apply_manifest(pp, catch_changes: true)
+      idempotent_apply(pp)
     end
 
     describe file('/var/ibm/InstallationManager/installed.xml') do

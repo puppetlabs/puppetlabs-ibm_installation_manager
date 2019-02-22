@@ -10,8 +10,7 @@ describe 'should install ibm software' do
           target        => '/opt/IBM/InstallationManager',
         }
       EOS
-      apply_manifest(pp, catch_failures: true)
-      apply_manifest(pp, catch_changes: true)
+      idempotent_apply(pp)
     end
 
     describe file('/opt/IBM/InstallationManager/eclipse/tools/imcl') do
@@ -38,8 +37,7 @@ describe 'should install ibm software' do
           source            => '/tmp/agent.installer.linux.gtk.x86_64_1.8.7000.20170706_2137.zip',
         }
       EOS
-      apply_manifest(pp, catch_failures: true)
-      apply_manifest(pp, catch_changes: true)
+      idempotent_apply(pp)
     end
 
     describe file('/home/webadmin/IBM/InstallationManager/eclipse/tools/imcl') do
@@ -70,8 +68,7 @@ describe 'should install ibm software' do
           source            => '/tmp/agent.installer.linux.gtk.x86_64_1.8.7000.20170706_2137.zip',
         }
       EOS
-      apply_manifest(pp, catch_failures: true)
-      apply_manifest(pp, catch_changes: true)
+      idempotent_apply(pp)
     end
 
     describe file('/home/webadmin/IBM/InstallationManager_Group/eclipse/tools/imcl') do
