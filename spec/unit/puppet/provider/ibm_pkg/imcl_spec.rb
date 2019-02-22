@@ -78,7 +78,7 @@ describe Puppet::Type.type(:ibm_pkg).provider(:imcl) do
     context 'file exists' do
       let(:file_path) { '/tmp/response_file.xml' }
       let(:file) do
-       <<-FILE
+        <<-FILE
           <?xml version="1.0" encoding="UTF-8"?>
           <agent-input clean='true' temporary='false'>
               <server>
@@ -95,12 +95,13 @@ describe Puppet::Type.type(:ibm_pkg).provider(:imcl) do
 
       let(:output_properties) do
         {
-          :package=>"com.ibm.cic.agent", 
-          :repository=>"http://a.site.com/local/products/InstallationManager/1.7.0000.20130901_0712/repository.config", 
-          :target=>"c:/temp/my_profile", 
-          :version=>"1.7.0000.20130901_0712"
+          package: 'com.ibm.cic.agent',
+          repository: 'http://a.site.com/local/products/InstallationManager/1.7.0000.20130901_0712/repository.config',
+          target: 'c:/temp/my_profile',
+          version: '1.7.0000.20130901_0712',
         }
       end
+
       it 'reads properties correctly' do
         expect(File).to receive(:exist?).with(file_path).and_return(true)
         expect(File).to receive(:open).with(file_path).and_yield(file)

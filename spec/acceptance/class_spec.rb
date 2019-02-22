@@ -10,13 +10,11 @@ describe 'should install ibm software' do
           target        => '/opt/IBM/InstallationManager',
         }
       EOS
-      idempotent_apply(pp)
-    end
+      idempotent_apply(default, pp)
 
-    describe file('/opt/IBM/InstallationManager/eclipse/tools/imcl') do
-      it { is_expected.to be_file }
-      it { is_expected.to be_owned_by 'root' }
-      it { is_expected.to be_executable }
+      expect(file('/opt/IBM/InstallationManager/eclipse/tools/imcl')).to be_file
+      expect(file('/opt/IBM/InstallationManager/eclipse/tools/imcl')).to be_owned_by 'root'
+      expect(file('/opt/IBM/InstallationManager/eclipse/tools/imcl')).to be_executable
     end
   end
   ## IIM module is expected to:
@@ -37,19 +35,15 @@ describe 'should install ibm software' do
           source            => '/tmp/agent.installer.linux.gtk.x86_64_1.8.7000.20170706_2137.zip',
         }
       EOS
-      idempotent_apply(pp)
-    end
+      idempotent_apply(default, pp)
 
-    describe file('/home/webadmin/IBM/InstallationManager/eclipse/tools/imcl') do
-      it { is_expected.to be_file }
-      it { is_expected.to be_owned_by 'webadmin' }
-      it { is_expected.to be_executable }
-    end
+      expect(file('/home/webadmin/IBM/InstallationManager/eclipse/tools/imcl')).to be_file
+      expect(file('/home/webadmin/IBM/InstallationManager/eclipse/tools/imcl')).to be_owned_by 'webadmin'
+      expect(file('/home/webadmin/IBM/InstallationManager/eclipse/tools/imcl')).to be_executable
 
-    ['/home/webadmin/', '/home/webadmin/var'].each do |path|
-      describe file(path) do
-        it { is_expected.to be_directory }
-        it { is_expected.to be_owned_by 'webadmin' }
+      ['/home/webadmin/', '/home/webadmin/var'].each do |path|
+        expect(file(path)).to be_directory
+        expect(file(path)).to be_owned_by 'webadmin'
       end
     end
   end
@@ -68,13 +62,11 @@ describe 'should install ibm software' do
           source            => '/tmp/agent.installer.linux.gtk.x86_64_1.8.7000.20170706_2137.zip',
         }
       EOS
-      idempotent_apply(pp)
-    end
+      idempotent_apply(default, pp)
 
-    describe file('/home/webadmin/IBM/InstallationManager_Group/eclipse/tools/imcl') do
-      it { is_expected.to be_file }
-      it { is_expected.to be_grouped_into 'webadmins' }
-      it { is_expected.to be_executable }
+      expect(file('/home/webadmin/IBM/InstallationManager_Group/eclipse/tools/imcl')).to be_file
+      expect(file('/home/webadmin/IBM/InstallationManager_Group/eclipse/tools/imcl')).to be_grouped_into 'webadmins'
+      expect(file('/home/webadmin/IBM/InstallationManager_Group/eclipse/tools/imcl')).to be_executable
     end
   end
 end

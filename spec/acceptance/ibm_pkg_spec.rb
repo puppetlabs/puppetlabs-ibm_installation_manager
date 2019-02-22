@@ -20,12 +20,10 @@ describe 'ibm_installation_manager::ibm_pkg' do
           user          => 'root',
         }
       EOS
-      idempotent_apply(pp)
-    end
+      idempotent_apply(default, pp)
 
-    describe file('/var/ibm/InstallationManager/installed.xml') do
-      it { is_expected.to be_file }
-      it { is_expected.to contain '/opt/IBM/WebSphere0/AppServer' }
+      expect(file('/var/ibm/InstallationManager/installed.xml')).to be_file
+      expect(file('/var/ibm/InstallationManager/installed.xml')).to contain '/opt/IBM/WebSphere0/AppServer'
     end
   end
 
@@ -54,15 +52,10 @@ describe 'ibm_installation_manager::ibm_pkg' do
           package_group => 'webadmins',
         }
         EOS
-        idempotent_apply(pp)
-      end
+        idempotent_apply(default, pp)
 
-      describe file('/home/webadmin/var/ibm/InstallationManager/installed.xml') do
-        it { is_expected.to be_file }
-      end
-
-      describe file('/home/webadmin/IBM/WebSphere0/AppServer') do
-        it { is_expected.to be_directory }
+        expect(file('/home/webadmin/var/ibm/InstallationManager/installed.xml')).to be_file
+        expect(file('/home/webadmin/IBM/WebSphere0/AppServer')).to be_directory
       end
     end
 
@@ -95,15 +88,10 @@ describe 'ibm_installation_manager::ibm_pkg' do
           package_group => 'webadmins',
         }
         EOS
-        idempotent_apply(pp)
-      end
+        idempotent_apply(default, pp)
 
-      describe file('/home/webadmin/var/ibm/InstallationManager/installed.xml') do
-        it { is_expected.to be_file }
-      end
-
-      describe file('/home/webadmin/IBM/WebSphere0/AppServer') do
-        it { is_expected.to be_directory }
+        expect(file('/home/webadmin/var/ibm/InstallationManager/installed.xml')).to be_file
+        expect(file('/home/webadmin/IBM/WebSphere0/AppServer')).to be_directory
       end
     end
   end
@@ -134,18 +122,14 @@ describe 'ibm_installation_manager::ibm_pkg' do
           require       => User['webadmin'],
         }
       EOS
-      idempotent_apply(pp)
-    end
+      idempotent_apply(default, pp)
 
-    describe file('/var/ibm/InstallationManager/installed.xml') do
-      it { is_expected.to be_file }
-      it { is_expected.to contain '/opt/IBM/WebSphere1/AppServer' }
-    end
+      expect(file('/var/ibm/InstallationManager/installed.xml')).to be_file
+      expect(file('/var/ibm/InstallationManager/installed.xml')).to contain '/opt/IBM/WebSphere1/AppServer'
 
-    describe file('/opt/IBM/WebSphere1/AppServer') do
-      it { is_expected.to be_directory }
-      it { is_expected.to be_owned_by 'webadmin' }
-      it { is_expected.to be_grouped_into 'webadmins' }
+      expect(file('/opt/IBM/WebSphere1/AppServer')).to be_directory
+      expect(file('/opt/IBM/WebSphere1/AppServer')).to be_owned_by 'webadmin'
+      expect(file('/opt/IBM/WebSphere1/AppServer')).to be_grouped_into 'webadmins'
     end
   end
 
@@ -176,18 +160,14 @@ describe 'ibm_installation_manager::ibm_pkg' do
           require          => User['webadmin'],
         }
       EOS
-      idempotent_apply(pp)
-    end
+      idempotent_apply(default, pp)
 
-    describe file('/var/ibm/InstallationManager/installed.xml') do
-      it { is_expected.to be_file }
-      it { is_expected.to contain '/opt/IBM/WebSphere2/AppServer' }
-    end
+      expect(file('/var/ibm/InstallationManager/installed.xml')).to be_file
+      expect(file('/var/ibm/InstallationManager/installed.xml')).to contain '/opt/IBM/WebSphere2/AppServer'
 
-    describe file('/opt/IBM/WebSphere2/AppServer') do
-      it { is_expected.to be_directory }
-      it { is_expected.to be_owned_by 'root' }
-      it { is_expected.to be_grouped_into 'root' }
+      expect(file('/opt/IBM/WebSphere2/AppServer')).to be_directory
+      expect(file('/opt/IBM/WebSphere2/AppServer')).to be_owned_by 'root'
+      expect(file('/opt/IBM/WebSphere2/AppServer')).to be_grouped_into 'root'
     end
   end
 end
