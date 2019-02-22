@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'should install ibm software' do
+describe 'ibm_installation_manager' do
   context 'default/administrator mode' do
     it do
       pp = <<-EOS
@@ -17,11 +17,6 @@ describe 'should install ibm software' do
       expect(file('/opt/IBM/InstallationManager/eclipse/tools/imcl')).to be_executable
     end
   end
-  ## IIM module is expected to:
-  ## - unzip the source into dir owned by the user
-  ## - execute imcl command as the user
-  ## - install IIM as user into the user's home
-  ## - install IIM as user into writable dirs owned by the user
 
   context 'nonadministrator mode' do
     it do

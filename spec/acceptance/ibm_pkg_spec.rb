@@ -1,7 +1,7 @@
 require 'spec_helper_acceptance'
 
 describe 'ibm_installation_manager::ibm_pkg' do
-  context 'installs package' do
+  context 'with valid parameters' do
     it 'installs package' do
       pp = <<-EOS
         class { 'ibm_installation_manager':
@@ -27,8 +27,8 @@ describe 'ibm_installation_manager::ibm_pkg' do
     end
   end
 
-  context 'installs package with non-root user' do
-    context 'with manage_user and manage_group' do
+  context 'with non-root user, manage_user and manage_group' do
+    context 'installs package' do
       it do
         pp = <<-EOS
         class { 'ibm_installation_manager':
@@ -59,8 +59,8 @@ describe 'ibm_installation_manager::ibm_pkg' do
       end
     end
 
-    context 'wihout manage_user with manage_group' do
-      it do
+    context 'without manage_user with manage_group' do
+      it 'installs package' do
         pp = <<-EOS
         user { 'webadmin':
           ensure     => present,
@@ -96,8 +96,8 @@ describe 'ibm_installation_manager::ibm_pkg' do
     end
   end
 
-  context 'installs package with manage user' do
-    it 'installs package with user' do
+  context 'with manage user' do
+    it 'installs package' do
       pp = <<-EOS
         class { 'ibm_installation_manager':
           deploy_source => true,
@@ -133,8 +133,8 @@ describe 'ibm_installation_manager::ibm_pkg' do
     end
   end
 
-  context 'installs package without manage user' do
-    it 'installs package with user' do
+  context 'without manage user' do
+    it 'installs package' do
       pp = <<-EOS
         class { 'ibm_installation_manager':
           deploy_source => true,
