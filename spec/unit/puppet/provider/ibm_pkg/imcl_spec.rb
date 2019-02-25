@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Puppet::Type.type(:ibm_pkg).provider(:imcl) do
   let(:provider) { Puppet::Type.type(:ibm_pkg).provider(:imcl) }
 
-  describe '#find_user_home' do
+  describe 'find_user_home' do
     let(:testuser) do
       Puppet::Type.type(:user).new(name: 'testuser', provider: :useradd)
     end
@@ -26,7 +26,7 @@ describe Puppet::Type.type(:ibm_pkg).provider(:imcl) do
     end
   end
 
-  describe '#installed_file' do
+  describe 'installed_file' do
     context 'nonadministrator' do
       let(:nonroot_path) { '/home/webadmin/var/ibm/InstallationManager/installed.xml' }
 
@@ -64,6 +64,48 @@ describe Puppet::Type.type(:ibm_pkg).provider(:imcl) do
         allow(File).to receive(:file?).with(root_path).and_return true
 
         expect(provider.installed_file('root')).to eq root_path
+      end
+    end
+  end
+
+  describe 'response_file_properties' do
+    context 'file does not exist' do
+      it 'raises error' do
+        expect { provider.response_file_properties('/imaginary/file') }.to raise_error RuntimeError, %r{Cannot open response file}
+      end
+    end
+
+    context 'file exists' do
+      let(:file_path) { '/tmp/response_file.xml' }
+      let(:file) do
+        <<-FILE
+          <?xml version="1.0" encoding="UTF-8"?>
+          <agent-input clean='true' temporary='false'>
+              <server>
+                  <repository location='http://a.site.com/local/products/InstallationManager/1.7.0000.20130901_0712/repository.config'></repository>
+                  <repository location='http://a.site.com/local/products/sample/8211/20130918_1728/repository.config'></repository>
+              </server>
+              <profile id='IBM Software Delivery Platform' installLocation='c:/temp/my_profile'></profile>
+              <install modify='false'>
+                  <offering features='agent_core,agent_jre' id='com.ibm.cic.agent' version="1.7.0000.20130901_0712" />
+              </install>
+          </agent-input>
+        FILE
+      end
+
+      let(:output_properties) do
+        {
+          package: 'com.ibm.cic.agent',
+          repository: 'http://a.site.com/local/products/InstallationManager/1.7.0000.20130901_0712/repository.config',
+          target: 'c:/temp/my_profile',
+          version: '1.7.0000.20130901_0712',
+        }
+      end
+
+      it 'reads properties correctly' do
+        expect(File).to receive(:exist?).with(file_path).and_return(true)
+        expect(File).to receive(:open).with(file_path).and_yield(file)
+        expect(provider.response_file_properties(file_path)).to eq output_properties
       end
     end
   end
