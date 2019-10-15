@@ -1,5 +1,8 @@
 fixtures:
   repositories:
+    datetime:
+      repo: 'git://github.com/fervidus/datetime.git'
+      ref: 'master'
     stdlib:
       repo: 'git://github.com/puppetlabs/puppetlabs-stdlib.git'
       ref: '4.6.0'

@@ -74,7 +74,7 @@ class ibm_installation_manager (
     fail("${module_name} requires a source parameter to be set.")
   }
 
-  $timestamp = chomp(generate('/bin/date', '+%Y%d%m_%H%M%S'))
+  $timestamp = chomp(datetime::date('+%Y%d%m_%H%M%S'))
 
   if $installation_mode == 'administrator' {
     if $user != 'root' {

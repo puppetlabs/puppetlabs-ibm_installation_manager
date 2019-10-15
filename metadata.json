@@ -9,6 +9,10 @@
   "issues_url": "https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/issues",
   "dependencies": [
     {
+      "name": "fervid-datetime",
+      "version_requirement": ">= 1.0.0 < 2.0.0"
+    },
+    {
       "name": "puppetlabs-stdlib",
       "version_requirement": ">= 4.6.0 < 7.0.0"
     },
