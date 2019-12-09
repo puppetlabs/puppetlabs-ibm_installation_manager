@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v2.1.0](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/tree/v2.1.0) (2019-12-09)
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/compare/v2.0.0...v2.1.0)
+
+### Added
+
+- \(FM-8675\) - Addition of Support for CentOS8 [\#136](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/pull/136) ([david22swan](https://github.com/david22swan))
+- \(FM-8027\) Add RedHat 8 support [\#124](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/pull/124) ([eimlav](https://github.com/eimlav))
+
+### Fixed
+
+- Timestamp retrieval function now Puppet native [\#134](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/pull/134) ([bryanjbelanger](https://github.com/bryanjbelanger))
+
 ## [v2.0.0](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/tree/v2.0.0) (2019-05-14)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/compare/1.0.0...v2.0.0)
