@@ -5,6 +5,8 @@
   default_configs:
     inherit_from: ".rubocop_todo.yml"
 ".travis.yml":
+  deploy_to_forge:
+    enabled: false
   docker_sets: []
   docker_defaults:
     bundler_args: ''
