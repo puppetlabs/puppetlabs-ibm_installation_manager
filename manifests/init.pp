@@ -55,18 +55,18 @@
 #   Default: true. Installs the unzip package.
 
 class ibm_installation_manager (
-  $deploy_source     = false,
-  $source            = undef,
-  $source_dir        = undef,
-  $target            = undef,
-  $manage_user       = false,
-  $user              = 'root',
-  $user_home         = undef,
-  $manage_group      = false,
-  $group             = 'root',
-  $options           = undef,
-  $timeout           = '900',
-  $installation_mode = 'administrator',
+  $deploy_source         = false,
+  $source                = undef,
+  $source_dir            = undef,
+  $target                = undef,
+  $manage_user           = false,
+  $user                  = 'root',
+  $user_home             = undef,
+  $manage_group          = false,
+  $group                 = 'root',
+  $options               = undef,
+  $timeout               = '900',
+  $installation_mode     = 'administrator',
   $install_unzip_package = true,
 ) {
 
