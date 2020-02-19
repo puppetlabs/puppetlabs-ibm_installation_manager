@@ -27,4 +27,4 @@ HOSTS:
     box : puppetlabs/centos-6.6-64-nocm
     hypervisor : vagrant
 CONFIG:
-  pe_dir: http://neptune.delivery.puppetlabs.net/3.8/ci-ready/
+  pe_dir: https://artifactory.delivery.puppetlabs.net/artifactory/generic_enterprise__local/2018.1/ci-ready/
