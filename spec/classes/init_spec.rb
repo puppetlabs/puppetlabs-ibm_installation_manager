@@ -65,6 +65,34 @@ describe 'ibm_installation_manager' do
     }
   end
 
+  context 'install_unzip_package = true' do
+    let(:params) do
+      {
+        install_unzip_package: true,
+        deploy_source: true,
+        source: '/opt/IBM/tmp/InstallationManager/ibm-agent_installer.zip',
+      }
+    end
+
+    describe 'install_unzip_package set to true' do
+      it { is_expected.to contain_package('unzip').with(ensure: 'present') }
+    end
+  end
+
+  context 'install_unzip_package = false' do
+    let(:params) do
+      {
+        install_unzip_package: false,
+        deploy_source: true,
+        source: '/opt/IBM/tmp/InstallationManager/ibm-agent_installer.zip',
+      }
+    end
+
+    describe 'install_unzip_package set to false' do
+      it { is_expected.not_to contain_package('unzip') }
+    end
+  end
+
   context 'deploy source = true' do
     let(:params) do
       {

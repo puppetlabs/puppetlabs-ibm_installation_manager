@@ -51,19 +51,23 @@
 # @param installation_mode
 #   Specifies which 'installation mode' you want to use to install the IBM Installation Manager. Values: 'administrator', 'nonadministrator', 'group'.
 #
+# @param install_unzip_package
+#   Default: true. Installs the unzip package.
+
 class ibm_installation_manager (
-  $deploy_source     = false,
-  $source            = undef,
-  $source_dir        = undef,
-  $target            = undef,
-  $manage_user       = false,
-  $user              = 'root',
-  $user_home         = undef,
-  $manage_group      = false,
-  $group             = 'root',
-  $options           = undef,
-  $timeout           = '900',
-  $installation_mode = 'administrator',
+  $deploy_source         = false,
+  $source                = undef,
+  $source_dir            = undef,
+  $target                = undef,
+  $manage_user           = false,
+  $user                  = 'root',
+  $user_home             = undef,
+  $manage_group          = false,
+  $group                 = 'root',
+  $options               = undef,
+  $timeout               = '900',
+  $installation_mode     = 'administrator',
+  $install_unzip_package = true,
 ) {
 
   validate_bool($deploy_source)
@@ -158,10 +162,11 @@ class ibm_installation_manager (
       owner  => $user,
       group  => $group,
     }
-
-    package { 'unzip':
-      ensure => present,
-      before => Archive["${_source_dir}/ibm-agent_installer.zip"],
+    if $install_unzip_package {
+      package { 'unzip':
+        ensure => present,
+        before => Archive["${_source_dir}/ibm-agent_installer.zip"],
+      }
     }
 
     archive { "${_source_dir}/ibm-agent_installer.zip":
