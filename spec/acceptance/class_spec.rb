@@ -10,7 +10,7 @@ describe 'ibm_installation_manager' do
           target        => '/opt/IBM/InstallationManager',
         }
       EOS
-      idempotent_apply(default, pp)
+      apply_manifest(pp, catch_failures: true)
 
       expect(file('/opt/IBM/InstallationManager/eclipse/tools/imcl')).to be_file
       expect(file('/opt/IBM/InstallationManager/eclipse/tools/imcl')).to be_owned_by 'root'
@@ -30,7 +30,7 @@ describe 'ibm_installation_manager' do
           source            => '/tmp/agent.installer.linux.gtk.x86_64_1.8.7000.20170706_2137.zip',
         }
       EOS
-      idempotent_apply(default, pp)
+      apply_manifest(pp, catch_failures: true)
 
       expect(file('/home/webadmin/IBM/InstallationManager/eclipse/tools/imcl')).to be_file
       expect(file('/home/webadmin/IBM/InstallationManager/eclipse/tools/imcl')).to be_owned_by 'webadmin'
@@ -57,7 +57,7 @@ describe 'ibm_installation_manager' do
           source            => '/tmp/agent.installer.linux.gtk.x86_64_1.8.7000.20170706_2137.zip',
         }
       EOS
-      idempotent_apply(default, pp)
+      apply_manifest(pp, catch_failures: true)
 
       expect(file('/home/webadmin/IBM/InstallationManager_Group/eclipse/tools/imcl')).to be_file
       expect(file('/home/webadmin/IBM/InstallationManager_Group/eclipse/tools/imcl')).to be_grouped_into 'webadmins'

@@ -20,7 +20,7 @@ describe 'ibm_installation_manager::ibm_pkg' do
           user          => 'root',
         }
       EOS
-      idempotent_apply(default, pp)
+      apply_manifest(pp, catch_failures: true)
 
       expect(file('/var/ibm/InstallationManager/installed.xml')).to be_file
       expect(file('/var/ibm/InstallationManager/installed.xml')).to contain '/opt/IBM/WebSphere0/AppServer'
@@ -52,7 +52,7 @@ describe 'ibm_installation_manager::ibm_pkg' do
           package_group => 'webadmins',
         }
         EOS
-        idempotent_apply(default, pp)
+        apply_manifest(pp, catch_failures: true)
 
         expect(file('/home/webadmin/var/ibm/InstallationManager/installed.xml')).to be_file
         expect(file('/home/webadmin/IBM/WebSphere0/AppServer')).to be_directory
@@ -88,7 +88,7 @@ describe 'ibm_installation_manager::ibm_pkg' do
           package_group => 'webadmins',
         }
         EOS
-        idempotent_apply(default, pp)
+        apply_manifest(pp, catch_failures: true)
 
         expect(file('/home/webadmin/var/ibm/InstallationManager/installed.xml')).to be_file
         expect(file('/home/webadmin/IBM/WebSphere0/AppServer')).to be_directory
@@ -122,7 +122,7 @@ describe 'ibm_installation_manager::ibm_pkg' do
           require       => User['webadmin'],
         }
       EOS
-      idempotent_apply(default, pp)
+      apply_manifest(pp, catch_failures: true)
 
       expect(file('/var/ibm/InstallationManager/installed.xml')).to be_file
       expect(file('/var/ibm/InstallationManager/installed.xml')).to contain '/opt/IBM/WebSphere1/AppServer'
@@ -160,7 +160,7 @@ describe 'ibm_installation_manager::ibm_pkg' do
           require          => User['webadmin'],
         }
       EOS
-      idempotent_apply(default, pp)
+      apply_manifest(pp, catch_failures: true)
 
       expect(file('/var/ibm/InstallationManager/installed.xml')).to be_file
       expect(file('/var/ibm/InstallationManager/installed.xml')).to contain '/opt/IBM/WebSphere2/AppServer'
