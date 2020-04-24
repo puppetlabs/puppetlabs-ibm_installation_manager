@@ -7,7 +7,7 @@ class Helper
 end
 
 RSpec.configure do |c|
-  module_root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
+  _module_root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
 
   c.formatter = :documentation
 
@@ -23,7 +23,7 @@ RSpec.configure do |c|
   #     "http://path.of/zip_files"
   #
   INSTALL_FILE_PATH = ENV['IBM_INSTALL_SOURCE'] || 'https://artifactory.delivery.puppetlabs.net/artifactory/list/generic/module_ci_resources/modules/ibm_installation_manager'
-  
+
   # Configure all nodes in nodeset
   c.before :suite do
     # Retrieve the install files for tests.

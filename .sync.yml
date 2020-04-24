@@ -20,6 +20,12 @@
 appveyor.yml:
   delete: true
 Gemfile:
+  required:
+    ':development':
+      - gem: ed25519
+        version: '>= 1.2', '< 2.0'
+      - gem: bcrypt_pbkdf
+        version: '>= 1.0', '< 2.0'
   optional:
     ":development":
     - gem: github_changelog_generator
