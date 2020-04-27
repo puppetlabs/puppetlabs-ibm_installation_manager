@@ -6,5 +6,8 @@ fixtures:
     archive:
       repo: 'https://github.com/voxpupuli/puppet-archive.git'
       ref: 'master'
+    facts: 'https://github.com/puppetlabs/puppetlabs-facts.git'
+    provision: 'https://github.com/puppetlabs/provision.git'
+    puppet_agent: 'https://github.com/puppetlabs/puppetlabs-puppet_agent.git'
   symlinks:
-    'ibm_installation_manager': "#{source_dir}"
+    ibm_installation_manager: "#{source_dir}"
