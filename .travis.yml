@@ -13,7 +13,7 @@ before_install:
   - gem --version
   - bundle -v
 script:
-  - 'SIMPLECOV=yes bundle exec rake $CHECK'
+  - 'bundle exec rake $CHECK'
 bundler_args: --without system_tests
 rvm:
   - 2.5.7
@@ -21,6 +21,9 @@ stages:
   - static
   - spec
   - acceptance
+  -
+    if: tag =~ ^v\d
+    name: deploy
 jobs:
   fast_finish: true
   include:
@@ -35,12 +38,12 @@ jobs:
       env: PUPPET_GEM_VERSION="~> 6.0" CHECK=parallel_spec
       rvm: 2.5.7
       stage: spec
+    -
+      env: DEPLOY_TO_FORGE=yes
+      stage: deploy
 branches:
   only:
     - master
     - /^v\d/
-    - release
 notifications:
   email: false
-  slack:
-    secure: DK3ralr8M16ow94LHtar9Ibde2EFWyCOCv7QJhCcaQpulmcNCZU82ia57v/tMWc8q8mhX524C3t+HA8p5LBKfHez7G6d0LDFO3OCtZO/t9Qy4/utB88UWIGZPJppmEMP5PyJjnob2qgbbo3/9E2MwGblebZ1MYTMEz9Ju8pezIc=

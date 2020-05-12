@@ -40,6 +40,10 @@ Style/BlockDelimiters:
   Description: Prefer braces for chaining. Mostly an aesthetical choice. Better to
     be consistent then.
   EnforcedStyle: braces_for_chaining
+Style/BracesAroundHashParameters:
+  Description: Braces are required by Ruby 2.7. Cop removed from RuboCop v0.80.0.
+    See https://github.com/rubocop-hq/rubocop/pull/7643
+  Enabled: true
 Style/ClassAndModuleChildren:
   Description: Compact style reduces the required amount of indentation.
   EnforcedStyle: compact
@@ -75,7 +79,6 @@ Style/TrailingCommaInLiteral:
 Style/SymbolArray:
   Description: Using percent style obscures symbolic intent of array's contents.
   EnforcedStyle: brackets
-inherit_from: ".rubocop_todo.yml"
 RSpec/MessageSpies:
   EnforcedStyle: receive
 Style/Documentation:
