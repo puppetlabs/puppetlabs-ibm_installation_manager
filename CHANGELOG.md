@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v2.2.0](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/tree/v2.2.0) (2020-06-02)
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/compare/v2.1.0...v2.2.0)
+
+### Added
+
+- Make installation of unzip optional [\#141](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/pull/141) ([haloflightleader](https://github.com/haloflightleader))
+
 ## [v2.1.0](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/tree/v2.1.0) (2019-12-09)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/compare/v2.0.0...v2.1.0)
@@ -19,16 +27,13 @@ All notable changes to this project will be documented in this file. The format 
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/compare/1.0.0...v2.0.0)
 
-### Changed
-
-- pdksync - \(MODULES-8444\) - Raise lower Puppet bound [\#117](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/pull/117) ([david22swan](https://github.com/david22swan))
-
 ## [1.0.0](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/tree/1.0.0) (2019-02-11)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/compare/0.6.0...1.0.0)
 
 ### Changed
 
+- pdksync - \(MODULES-8444\) - Raise lower Puppet bound [\#117](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/pull/117) ([david22swan](https://github.com/david22swan))
 - \(FM-7710\) - Remove Scientific 5 testing/support for IBM Installation Manager [\#105](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/pull/105) ([david22swan](https://github.com/david22swan))
 
 ### Fixed
