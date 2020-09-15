@@ -1,8 +1,0 @@
-download_uncompress {'download_unzip_<%= installer_url %>':
-  distribution_name  => "<%= installer_url %>",
-  dest_folder        => '<%= dest_directory %>',
-  creates            => "<%= directory_path %>",
-  uncompress         => '<%= compress_type %>',
-  user               => 'root',
-  group              => '<%= user_group %>',
-}
