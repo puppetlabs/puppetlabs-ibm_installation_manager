@@ -97,13 +97,13 @@ ibm_pkg { 'com.ibm.websphere.NDTRIAL.v85':
 
 ## Reference
 
-See [REFERENCE.md](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/blob/master/REFERENCE.md)
+See [REFERENCE.md](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/blob/main/REFERENCE.md)
 
 ## Limitations
 
 This module has only been tested with IBM Installation Manager 1.8.7.
 
-For an extensive list of supported operating systems, see [metadata.json](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/blob/master/metadata.json)
+For an extensive list of supported operating systems, see [metadata.json](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/blob/main/metadata.json)
 
 ## Known Issues
 
