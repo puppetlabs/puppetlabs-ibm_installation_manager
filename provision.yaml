@@ -37,4 +37,4 @@ release_checks_7:
   - centos-8-x86_64
   - oracle-7-x86_64
   - scientific-7-x86_64
-  - ubuntu-18.04-x86_64
+  - ubuntu-1804-x86_64
