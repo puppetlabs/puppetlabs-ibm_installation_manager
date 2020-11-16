@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v2.2.1](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/tree/v2.2.1) (2020-11-16)
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/compare/v2.2.0...v2.2.1)
+
+### Fixed
+
+- \(IAC-990\) - Removal of inappropriate terminology [\#160](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/pull/160) ([david22swan](https://github.com/david22swan))
+
 ## [v2.2.0](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/tree/v2.2.0) (2020-06-26)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/compare/v2.1.0...v2.2.0)
