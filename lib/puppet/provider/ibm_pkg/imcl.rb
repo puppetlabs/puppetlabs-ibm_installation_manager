@@ -100,7 +100,7 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
                 end
 
     if File.exist? user_path
-      Find.find(user_path) { |path| installed_xml_path = path if path =~ %r{InstallationManager/installed.xml$} }
+      Find.find(user_path) { |path| installed_xml_path = path if %r{InstallationManager/installed.xml$}.match?(path) }
     end
 
     return installed_xml_path if File.file?(installed_xml_path)
