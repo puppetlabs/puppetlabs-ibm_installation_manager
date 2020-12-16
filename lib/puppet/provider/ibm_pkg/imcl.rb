@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Provider for installing and querying packages with IBM Installation
 # Manager.  This could almost be a provider for the package resource, but I'm
 # not sure how.  We need to be able to support multiple installations of the

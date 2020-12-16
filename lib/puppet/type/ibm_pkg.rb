@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # Type for interfacing with IBM's Installation Manager.  See the 'imcl'
 # provider for more detailed notes.

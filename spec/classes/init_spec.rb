@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 describe 'ibm_installation_manager' do
   context 'defaults' do
     context 'administrator' do
       it { is_expected.to contain_class('ibm_installation_manager') }
       it {
-        is_expected.to contain_exec('Install IBM Installation Manager').with(command: %r{/opt/IBM/tmp/InstallationManager/installc -acceptLicense -s -log.*-installationDirectory /opt/IBM/InstallationManager}, # rubocop:disable Metrics/LineLength
+        is_expected.to contain_exec('Install IBM Installation Manager').with(command: %r{/opt/IBM/tmp/InstallationManager/installc -acceptLicense -s -log.*-installationDirectory /opt/IBM/InstallationManager}, # rubocop:disable Layout/LineLength
                                                                              creates: '/opt/IBM/InstallationManager/eclipse/tools/imcl',
                                                                              user: 'root',
                                                                              timeout: '900')
@@ -22,7 +24,7 @@ describe 'ibm_installation_manager' do
 
       it { is_expected.to contain_class('ibm_installation_manager') }
       it {
-        is_expected.to contain_exec('Install IBM Installation Manager').with(command: %r{/home/webadmin/IBM/tmp/InstallationManager/userinstc -acceptLicense -accessRights nonAdmin -s -log.*-installationDirectory /home/webadmin/IBM/InstallationManager}, # rubocop:disable Metrics/LineLength
+        is_expected.to contain_exec('Install IBM Installation Manager').with(command: %r{/home/webadmin/IBM/tmp/InstallationManager/userinstc -acceptLicense -accessRights nonAdmin -s -log.*-installationDirectory /home/webadmin/IBM/InstallationManager}, # rubocop:disable Layout/LineLength
                                                                              creates: '/home/webadmin/IBM/InstallationManager/eclipse/tools/imcl',
                                                                              user: 'webadmin',
                                                                              timeout: '900')
@@ -40,7 +42,7 @@ describe 'ibm_installation_manager' do
 
       it { is_expected.to contain_class('ibm_installation_manager') }
       it {
-        is_expected.to contain_exec('Install IBM Installation Manager').with(command: %r{/home/webadmin/IBM/tmp/InstallationManager/groupinstc -acceptLicense -accessRights group -s -log.*-installationDirectory /home/webadmin/IBM/InstallationManager_Group}, # rubocop:disable Metrics/LineLength
+        is_expected.to contain_exec('Install IBM Installation Manager').with(command: %r{/home/webadmin/IBM/tmp/InstallationManager/groupinstc -acceptLicense -accessRights group -s -log.*-installationDirectory /home/webadmin/IBM/InstallationManager_Group}, # rubocop:disable Layout/LineLength
                                                                              creates: '/home/webadmin/IBM/InstallationManager_Group/eclipse/tools/imcl',
                                                                              user: 'webadmin',
                                                                              timeout: '900')
@@ -58,7 +60,7 @@ describe 'ibm_installation_manager' do
     end
 
     it {
-      is_expected.to contain_exec('Install IBM Installation Manager').with(command: %r{/opt/myorg/tmp/InstallationManager/installc -acceptLicense -s -log.*-installationDirectory /opt/myorg/InstallationManager}, # rubocop:disable Metrics/LineLength
+      is_expected.to contain_exec('Install IBM Installation Manager').with(command: %r{/opt/myorg/tmp/InstallationManager/installc -acceptLicense -s -log.*-installationDirectory /opt/myorg/InstallationManager}, # rubocop:disable Layout/LineLength
                                                                            creates: '/opt/myorg/InstallationManager/eclipse/tools/imcl',
                                                                            user: 'root',
                                                                            timeout: '1200')
