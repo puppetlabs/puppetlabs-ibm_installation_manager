@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Provider for installing and querying packages with IBM Installation
 # Manager.  This could almost be a provider for the package resource, but I'm
 # not sure how.  We need to be able to support multiple installations of the
@@ -98,7 +100,7 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
                 end
 
     if File.exist? user_path
-      Find.find(user_path) { |path| installed_xml_path = path if path =~ %r{InstallationManager/installed.xml$} }
+      Find.find(user_path) { |path| installed_xml_path = path if %r{InstallationManager/installed.xml$}.match?(path) }
     end
 
     return installed_xml_path if File.file?(installed_xml_path)
@@ -247,7 +249,7 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
   def self.prefetch(resources)
     packages = instances(resources)
     return unless packages
-    resources.keys.each do |name|
+    resources.each_key do |name|
       if resources[name][:response]
         props = response_file_properties(resources[name][:response])
         # pre populate the things that were missing when the response file was parsed
@@ -268,7 +270,7 @@ Puppet::Type.type(:ibm_pkg).provide(:imcl) do
     # returns a file handle by opening the registry file
     # easier to mock when extracted to method like this
     registry_file = nil
-    catalog.keys.each do |name|
+    catalog.each_key do |name|
       registry_file = if installed_file(catalog[name][:user]).match(%r{^/var/ibm/}) || catalog[name][:user] == 'root'
                         '/var/ibm/InstallationManager/installRegistry.xml'
                       else

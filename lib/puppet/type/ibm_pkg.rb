@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # Type for interfacing with IBM's Installation Manager.  See the 'imcl'
 # provider for more detailed notes.
@@ -42,7 +44,7 @@ Puppet::Type.newtype(:ibm_pkg) do
         raise('repository is required when a response file is not provided') if self[:repository].nil?
       end
 
-      raise("Invalid user #{self[:user]}") unless :user =~ %r{^[0-9A-Za-z_-]+$}
+      raise("Invalid user #{self[:user]}") unless :user.match?(%r{^[0-9A-Za-z_-]+$})
 
       [:imcl_path, :target, :response].each do |value|
         if self[value]
