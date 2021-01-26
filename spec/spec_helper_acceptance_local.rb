@@ -23,22 +23,25 @@ RSpec.configure do |c|
   #     "file:///directory/of/the/zips"
   # To specify a url:
   #     "http://path.of/zip_files"
-  #
-  INSTALL_FILE_PATH = ENV['IBM_INSTALL_SOURCE'] || 'https://artifactory.delivery.puppetlabs.net/artifactory/list/generic/module_ci_resources/modules/ibm_installation_manager'
+  # For Internal testing
+  # INSTALL_FILE_PATH = ENV['IBM_INSTALL_SOURCE'] || 'https://artifactory.delivery.puppetlabs.net/artifactory/list/generic/module_ci_resources/modules/ibm_installation_manager'
+
+
+
+  INSTALL_FILE_PATH = ENV['IBM_INSTALL_SOURCE'] || '/sharedfiles'
 
   # Configure all nodes in nodeset
   c.before :suite do
-    # Retrieve the install files for tests.
     pp = <<-EOS
-      archive { '/tmp/agent.installer.linux.gtk.x86_64_1.8.7000.20170706_2137.zip':
-        source       => "#{INSTALL_FILE_PATH}/agent.installer.linux.gtk.x86_64_1.8.7000.20170706_2137.zip",
+      archive { '/tmp/agent.installer.linux.gtk.x86_64_1.9.1004.20201109_1718.zip':
+        source       => "#{INSTALL_FILE_PATH}/agent.installer.linux.gtk.x86_64_1.9.1004.20201109_1718.zip",
         extract      => false,
         extract_path => '/tmp',
       }
 
       package { 'unzip':
         ensure => present,
-        before => Archive['/tmp/ndtrial/was.repo.8550.liberty.ndtrial.zip'],
+        before => Archive["/tmp/ndtrial/was.repo.8550.liberty.ndtrial.zip"],
       }
 
       file { '/tmp/ndtrial':
@@ -46,7 +49,7 @@ RSpec.configure do |c|
       }
 
       archive { '/tmp/ndtrial/was.repo.8550.liberty.ndtrial.zip':
-        source       => "#{INSTALL_FILE_PATH}/was.repo.8550.liberty.ndtrial.zip",
+        source       => "#{INSTALL_FILE_PATH}/ndtrial/was.repo.8550.liberty.ndtrial.zip",
         extract      => true,
         extract_path => '/tmp/ndtrial',
         creates      => '/tmp/ndtrial/repository.config',
