@@ -8,7 +8,7 @@ describe 'ibm_installation_manager' do
       pp = <<-EOS
         class { 'ibm_installation_manager':
           deploy_source => true,
-          source        => '/tmp/agent.installer.linux.gtk.x86_64_1.8.7000.20170706_2137.zip',
+          source        => '/tmp/agent.installer.linux.gtk.x86_64_1.9.1004.20201109_1718.zip',
           target        => '/opt/IBM/InstallationManager',
         }
       EOS
@@ -29,7 +29,7 @@ describe 'ibm_installation_manager' do
           manage_user       => true,
           user              => 'webadmin',
           user_home         => '/home/webadmin',
-          source            => '/tmp/agent.installer.linux.gtk.x86_64_1.8.7000.20170706_2137.zip',
+          source            => '/tmp/agent.installer.linux.gtk.x86_64_1.9.1004.20201109_1718.zip',
         }
       EOS
       apply_manifest(pp, catch_failures: true)
@@ -56,7 +56,7 @@ describe 'ibm_installation_manager' do
           user              => 'webadmin',
           group             => 'webadmins',
           user_home         => '/home/webadmin',
-          source            => '/tmp/agent.installer.linux.gtk.x86_64_1.8.7000.20170706_2137.zip',
+          source            => '/tmp/agent.installer.linux.gtk.x86_64_1.9.1004.20201109_1718.zip',
         }
       EOS
       apply_manifest(pp, catch_failures: true)

@@ -8,7 +8,7 @@ describe 'ibm_installation_manager::ibm_pkg' do
       pp = <<-EOS
         class { 'ibm_installation_manager':
           deploy_source => true,
-          source        => '/tmp/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip',
+          source        => '/tmp/agent.installer.linux.gtk.x86_64_1.9.1004.20201109_1718.zip',
           target        => '/opt/IBM/InstallationManager',
         }
         ibm_pkg { 'Websphere0':
@@ -35,7 +35,7 @@ describe 'ibm_installation_manager::ibm_pkg' do
         pp = <<-EOS
         class { 'ibm_installation_manager':
           deploy_source     => true,
-          source            => '/tmp/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip',
+          source            => '/tmp/agent.installer.linux.gtk.x86_64_1.9.1004.20201109_1718.zip',
           manage_user       => true,
           manage_group      => true,
           user              => 'webadmin',
@@ -72,7 +72,7 @@ describe 'ibm_installation_manager::ibm_pkg' do
         }
         class { 'ibm_installation_manager':
           deploy_source     => true,
-          source            => '/tmp/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip',
+          source            => '/tmp/agent.installer.linux.gtk.x86_64_1.9.1004.20201109_1718.zip',
           user              => 'webadmin',
           user_home         => '/home/webadmin',
           manage_group      => true,
@@ -103,7 +103,7 @@ describe 'ibm_installation_manager::ibm_pkg' do
       pp = <<-EOS
         class { 'ibm_installation_manager':
           deploy_source => true,
-          source        => '/tmp/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip',
+          source        => '/tmp/agent.installer.linux.gtk.x86_64_1.9.1004.20201109_1718.zip',
           target        => '/opt/IBM/InstallationManager',
         }
         group { 'webadmins':
@@ -140,7 +140,7 @@ describe 'ibm_installation_manager::ibm_pkg' do
       pp = <<-EOS
         class { 'ibm_installation_manager':
           deploy_source => true,
-          source        => '/tmp/agent.installer.linux.gtk.x86_64_1.6.2000.20130301_2248.zip',
+          source        => '/tmp/agent.installer.linux.gtk.x86_64_1.9.1004.20201109_1718.zip',
           target        => '/opt/IBM/InstallationManager',
         }
         group { 'webadmins':
