@@ -14,47 +14,29 @@
 
 ## Classes
 
-### `ibm_installation_manager`
+### <a name="ibm_installation_manager"></a>`ibm_installation_manager`
 
 The ibm_installation_manager class.
 
 #### Parameters
 
-The following parameters are available in the `ibm_installation_manager` class.
+The following parameters are available in the `ibm_installation_manager` class:
 
-##### `deploy_source`
+* [`deploy_source`](#deploy_source)
+* [`source`](#source)
+* [`source_dir`](#source_dir)
+* [`target`](#target)
+* [`manage_user`](#manage_user)
+* [`user`](#user)
+* [`user_home`](#user_home)
+* [`manage_group`](#manage_group)
+* [`group`](#group)
+* [`options`](#options)
+* [`timeout`](#timeout)
+* [`installation_mode`](#installation_mode)
+* [`install_unzip_package`](#install_unzip_package)
 
-Data type: `Any`
-
-
-
-Default value: ``false``
-
-##### `source`
-
-Data type: `Any`
-
-
-
-Default value: ``undef``
-
-##### `source_dir`
-
-Data type: `Any`
-
-
-
-Default value: ``undef``
-
-##### `target`
-
-Data type: `Any`
-
-
-
-Default value: ``undef``
-
-##### `manage_user`
+##### <a name="deploy_source"></a>`deploy_source`
 
 Data type: `Any`
 
@@ -62,7 +44,39 @@ Data type: `Any`
 
 Default value: ``false``
 
-##### `user`
+##### <a name="source"></a>`source`
+
+Data type: `Any`
+
+
+
+Default value: ``undef``
+
+##### <a name="source_dir"></a>`source_dir`
+
+Data type: `Any`
+
+
+
+Default value: ``undef``
+
+##### <a name="target"></a>`target`
+
+Data type: `Any`
+
+
+
+Default value: ``undef``
+
+##### <a name="manage_user"></a>`manage_user`
+
+Data type: `Any`
+
+
+
+Default value: ``false``
+
+##### <a name="user"></a>`user`
 
 Data type: `Any`
 
@@ -70,7 +84,7 @@ Data type: `Any`
 
 Default value: `'root'`
 
-##### `user_home`
+##### <a name="user_home"></a>`user_home`
 
 Data type: `Any`
 
@@ -78,7 +92,7 @@ Data type: `Any`
 
 Default value: ``undef``
 
-##### `manage_group`
+##### <a name="manage_group"></a>`manage_group`
 
 Data type: `Any`
 
@@ -86,7 +100,7 @@ Data type: `Any`
 
 Default value: ``false``
 
-##### `group`
+##### <a name="group"></a>`group`
 
 Data type: `Any`
 
@@ -94,7 +108,7 @@ Data type: `Any`
 
 Default value: `'root'`
 
-##### `options`
+##### <a name="options"></a>`options`
 
 Data type: `Any`
 
@@ -102,7 +116,7 @@ Data type: `Any`
 
 Default value: ``undef``
 
-##### `timeout`
+##### <a name="timeout"></a>`timeout`
 
 Data type: `Any`
 
@@ -110,7 +124,7 @@ Data type: `Any`
 
 Default value: `'900'`
 
-##### `installation_mode`
+##### <a name="installation_mode"></a>`installation_mode`
 
 Data type: `Any`
 
@@ -118,7 +132,7 @@ Data type: `Any`
 
 Default value: `'administrator'`
 
-##### `install_unzip_package`
+##### <a name="install_unzip_package"></a>`install_unzip_package`
 
 Data type: `Any`
 
@@ -128,7 +142,7 @@ Default value: ``true``
 
 ## Resource types
 
-### `ibm_pkg`
+### <a name="ibm_pkg"></a>`ibm_pkg`
 
 Custom type for installing an IBM package.
 
@@ -148,7 +162,23 @@ Default value: `present`
 
 The following parameters are available in the `ibm_pkg` type.
 
-##### `imcl_path`
+* [`imcl_path`](#imcl_path)
+* [`jdk_package_name`](#jdk_package_name)
+* [`jdk_package_version`](#jdk_package_version)
+* [`manage_ownership`](#manage_ownership)
+* [`name`](#name)
+* [`options`](#options)
+* [`package`](#package)
+* [`package_group`](#package_group)
+* [`package_owner`](#package_owner)
+* [`provider`](#provider)
+* [`repository`](#repository)
+* [`response`](#response)
+* [`target`](#target)
+* [`user`](#user)
+* [`version`](#version)
+
+##### <a name="imcl_path"></a>`imcl_path`
 
 The full path to the imcl executable.
 This is optional. The provider will attempt to locate imcl by parsing
@@ -156,17 +186,17 @@ This is optional. The provider will attempt to locate imcl by parsing
 If, for some reason, it cannot be discovered or if you need to provide a specific path, you may do so with this
 parameter.
 
-##### `jdk_package_name`
+##### <a name="jdk_package_name"></a>`jdk_package_name`
 
 If a JDK must be installed separately (as in the case of Websphere Application Server 9), specify the package_name here
 (everything before the underscore in the IBM package name).
 
-##### `jdk_package_version`
+##### <a name="jdk_package_version"></a>`jdk_package_version`
 
 If a JDK must be installed separately (as in the case of Websphere Application Server 9), specify the version here.
 Like 'version', this parameter refers to the number after the underscore in the IBM package name.
 
-##### `manage_ownership`
+##### <a name="manage_ownership"></a>`manage_ownership`
 
 Valid values: ``true``, ``false``, `yes`, `no`
 
@@ -174,57 +204,57 @@ Whether or not to manage the ownership of installed packages. Allows for package
 
 Default value: ``true``
 
-##### `name`
+##### <a name="name"></a>`name`
 
 namevar
 
 An arbitrary name to identify the resource.
 
-##### `options`
+##### <a name="options"></a>`options`
 
 Any custom options to pass to the 'imcl' tool for installing the package.
 
-##### `package`
+##### <a name="package"></a>`package`
 
 The IBM package name. Example: com.ibm.websphere.IBMJAVA.v71
 This is the first part of the traditional IBM full package name, before the first underscore.
 
-##### `package_group`
+##### <a name="package_group"></a>`package_group`
 
 The group that should own this package installation. Only used if manage_ownership is true.
 
 Default value: `root`
 
-##### `package_owner`
+##### <a name="package_owner"></a>`package_owner`
 
 The user that should own this package installation. Only used if manage_ownership is true.
 
 Default value: `root`
 
-##### `provider`
+##### <a name="provider"></a>`provider`
 
 The specific backend to use for this `ibm_pkg` resource. You will seldom need to specify this --- Puppet will usually
 discover the appropriate provider for your platform.
 
-##### `repository`
+##### <a name="repository"></a>`repository`
 
 The full path to the 'repository.config' file for installing this package.
 
-##### `response`
+##### <a name="response"></a>`response`
 
 Full path to an optional response file to use. The user is responsible for ensuring this file is present.
 
-##### `target`
+##### <a name="target"></a>`target`
 
 The full path to install the specified package to. Corresponds to the 'imcl' option '-installationDirectory'.
 
-##### `user`
+##### <a name="user"></a>`user`
 
 The user to run the 'imcl' command as.
 
 Default value: `root`
 
-##### `version`
+##### <a name="version"></a>`version`
 
 The version of the package. Example: 7.1.2000.20141116_0823
 This is the second part of the traditional IBM full package name, after the first underscore.
