@@ -23,15 +23,26 @@ RSpec.configure do |c|
   #     "file:///directory/of/the/zips"
   # To specify a url:
   #     "http://path.of/zip_files"
-  #
-  INSTALL_FILE_PATH = ENV['IBM_INSTALL_SOURCE'] || 'https://artifactory.delivery.puppetlabs.net/artifactory/list/generic/module_ci_resources/modules/ibm_installation_manager'
 
   # Configure all nodes in nodeset
   c.before :suite do
-    # Retrieve the install files for tests.
+    if ENV['GITHUB_ACTIONS'] == 'true'
+      Helper.instance.run_shell('gsutil cp -r gs://artifactory-modules/agent.installer.linux.gtk.x86_64_1.9.1004.20201109_1718.zip /tmp/')
+      Helper.instance.run_shell('gsutil cp -r gs://artifactory-modules/was.repo.8550.liberty.ndtrial.zip /tmp/')
+      INSTALL_FILE_PATH = ENV['IBM_INSTALL_SOURCE'] || '/tmp'
+    else
+      # For Internal testing
+      INSTALL_FILE_PATH = ENV['IBM_INSTALL_SOURCE'] || 'https://artifactory.delivery.puppetlabs.net/artifactory/list/generic/module_ci_resources/modules/ibm_installation_manager'
+    end
+
     pp = <<-EOS
-      archive { '/tmp/agent.installer.linux.gtk.x86_64_1.8.7000.20170706_2137.zip':
-        source       => "#{INSTALL_FILE_PATH}/agent.installer.linux.gtk.x86_64_1.8.7000.20170706_2137.zip",
+
+    file { '/tmp/agentinstaller':
+        ensure => directory,
+      }
+
+      archive { '/tmp/agentinstaller/agent.installer.linux.gtk.x86_64_1.9.1004.20201109_1718.zip':
+        source       => "#{INSTALL_FILE_PATH}/agent.installer.linux.gtk.x86_64_1.9.1004.20201109_1718.zip",
         extract      => false,
         extract_path => '/tmp',
       }
