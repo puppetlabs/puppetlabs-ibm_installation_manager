@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v3.0.1](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/tree/v3.0.1) (2021-04-12)
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/compare/v3.0.0...v3.0.1)
+
+### Fixed
+
+- \(maint\) Frozenstring fix [\#181](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/pull/181) ([sheenaajay](https://github.com/sheenaajay))
+
 ## [v3.0.0](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/tree/v3.0.0) (2021-03-03)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-ibm_installation_manager/compare/v2.2.1...v3.0.0)
