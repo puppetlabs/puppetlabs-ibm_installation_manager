@@ -53,7 +53,6 @@
 #
 # @param install_unzip_package
 #   Default: true. Installs the unzip package.
-
 class ibm_installation_manager (
   $deploy_source         = false,
   $source                = undef,
@@ -69,7 +68,6 @@ class ibm_installation_manager (
   $installation_mode     = 'administrator',
   $install_unzip_package = true,
 ) {
-
   validate_bool($deploy_source)
   validate_string($options, $user, $group)
   validate_integer($timeout)
@@ -126,14 +124,16 @@ class ibm_installation_manager (
       $_options = "-acceptLicense -accessRights group -s -log /tmp/IM_install.${timestamp}.log.xml"
     }
 
-    file { [$ibm_root,
-            "${user_home}/var/",
-            "${user_home}/var/ibm/",
-            "${user_home}/var/ibm/InstallationManager"]:
-      ensure => 'directory',
-      owner  => $user,
-      group  => $group,
-      mode   => '0755',
+    file { [
+        $ibm_root,
+        "${user_home}/var/",
+        "${user_home}/var/ibm/",
+        "${user_home}/var/ibm/InstallationManager",
+      ]:
+        ensure => 'directory',
+        owner  => $user,
+        group  => $group,
+        mode   => '0755',
     }
   }
 
@@ -154,7 +154,7 @@ class ibm_installation_manager (
       creates => $_source_dir,
       user    => $user,
       group   => $group,
-      path    => '/bin:/usr/bin:/sbin:/usr/sbin'
+      path    => '/bin:/usr/bin:/sbin:/usr/sbin',
     }
 
     file { $_source_dir:

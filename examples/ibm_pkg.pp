@@ -27,7 +27,6 @@ ibm_pkg { 'com.ibm.websphere.NDTRIAL.v85':
   response => '/opt/myorg/was/response/response_85.xml',
 }
 
-
 # Example of using a response file but also custom options to pass to 'imcl'
 ibm_pkg { 'com.ibm.websphere.NDTRIAL.v85':
   ensure   => 'present',
