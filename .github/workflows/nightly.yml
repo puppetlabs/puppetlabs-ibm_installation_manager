@@ -58,7 +58,7 @@ jobs:
       if: ${{ github.repository_owner == 'puppetlabs' }}
       run: |
         if [ '${{ github.repository_owner }}' == 'puppetlabs' ]; then
-          echo  "::set-output name=matrix::{'platforms':[{'label':'RedHat-6','provider':'provision::provision_service','image':'rhel-6'}, {'label':'RedHat-7','provider':'provision::provision_service','image':'rhel-7'}, {'label':'RedHat-8','provider':'provision::provision_service','image':'rhel-8'}, {'label':'Centos-7','provider':'provision::provision_service','image':'centos-7'}, {'label':'Centos-7','provider':'provision::provision_service','image':'centos-8'}, {'label':'Ubuntu-1804','provider':'provision::provision_service','image':'ubuntu-1804-lts'}],'collection':['puppet6-nightly','puppet7-nightly']}"
+          echo  "::set-output name=matrix::{'platforms':[{'label':'RedHat-6','provider':'provision::provision_service','image':'rhel-6'}, {'label':'RedHat-7','provider':'provision::provision_service','image':'rhel-7'}, {'label':'RedHat-8','provider':'provision::provision_service','image':'rhel-8'}, {'label':'RedHat-9','provider':'provision::provision_service','image':'rhel-9'}, {'label':'Centos-7','provider':'provision::provision_service','image':'centos-7'}, {'label':'Centos-8','provider':'provision::provision_service','image':'centos-stream-8'}, {'label':'Ubuntu-1804','provider':'provision::provision_service','image':'ubuntu-1804-lts'}],'collection':['puppet6-nightly','puppet7-nightly']}"
         else
           echo  "::set-output name=matrix::{}"
         fi
