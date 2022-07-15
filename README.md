@@ -6,22 +6,30 @@
 
 
 1. [Module Description](#module-description)
-2. [Setup - The basics of getting started with ibm_installation_manager](#setup)
+2. [Support](#support)
+3. [Setup - The basics of getting started with ibm_installation_manager](#setup)
     * [Beginning with ibm_installation_manager](#beginning-with-ibm_installation_manager)
-3. [Usage - Configuration options and additional functionality](#usage)
+4. [Usage - Configuration options and additional functionality](#usage)
     * [Installing Installation Manager](#installing-installation-manager)
     * [Installing software packages](#installing-software-packages)
-4. [Reference - Classes and Parameters](#reference)
-5. [Limitations - OS compatibility, etc.](#limitations)
-6. [Dependencies](#dependencies)
-7. [Development and Contributing](#development-and-contributing)
-8. [Authors](#authors)
+5. [Reference - Classes and Parameters](#reference)
+6. [Limitations - OS compatibility, etc.](#limitations)
+7. [Dependencies](#dependencies)
+8. [Development and Contributing](#development-and-contributing)
+9. [Authors](#authors)
 
 ## Module Description
 
 This module installs the [IBM Installation Manager](http://www-947.ibm.com/support/entry/portal/product/rational/ibm_installation_manager?productContext=-57272472). Optionally, it can deploy the installation from a source such as HTTP or a local file path.
 
 This module can also manage the installation of software from IBM packages (for example, WebSphere, IHS).
+
+## Support
+
+This module is not supported or maintained by Puppet and does not qualify for Puppet Support plans.
+It's provided without guarantee or warranty and you can use it at your own risk.
+All bugfixes, updates, and new feature development will come from community contributions.
+[tier:community]
 
 ## Usage
 
